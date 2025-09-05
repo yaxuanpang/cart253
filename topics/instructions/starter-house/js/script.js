@@ -25,6 +25,23 @@ function draw() {
     // The sky
     background(150, 200, 250);
 
+    //The cloud
+
+    drawCloud();
+
+    // The ground
+
+    drawGround();
+
+    //draws the house
+    drawHouse();
+
+}
+
+/**
+ * draws a fluffy white cloud
+ */
+function drawCloud() {
     // A cloud
     push();
     noStroke();
@@ -38,14 +55,23 @@ function draw() {
     ellipse(190, 130, 60, 60);
     ellipse(220, 120, 60, 60);
     pop();
+}
 
-    // The ground
+/**
+ * draws the ground
+ */
+function drawGround() {
     push();
     noStroke();
     fill(200);
     rect(0, 400, 640, 480);
     pop();
+}
 
+/**
+ * draws the house
+ */
+function drawHouse() {
     // The main body of the house
     push();
     noStroke();
