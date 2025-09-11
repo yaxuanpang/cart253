@@ -13,7 +13,6 @@
 */
 function setup() {
     CreateCanvas(500, 500);
-    background(12, 48, 133);
 }
 
 
@@ -21,5 +20,6 @@ function setup() {
  * skyscrapers on a cement.
 */
 function draw() {
+    background(12, 48, 133);
 
 }
