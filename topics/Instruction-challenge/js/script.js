@@ -1,23 +1,24 @@
 /**
- * Title of Project
- * Author Name
+ * Cyberpunk City
+ * Yaxuan, Ashmitha, Nerly
  * 
- * HOW EMBARRASSING! I HAVE NO DESCRIPTION OF MY PROJECT!
- * PLEASE REMOVE A GRADE FROM MY WORK IF IT'S GRADED!
+ * Nighttime futuristic city.
  */
 
 "use strict";
 
 /**
- * OH LOOK I DIDN'T DESCRIBE SETUP!!
+ * a big canvas to describe a nighttime background.
+ * In a possible dystopian future.
 */
 function setup() {
-
+    CreateCanvas(500, 500);
+    background(12, 48, 133);
 }
 
 
 /**
- * OOPS I DIDN'T DESCRIBE WHAT MY DRAW DOES!
+ * skyscrapers on a cement.
 */
 function draw() {
 
