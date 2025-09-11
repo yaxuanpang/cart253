@@ -20,15 +20,49 @@ function setup() {
  * setting up the background whihc is the sky
 */
 function draw() {
-    background(12, 48, 133);
+    background(84, 196, 240);
 
 
     /**
-     * create cement
+     * create waterfront
      */
     push();
     noStroke();
-    fill(182, 196, 219);
+    fill(33, 89, 181);
     rect(0, 400, 500, 100);
+    pop();
+
+    /**
+     * create skyscrapers
+     */
+
+    /**
+     * creating skyscraper 1
+     */
+
+    push();
+    noStroke();
+    fill(115, 117, 120);
+    rect(125, 50, 100, 350);
+    pop();
+
+    /**
+     * creating skyscraper 2
+     */
+
+    push();
+    noStroke();
+    fill(115, 117, 120);
+    rect(300, 50, 100, 350);
+    pop();
+
+    /**
+     * waves
+     */
+
+    push();
+    noStroke();
+    fill(26, 37, 107);
+    rect(350, 450, 100, 10);
     pop();
 }
