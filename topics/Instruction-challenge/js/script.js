@@ -1,15 +1,15 @@
 /**
- * Cyberpunk City
+ * THE twin towers
  * Yaxuan, Ashmitha, Nerly
  * 
- * Nighttime futuristic city.
+ * September 11, 2001
  */
 
 "use strict";
 
 /**
- * a big canvas to describe a nighttime background.
- * In a possible dystopian future.
+ * This is a picture that was inspired by the event of 9/11, 2001
+ * We are commemorating the twin towers, before they got exploded
 */
 function setup() {
     createCanvas(500, 500);
