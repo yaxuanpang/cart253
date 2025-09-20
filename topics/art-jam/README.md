@@ -1,6 +1,6 @@
-# TITLE OF PROJECT
+# Art Jam Self Portrait
 
-AUTHOR NAME
+Yaxuan Pang
 
 [View this project online](URL_FOR_THE_RUNNING_PROJECT)
 
