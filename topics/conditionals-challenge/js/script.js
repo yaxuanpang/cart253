@@ -19,6 +19,18 @@ const puck = {
     }
 };
 
+const target = {
+    x: 30,
+    y: 300,
+    size: 50,
+    fill: "#ffffffff",
+    fills: {
+        overlap: "#000000",
+    }
+
+
+};
+
 const user = {
     x: undefined, // will be mouseX
     y: undefined, // will be mouseY
@@ -44,69 +56,86 @@ function draw() {
     // Move user circle
     moveUser();
 
-    // Draw the user and puck
+    // Draw the user and puck and target
     drawPuck();
     drawUser();
-    MovePuck();
+    //  MovePuck();
+    drawTarget();
+    movePuck();
 
-    const d = dist(user.x, user.y, puck.x, puck.y);
-    const overlap = (d < user.size / 2);
-    if (overlap) {
-        user.fill = puck.fills.overlap;
+    function movePuck() {
+        const d = dist(user.x, user.y, puck.x, puck.y);
+        const overlap = (d < user.size / 2);
+        if (overlap) {
+            user.fill = puck.fills.overlap;
 
-        if (overlap && user.x < (puck.x)) {
-            puck.x += 10;
+            if (overlap && user.x < (puck.x)) {
+                puck.x += 10;
+            }
+
+            if (overlap && user.y < (puck.y)) {
+                puck.y += 10;
+            }
+
+            if (overlap && user.x > (puck.x)) {
+                puck.x -= 10;
+            }
+
+            if (overlap && user.y > (puck.y)) {
+                puck.y -= 10;
+            }
+
+        }
+        else {
+            user.fill = puck.fills.noOverlap;
         }
 
-        if (overlap && user.y < (puck.y)) {
-            puck.y += 10;
-        }
 
-        if (overlap && user.x > (puck.x)) {
-            puck.x -= 10;
-        }
-
-        if (overlap && user.y > (puck.y)) {
-            puck.y -= 10;
-        }
 
     }
-    else {
-        user.fill = puck.fills.noOverlap;
+
+
+    /**
+     * Sets the user position to the mouse position
+     */
+    function moveUser() {
+        user.x = mouseX;
+        user.y = mouseY;
+
     }
 
+    // Displays the puck circle
+    function drawPuck() {
+        push();
+        noStroke();
+        fill(puck.fill);
+        ellipse(puck.x, puck.y, puck.size);
+        pop()
+    }
+
+    /**
+     * Displays the user circle
+     */
+    function drawUser() {
+        push();
+        noStroke();
+        fill(user.fill);
+        ellipse(user.x, user.y, user.size);
+        pop();
+    }
+
+    function drawTarget() {
+        push();
+        noStroke();
+        fill(target.fill);
+        ellipse(target.x, target.y, target.size);
+        pop();
+
+    }
+
+    function checkTarget() {
 
 
-}
+    }
 
-/**
- * Sets the user position to the mouse position
- */
-function moveUser() {
-    user.x = mouseX;
-    user.y = mouseY;
-
-}
-
-// Displays the puck circle
-function drawPuck() {
-    push();
-    noStroke();
-    fill(puck.fill);
-    ellipse(puck.x, puck.y, puck.size);
-    pop()
-}
-
-/**
- * Displays the user circle
- */
-function drawUser() {
-    push();
-    noStroke();
-    fill(user.fill);
-    ellipse(user.x, user.y, user.size);
-    pop();
-}
-
-function MovePuck() {
 }
