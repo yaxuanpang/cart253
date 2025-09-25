@@ -53,12 +53,29 @@ function draw() {
     const overlap = (d < user.size / 2);
     if (overlap) {
         user.fill = puck.fills.overlap;
-        puck.y += 15;
+
+        if (overlap && user.x < (puck.x)) {
+            puck.x += 10;
+        }
+
+        if (overlap && user.y < (puck.y)) {
+            puck.y += 10;
+        }
+
+        if (overlap && user.x > (puck.x)) {
+            puck.x -= 10;
+        }
+
+        if (overlap && user.y > (puck.y)) {
+            puck.y -= 10;
+        }
 
     }
     else {
         user.fill = puck.fills.noOverlap;
     }
+
+
 
 }
 
