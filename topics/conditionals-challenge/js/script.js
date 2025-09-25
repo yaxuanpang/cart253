@@ -32,7 +32,7 @@ function setup() {
 
 
 /**
- * OOPS I DIDN'T DESCRIBE WHAT MY DRAW DOES!
+ * We draw a puck
 */
 function draw() {
     background("#aaaaaa");
@@ -41,8 +41,9 @@ function draw() {
     moveUser();
 
     // Draw the user and puck
-    drawUser();
     drawPuck();
+    drawUser();
+
 }
 
 /**
@@ -53,6 +54,15 @@ function moveUser() {
     user.y = mouseY;
 }
 
+// Displays the puck circle
+function drawPuck() {
+    push();
+    noStroke();
+    fill(puck.fill);
+    ellipse(puck.x, puck.y, puck.size);
+    pop()
+}
+
 /**
  * Displays the user circle
  */
@@ -61,16 +71,5 @@ function drawUser() {
     noStroke();
     fill(user.fill);
     ellipse(user.x, user.y, user.size);
-    pop();
-}
-
-/**
- * Displays the puck circle
- */
-function drawPuck() {
-    push();
-    noStroke();
-    fill(puck.fill);
-    ellipse(puck.x, puck.y, puck.size);
     pop();
 }
