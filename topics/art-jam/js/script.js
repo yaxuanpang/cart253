@@ -1,24 +1,29 @@
 /**
- * Title of Project
- * Author Name
+ * Art-Jam: Self Portrait
+ * Yaxuan Pang
  * 
- * HOW EMBARRASSING! I HAVE NO DESCRIPTION OF MY PROJECT!
- * PLEASE REMOVE A GRADE FROM MY WORK IF IT'S GRADED!
+ * This is an interactive self portrait.
  */
 
 "use strict";
 
 /**
- * OH LOOK I DIDN'T DESCRIBE SETUP!!
+ * Created the canvas
 */
 function setup() {
-
+    createCanvas(700, 700);
 }
 
 
 /**
- * OOPS I DIDN'T DESCRIBE WHAT MY DRAW DOES!
+ * Darwing the background
 */
 function draw() {
+    background(32, 227, 214);
+
+    //making my face
+    noStroke();
+    fill(255, 240, 201);
+    circle(width / 2, 250, 250);
 
 }
