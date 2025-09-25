@@ -59,9 +59,9 @@ function draw() {
     // Draw the user and puck and target
     drawPuck();
     drawUser();
-    //  MovePuck();
     drawTarget();
     movePuck();
+    checkTarget();
 
     function movePuck() {
         const d = dist(user.x, user.y, puck.x, puck.y);
@@ -135,6 +135,17 @@ function draw() {
 
     function checkTarget() {
 
+        const d = dist(puck.x, puck.y, target.x, target.y);
+        const overlap = (d < puck.size / 2 + target.size / 2);
+        if (overlap) {
+            target.fill = target.fills.overlap;
+
+
+
+        }
+        else {
+            user.fill = puck.fills.noOverlap;
+        }
 
     }
 
