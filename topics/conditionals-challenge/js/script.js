@@ -12,7 +12,11 @@ const puck = {
     x: 200,
     y: 200,
     size: 100,
-    fill: "#ff0000"
+    fill: "#ff0000", // red to start
+    fills: {
+        noOverlap: "#ed15b4", // red for no overlap
+        overlap: "#000000", //green for overlap
+    }
 };
 
 const user = {
@@ -43,6 +47,18 @@ function draw() {
     // Draw the user and puck
     drawPuck();
     drawUser();
+    MovePuck();
+
+    const d = dist(user.x, user.y, puck.x, puck.y);
+    const overlap = (d < user.size / 2);
+    if (overlap) {
+        user.fill = puck.fills.overlap;
+        puck.y += 15;
+
+    }
+    else {
+        user.fill = puck.fills.noOverlap;
+    }
 
 }
 
@@ -52,6 +68,7 @@ function draw() {
 function moveUser() {
     user.x = mouseX;
     user.y = mouseY;
+
 }
 
 // Displays the puck circle
@@ -72,4 +89,7 @@ function drawUser() {
     fill(user.fill);
     ellipse(user.x, user.y, user.size);
     pop();
+}
+
+function MovePuck() {
 }
