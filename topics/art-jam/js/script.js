@@ -26,6 +26,8 @@ function draw() {
     drawBangs(); //drawing the bangs
     drawEyes(); //drawing the eyes
     drawPupils();
+    drawNeck();
+    drawBody();
 }
 function drawFace() {
     //drawing the face
@@ -69,8 +71,8 @@ function drawPupils() {
     stroke(94, 42, 7); //gave myself dark brown eyes :)
     strokeWeight(3.5); //iris
     fill(0);
-    circle(287, 275, 16); //pupils of left eye
-    circle(412, 275, 16); //pupils of right eye
+    circle(287, 275, 18); //pupils of left eye
+    circle(412, 275, 18); //pupils of right eye
     noStroke();
     fill(255);
     circle(290, 272, 3); //shine of left eye
@@ -78,40 +80,18 @@ function drawPupils() {
     pop();
 }
 
+function drawNeck() {
+    push();
+    noStroke();
+    fill(255, 240, 201);
+    rect(337, 370, 26, 35);
+    pop();
+}
 
-// if (mouseY >= 260 & mouseY <= 290) {
-//     if (mouseX >= 242 & mouseX <= 272) {
-//         circle(mouseX, mouseY, 10);
-//     }
-//     else if (mouseX < 242) {
-//         circle(242, mouseY, 10);
-//     }
-//     else if (mouseX > 272) {
-//         circle(272, mouseY, 10);
-//     }
-// }
-
-
-// else if (mouseY < 260) {
-//     if (mouseX > 225 & mouseX < 475) {
-//         circle(mouseX, 0, 100, 100, 0, 180);
-//     }
-//     else if (mouseX < 225) {
-//         circle(225, 0, 100, 100, 0, 180);
-//     }
-//     else if (mouseX > 290) {
-//         circle(475, 0, 100, 100, 0, 180);
-//     }
-// }
-
-// else {
-//     if (mouseX > 225 & mouseX < 475) {
-//         circle(mouseX, 400, 100, 100, 0, 180);
-//     }
-//     else if (mouseX < 225) {
-//         circle(225, 400, 100, 100, 0, 180);
-//     }
-//     else if (mouseX > 475) {
-//         circle(475, 400, 100, 100, 0, 180);
-//     }
-// }
+function drawBody() {
+    push();
+    noStroke();
+    fill(245, 130, 201);
+    rect(285, 395, 126, 150);
+    pop();
+}
