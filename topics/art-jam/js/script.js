@@ -7,6 +7,8 @@
 
 "use strict";
 
+//let drawSunGlasses = false;
+
 /**
  * Created the canvas
 */
@@ -21,6 +23,8 @@ function setup() {
 */
 function draw() {
     background(32, 227, 214);
+    // fill(0, 0, 0, 200);
+    // rect(0, 0, 700, 700);
     drawHair();  //drawing the hair behind my head
     drawFace(); //drawing the head
     drawBangs(); //drawing the bangs
@@ -28,6 +32,8 @@ function draw() {
     drawPupils();
     drawNeck();
     drawBody();
+    drawLegs();
+    drawMouth();
 }
 function drawFace() {
     //drawing the face
@@ -91,7 +97,24 @@ function drawNeck() {
 function drawBody() {
     push();
     noStroke();
-    fill(245, 130, 201);
+    fill(255, 173, 224);
     rect(285, 395, 126, 150);
+    pop();
+}
+
+function drawLegs() {
+    push();
+    noStroke();
+    fill(255, 240, 201);
+    rect(362, 545, 20, 100);
+    rect(317, 545, 20, 100);
+    pop();
+}
+
+function drawMouth() {
+    push();
+    noStroke();
+    fill(117, 11, 11);
+    rect(340, 330, 20, 5);
     pop();
 }
