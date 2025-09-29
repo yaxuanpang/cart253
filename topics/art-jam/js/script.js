@@ -32,7 +32,10 @@ function draw() {
     drawLegs(); // drawing the legs
     drawMouth(); // drawing the mouth
     drawBear(); // drawing the bear
+    drawEyelids(); // drawing the eyelids
+    drawBook(); //drawing the book
 }
+//Body parts
 function drawFace() {
     //drawing the face
     push();
@@ -122,6 +125,18 @@ function drawMouth() {
     pop();
 }
 
+function drawEyelids() {
+    //drawing eyelids to cast a shadow on the eyes
+    push();
+    stroke(0);
+    strokeWeight(3);
+    fill(0, 40);
+    arc(412, 271.5, 29, 20, 180, 360); // right eyelid
+    arc(287, 271.5, 29, 20, 180, 360); // left eyelid
+    pop();
+}
+
+//flashlight
 function drawFlashLight() {
     push();
     noStroke();
@@ -130,6 +145,7 @@ function drawFlashLight() {
     pop();
 }
 
+//things I like
 function drawBear() {
     push();
     noStroke();
@@ -160,4 +176,25 @@ function drawBear() {
     fill(222, 175, 214);
     ellipse(100, 150, 10, 5);
     pop();
+}
+
+function drawBook() {
+    push();
+    noStroke();
+    //drawing the book
+    //last page (blue)
+    fill(52, 161, 235);
+    triangle(580, 400, 600, 390, 600, 410);
+    //gray page
+    fill(200);
+    triangle(580, 400, 615, 390, 615, 410);
+
+    fill(255);
+    triangle(580, 400, 625, 395, 625, 410);
+    fill(52, 161, 235);
+    rect(580, 400, 50, 65)
+    fill(255);
+    rect();
+    pop();
+
 }
