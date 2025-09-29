@@ -37,6 +37,7 @@ function draw() {
     drawBook(); //drawing the book
     drawPainting(); // drawing the painting
     drawPhone(); //drawing the phone
+    drawOrange(); //drawing the orange
 }
 //Body parts
 function drawFace() {
@@ -162,6 +163,19 @@ function drawFlashLight() {
 function drawBear() {
     push();
     noStroke();
+    //arms of the bear
+    fill(222, 175, 214);
+    circle(75, 178, 20);
+    circle(127, 178, 20);
+
+    //legs of the bear
+    ellipse(113, 207, 15, 30);
+    ellipse(90, 207, 15, 30);
+
+    // drawing the body of the bear
+    fill(222, 175, 214);
+    ellipse(101, 180, 50, 55);
+
     //drawing the face and the ears of the bear
     fill(222, 175, 214);
     circle(83, 130, 20);
@@ -188,6 +202,7 @@ function drawBear() {
     //drawing the nose of the bear
     fill(222, 175, 214);
     ellipse(100, 150, 10, 5);
+
     pop();
 }
 
@@ -245,5 +260,15 @@ function drawPhone() {
     strokeWeight(4); // the phone
     fill(0); // phone screen is black
     rect(480, 90, 40, 60);
+    pop();
+}
+
+function drawOrange() {
+    push();
+    noStroke();
+    fill(232, 123, 14);
+    circle(540, 280, 50); //darwing the orange
+    fill(25, 115, 18);
+    ellipse(540, 260, 15, 5); // drawing the stem
     pop();
 }
