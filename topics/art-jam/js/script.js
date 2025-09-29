@@ -38,6 +38,7 @@ function draw() {
     drawPainting(); // drawing the painting
     drawPhone(); //drawing the phone
     drawOrange(); //drawing the orange
+    darwCover(); // darwing the cover
 }
 //Body parts
 function drawFace() {
@@ -163,18 +164,18 @@ function drawFlashLight() {
 function drawBear() {
     push();
     noStroke();
-    //arms of the bear
-    fill(222, 175, 214);
-    circle(75, 178, 20);
-    circle(127, 178, 20);
+    // //arms of the bear
+    // fill(222, 175, 214);
+    // circle(75, 178, 20);
+    // circle(127, 178, 20);
 
-    //legs of the bear
-    ellipse(113, 207, 15, 30);
-    ellipse(90, 207, 15, 30);
+    // //legs of the bear
+    // ellipse(113, 207, 15, 30);
+    // ellipse(90, 207, 15, 30);
 
-    // drawing the body of the bear
-    fill(222, 175, 214);
-    ellipse(101, 180, 50, 55);
+    // // drawing the body of the bear
+    // fill(222, 175, 214);
+    // ellipse(101, 180, 50, 55);
 
     //drawing the face and the ears of the bear
     fill(222, 175, 214);
@@ -270,5 +271,18 @@ function drawOrange() {
     circle(540, 280, 50); //darwing the orange
     fill(25, 115, 18);
     ellipse(540, 260, 15, 5); // drawing the stem
+    pop();
+}
+
+function darwCover() {
+    push();
+    noStroke();
+    //fill(13, 79, 75);
+    fill(0);
+    circle(100, 150, 80); // covers the bear
+    circle(150, 330, 130); //covers the painting
+    circle(500, 120, 80); //covers the phone
+    circle(530, 280, 80); //covers the orange
+    circle(600, 430, 100);
     pop();
 }
