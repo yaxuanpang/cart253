@@ -38,7 +38,7 @@ function draw() {
     drawPainting(); // drawing the painting
     drawPhone(); //drawing the phone
     drawOrange(); //drawing the orange
-    darwCover(); // darwing the cover
+    drawCover(); // darwing the cover
 }
 //Body parts
 function drawFace() {
@@ -109,8 +109,8 @@ function drawNeck() {
 function drawBody() {
     push();
     noStroke();
-    fill(255, 173, 224); // gave myself a pink shirt
-    rect(285, 395, 126, 150); // drawing the body or shirt
+    fill(255, 173, 224); // gave myself a pink dress
+    rect(300, 395, 100, 150); // drawing the body or dress
     pop();
 }
 
@@ -118,8 +118,8 @@ function drawArms() {
     push();
     noStroke();
     fill(255, 240, 201); // same color as the head
-    rect(410, 395, 20, 100); // right arm
-    rect(265, 395, 20, 100); // left arm
+    rect(400, 395, 20, 100); // right arm
+    rect(280, 395, 20, 100); // left arm
     pop();
 }
 
@@ -274,7 +274,7 @@ function drawOrange() {
     pop();
 }
 
-function darwCover() {
+function drawCover() {
     push();
     noStroke();
     //fill(13, 79, 75);
@@ -283,6 +283,6 @@ function darwCover() {
     circle(150, 330, 130); //covers the painting
     circle(500, 120, 80); //covers the phone
     circle(530, 280, 80); //covers the orange
-    circle(600, 430, 100);
+    circle(600, 430, 100); //covers the book
     pop();
 }
