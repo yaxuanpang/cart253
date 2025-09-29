@@ -17,7 +17,7 @@ function setup() {
 
 
 /**
- * Darwing the background
+ * Darwing the background and all the elements I want to add
 */
 function draw() {
     background(13, 79, 75);
@@ -29,11 +29,14 @@ function draw() {
     drawPupils(); // drawing the pupils and the shine of the eyes
     drawNeck(); // drawing the neck
     drawBody(); //drawing the body
+    drawArms(); //draw the arms (i don't like them)
     drawLegs(); // drawing the legs
     drawMouth(); // drawing the mouth
     drawBear(); // drawing the bear
     drawEyelids(); // drawing the eyelids
     drawBook(); //drawing the book
+    drawPainting(); // drawing the painting
+    drawPhone(); //drawing the phone
 }
 //Body parts
 function drawFace() {
@@ -51,6 +54,7 @@ function drawHair() {
     noStroke();
     fill(0);
     rect(225, 250, 250, 250);
+
     pop();
 }
 
@@ -95,33 +99,42 @@ function drawPupils() {
 function drawNeck() {
     push();
     noStroke();
-    fill(255, 240, 201);
-    rect(337, 370, 26, 35);
+    fill(255, 240, 201); //same color as skintone so my neck matches my head
+    rect(337, 370, 26, 35); // drawing the neck
     pop();
 }
 
 function drawBody() {
     push();
     noStroke();
-    fill(255, 173, 224);
-    rect(285, 395, 126, 150);
+    fill(255, 173, 224); // gave myself a pink shirt
+    rect(285, 395, 126, 150); // drawing the body or shirt
+    pop();
+}
+
+function drawArms() {
+    push();
+    noStroke();
+    fill(255, 240, 201); // same color as the head
+    rect(410, 395, 20, 100); // right arm
+    rect(265, 395, 20, 100); // left arm
     pop();
 }
 
 function drawLegs() {
     push();
     noStroke();
-    fill(255, 240, 201);
-    rect(362, 545, 20, 100);
-    rect(317, 545, 20, 100);
+    fill(255, 240, 201); // same color as the neck and head
+    rect(362, 545, 20, 100); // right leg
+    rect(317, 545, 20, 100); // left leg
     pop();
 }
 
 function drawMouth() {
     push();
     noStroke();
-    fill(117, 11, 11);
-    rect(340, 330, 20, 5);
+    fill(117, 11, 11); // red mouth
+    rect(340, 330, 20, 5); // drawing the mouth
     pop();
 }
 
@@ -141,7 +154,7 @@ function drawFlashLight() {
     push();
     noStroke();
     fill(32, 227, 214);
-    circle(mouseX, mouseY, 200);
+    circle(mouseX, mouseY, 200); // the flashlight follows the mouse
     pop();
 }
 
@@ -188,13 +201,49 @@ function drawBook() {
     //gray page
     fill(200);
     triangle(580, 400, 615, 390, 615, 410);
-
+    //white page 
     fill(255);
     triangle(580, 400, 625, 395, 625, 410);
+    //front cover
     fill(52, 161, 235);
     rect(580, 400, 50, 65)
+    //white part of the cover
     fill(255);
-    rect();
+    rect(590, 410, 30, 20);
     pop();
+}
 
+function drawPainting() {
+    push();
+    //drawing the canvas
+    stroke(200);
+    strokeWeight(2);
+    rect(100, 300, 90, 65);
+    //paint splotches (watercolor)
+    noStroke();
+    //bigger pink splotch
+    fill(247, 163, 233, 80);
+    ellipse(150, 330, 50, 30);
+    //blue splotch
+    fill(68, 189, 219, 100);
+    circle(120, 320, 30);
+    //yellow splotch
+    fill(250, 231, 112, 160);
+    circle(140, 350, 20);
+    //green splotch
+    fill(119, 250, 112, 90);
+    circle(170, 315, 30);
+    //purple splotch
+    fill(173, 90, 237, 100);
+    circle(120, 345, 10);
+    pop();
+}
+
+function drawPhone() {
+    push();
+    stroke(51, 50, 69);
+    strokeWeight(4); // the phone
+    fill(0); // phone screen is black
+    rect(480, 90, 40, 60);
+    pop();
 }
