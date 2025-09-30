@@ -2,15 +2,60 @@
  * Art-Jam: Self Portrait
  * Yaxuan Pang
  * 
- * This is an interactive self portrait. 
+ * This is an interactive self portrait. I put some items that I like around 
+ * so that the player can get to know me! Use the flashlight (mouseX and mouseY)
+ * to find the hidden items.
  */
 
 "use strict";
 
-
 const cover = {
     x: 100,
     y: 150,
+    size: 100,
+    fill: "#0d4f4b",
+    fills: {
+        noOverlap: "#20e3d6",
+        overlap: "#20e3d6",
+    }
+};
+
+const anothercover = {
+    x: 150,
+    y: 330,
+    size: 130,
+    fill: "#0d4f4b",
+    fills: {
+        noOverlap: "#20e3d6",
+        overlap: "#20e3d6",
+    }
+};
+
+const morecover = {
+    x: 500,
+    y: 120,
+    size: 80,
+    fill: "#0d4f4b",
+    fills: {
+        noOverlap: "#20e3d6",
+        overlap: "#20e3d6",
+    }
+};
+
+const Iscover = {
+    x: 530,
+    y: 280,
+    size: 80,
+    fill: "#0d4f4b",
+    fills: {
+        noOverlap: "#20e3d6",
+        overlap: "#20e3d6",
+    }
+};
+
+const whatcover = {
+    x: 600,
+    y: 430,
     size: 100,
     fill: "#0d4f4b",
     fills: {
@@ -47,7 +92,11 @@ function draw() {
     drawPainting(); // drawing the painting
     drawPhone(); //drawing the phone
     drawOrange(); //drawing the orange
-    drawCover(); // darwing the cover
+    drawCover(); // darwing the cover for the bear
+    drawanotherCover(); //drawing for the paitning
+    drawmoreCover(); //drawing the cover for the phone
+    drawIsCover(); //drawing the cover for the orange
+    drawwhatCover(); //drawing the cover for the book
     drawHair();  //drawing the hair behind my head
     drawFace(); //drawing the head
     drawBangs(); //drawing the bangs
@@ -60,6 +109,10 @@ function draw() {
     drawMouth(); // drawing the mouth
     drawEyelids(); //drawing the eyelids
     moveCover();
+    moveanotherCover();
+    movemoreCover();
+    moveIsCover();
+    movewhatCover();
     moveFlashlight();
 
 }
@@ -88,6 +141,114 @@ function moveCover() {
     }
     else {
         cover.fill = "#0d4f4b";
+    }
+}
+
+function moveanotherCover() {
+    const d = dist(flashlight.x, flashlight.y, anothercover.x, anothercover.y);
+    const overlap = (d < flashlight.size / 2 + anothercover.size / 2);
+    if (overlap) {
+        flashlight.fill = anothercover.fills.overlap;
+
+        if (overlap && flashlight.x < (anothercover.x)) {
+            anothercover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.y < (anothercover.y)) {
+            anothercover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.y > (anothercover.y)) {
+            anothercover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.x > (anothercover.x)) {
+            anothercover.fill = "#00000000";
+        }
+    }
+    else {
+        anothercover.fill = "#0d4f4b";
+    }
+}
+
+function movemoreCover() {
+    const d = dist(flashlight.x, flashlight.y, morecover.x, morecover.y);
+    const overlap = (d < flashlight.size / 2 + morecover.size / 2);
+    if (overlap) {
+        flashlight.fill = morecover.fills.overlap;
+
+        if (overlap && flashlight.x < (morecover.x)) {
+            morecover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.y < (morecover.y)) {
+            morecover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.y > (morecover.y)) {
+            morecover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.x > (morecover.x)) {
+            morecover.fill = "#00000000";
+        }
+    }
+    else {
+        morecover.fill = "#0d4f4b";
+    }
+}
+
+function moveIsCover() {
+    const d = dist(flashlight.x, flashlight.y, Iscover.x, Iscover.y);
+    const overlap = (d < flashlight.size / 2 + Iscover.size / 2);
+    if (overlap) {
+        flashlight.fill = Iscover.fills.overlap;
+
+        if (overlap && flashlight.x < (Iscover.x)) {
+            Iscover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.y < (Iscover.y)) {
+            Iscover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.y > (Iscover.y)) {
+            Iscover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.x > (Iscover.x)) {
+            Iscover.fill = "#00000000";
+        }
+    }
+    else {
+        Iscover.fill = "#0d4f4b";
+    }
+}
+
+function movewhatCover() {
+    const d = dist(flashlight.x, flashlight.y, whatcover.x, whatcover.y);
+    const overlap = (d < flashlight.size / 2 + whatcover.size / 2);
+    if (overlap) {
+        flashlight.fill = whatcover.fills.overlap;
+
+        if (overlap && flashlight.x < (whatcover.x)) {
+            whatcover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.y < (whatcover.y)) {
+            whatcover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.y > (whatcover.y)) {
+            whatcover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.x > (whatcover.x)) {
+            whatcover.fill = "#00000000";
+        }
+    }
+    else {
+        whatcover.fill = "#0d4f4b";
     }
 }
 
@@ -220,18 +381,6 @@ function drawFlashLight() {
 function drawBear() {
     push();
     noStroke();
-    // //arms of the bear
-    // fill(222, 175, 214);
-    // circle(75, 178, 20);
-    // circle(127, 178, 20);
-
-    // //legs of the bear
-    // ellipse(113, 207, 15, 30);
-    // ellipse(90, 207, 15, 30);
-
-    // // drawing the body of the bear
-    // fill(222, 175, 214);
-    // ellipse(101, 180, 50, 55);
 
     //drawing the face and the ears of the bear
     fill(222, 175, 214);
@@ -333,12 +482,39 @@ function drawOrange() {
 function drawCover() {
     push();
     noStroke();
-    //fill(13, 79, 75);
     fill(cover.fill);
     circle(cover.x, cover.y, cover.size); // covers the bear
-    // circle(150, 330, 130); //covers the painting
-    // circle(500, 120, 80); //covers the phone
-    // circle(530, 280, 80); //covers the orange
-    // circle(600, 430, 100); //covers the book
+    pop();
+}
+
+function drawanotherCover() {
+    push();
+    noStroke();
+    fill(anothercover.fill);
+    circle(anothercover.x, anothercover.y, anothercover.size); //covers the painting
+    pop();
+}
+
+function drawmoreCover() {
+    push();
+    noStroke();
+    fill(morecover.fill);
+    circle(morecover.x, morecover.y, morecover.size); //covers the phone
+    pop();
+}
+
+function drawIsCover() {
+    push();
+    noStroke();
+    fill(Iscover.fill);
+    circle(Iscover.x, Iscover.y, Iscover.size); //covers the orange
+    pop();
+}
+
+function drawwhatCover() {
+    push();
+    noStroke();
+    fill(whatcover.fill);
+    circle(whatcover.x, whatcover.y, whatcover.size); //covers the book
     pop();
 }
