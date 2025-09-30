@@ -7,6 +7,25 @@
 
 "use strict";
 
+
+const cover = {
+    x: 100,
+    y: 150,
+    size: 100,
+    fill: "#0d4f4b",
+    fills: {
+        noOverlap: "#20e3d6",
+        overlap: "#20e3d6",
+    }
+};
+
+const flashlight = {
+    x: undefined,
+    y: undefined,
+    size: 200,
+    fill: "#20e3d6",
+};
+
 /**
  * Created the canvas
 */
@@ -21,7 +40,14 @@ function setup() {
 */
 function draw() {
     background(13, 79, 75);
-    //drawFlashLight(); // drawing the flashlight
+    drawFlashLight(); // drawing the flashlight
+    drawBear(); // drawing the bear
+    drawEyelids(); // drawing the eyelids
+    drawBook(); //drawing the book
+    drawPainting(); // drawing the painting
+    drawPhone(); //drawing the phone
+    drawOrange(); //drawing the orange
+    drawCover(); // darwing the cover
     drawHair();  //drawing the hair behind my head
     drawFace(); //drawing the head
     drawBangs(); //drawing the bangs
@@ -32,14 +58,44 @@ function draw() {
     drawArms(); //draw the arms (i don't like them)
     drawLegs(); // drawing the legs
     drawMouth(); // drawing the mouth
-    drawBear(); // drawing the bear
-    drawEyelids(); // drawing the eyelids
-    drawBook(); //drawing the book
-    drawPainting(); // drawing the painting
-    drawPhone(); //drawing the phone
-    drawOrange(); //drawing the orange
-    drawCover(); // darwing the cover
+    drawEyelids(); //drawing the eyelids
+    moveCover();
+    moveFlashlight();
+
 }
+
+function moveCover() {
+    const d = dist(flashlight.x, flashlight.y, cover.x, cover.y);
+    const overlap = (d < flashlight.size / 2 + cover.size / 2);
+    if (overlap) {
+        flashlight.fill = cover.fills.overlap;
+
+        if (overlap && flashlight.x < (cover.x)) {
+            cover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.y < (cover.y)) {
+            cover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.y > (cover.y)) {
+            cover.fill = "#00000000";
+        }
+
+        if (overlap && flashlight.x > (cover.x)) {
+            cover.fill = "#00000000";
+        }
+    }
+    else {
+        cover.fill = "#0d4f4b";
+    }
+}
+
+function moveFlashlight() {
+    flashlight.x = mouseX;
+    flashlight.y = mouseY;
+}
+
 //Body parts
 function drawFace() {
     //drawing the face
@@ -155,8 +211,8 @@ function drawEyelids() {
 function drawFlashLight() {
     push();
     noStroke();
-    fill(32, 227, 214);
-    circle(mouseX, mouseY, 200); // the flashlight follows the mouse
+    fill(flashlight.fill);
+    circle(flashlight.x, flashlight.y, 200); // the flashlight follows the mouse
     pop();
 }
 
@@ -278,11 +334,11 @@ function drawCover() {
     push();
     noStroke();
     //fill(13, 79, 75);
-    fill(0);
-    circle(100, 150, 80); // covers the bear
-    circle(150, 330, 130); //covers the painting
-    circle(500, 120, 80); //covers the phone
-    circle(530, 280, 80); //covers the orange
-    circle(600, 430, 100); //covers the book
+    fill(cover.fill);
+    circle(cover.x, cover.y, cover.size); // covers the bear
+    // circle(150, 330, 130); //covers the painting
+    // circle(500, 120, 80); //covers the phone
+    // circle(530, 280, 80); //covers the orange
+    // circle(600, 430, 100); //covers the book
     pop();
 }
