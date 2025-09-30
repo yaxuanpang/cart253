@@ -9,6 +9,7 @@
 
 "use strict";
 
+// constant for the first cover (bear)
 const cover = {
     x: 100,
     y: 150,
@@ -20,6 +21,7 @@ const cover = {
     }
 };
 
+// constant for the second cover (painting)
 const anothercover = {
     x: 150,
     y: 330,
@@ -31,6 +33,7 @@ const anothercover = {
     }
 };
 
+// constant for the third cover (phone)
 const morecover = {
     x: 500,
     y: 120,
@@ -42,6 +45,7 @@ const morecover = {
     }
 };
 
+// constant for the fourth cover (orange)
 const Iscover = {
     x: 530,
     y: 280,
@@ -53,6 +57,7 @@ const Iscover = {
     }
 };
 
+// constant for the fifth cover (book)
 const whatcover = {
     x: 600,
     y: 430,
@@ -108,12 +113,12 @@ function draw() {
     drawLegs(); // drawing the legs
     drawMouth(); // drawing the mouth
     drawEyelids(); //drawing the eyelids
-    moveCover();
-    moveanotherCover();
-    movemoreCover();
-    moveIsCover();
-    movewhatCover();
-    moveFlashlight();
+    moveCover(); // moves the cover (for the bear)
+    moveanotherCover(); // moves the cover (for the painting)
+    movemoreCover(); // moves the cover (for the phone)
+    moveIsCover(); // moves the cover (for the orange)
+    movewhatCover(); //moves the cover (for the book)
+    moveFlashlight(); // moves the flashlight
 
 }
 
@@ -124,23 +129,23 @@ function moveCover() {
         flashlight.fill = cover.fills.overlap;
 
         if (overlap && flashlight.x < (cover.x)) {
-            cover.fill = "#00000000";
+            cover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.y < (cover.y)) {
-            cover.fill = "#00000000";
+            cover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.y > (cover.y)) {
-            cover.fill = "#00000000";
+            cover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.x > (cover.x)) {
-            cover.fill = "#00000000";
+            cover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
     }
     else {
-        cover.fill = "#0d4f4b";
+        cover.fill = "#0d4f4b"; // if there is no overlapping the color goes back to the original color
     }
 }
 
@@ -151,23 +156,23 @@ function moveanotherCover() {
         flashlight.fill = anothercover.fills.overlap;
 
         if (overlap && flashlight.x < (anothercover.x)) {
-            anothercover.fill = "#00000000";
+            anothercover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.y < (anothercover.y)) {
-            anothercover.fill = "#00000000";
+            anothercover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.y > (anothercover.y)) {
-            anothercover.fill = "#00000000";
+            anothercover.fill = "#00000000";// if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.x > (anothercover.x)) {
-            anothercover.fill = "#00000000";
+            anothercover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
     }
     else {
-        anothercover.fill = "#0d4f4b";
+        anothercover.fill = "#0d4f4b"; // if there is no overlapping the color goes back to the original color
     }
 }
 
@@ -178,23 +183,23 @@ function movemoreCover() {
         flashlight.fill = morecover.fills.overlap;
 
         if (overlap && flashlight.x < (morecover.x)) {
-            morecover.fill = "#00000000";
+            morecover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.y < (morecover.y)) {
-            morecover.fill = "#00000000";
+            morecover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.y > (morecover.y)) {
-            morecover.fill = "#00000000";
+            morecover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.x > (morecover.x)) {
-            morecover.fill = "#00000000";
+            morecover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
     }
     else {
-        morecover.fill = "#0d4f4b";
+        morecover.fill = "#0d4f4b"; // if there is no overlapping the color goes back to the original color
     }
 }
 
@@ -205,23 +210,23 @@ function moveIsCover() {
         flashlight.fill = Iscover.fills.overlap;
 
         if (overlap && flashlight.x < (Iscover.x)) {
-            Iscover.fill = "#00000000";
+            Iscover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.y < (Iscover.y)) {
-            Iscover.fill = "#00000000";
+            Iscover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.y > (Iscover.y)) {
-            Iscover.fill = "#00000000";
+            Iscover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.x > (Iscover.x)) {
-            Iscover.fill = "#00000000";
+            Iscover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
     }
     else {
-        Iscover.fill = "#0d4f4b";
+        Iscover.fill = "#0d4f4b"; // if there is no overlapping the color goes back to the original color
     }
 }
 
@@ -232,23 +237,23 @@ function movewhatCover() {
         flashlight.fill = whatcover.fills.overlap;
 
         if (overlap && flashlight.x < (whatcover.x)) {
-            whatcover.fill = "#00000000";
+            whatcover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.y < (whatcover.y)) {
-            whatcover.fill = "#00000000";
+            whatcover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.y > (whatcover.y)) {
-            whatcover.fill = "#00000000";
+            whatcover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
 
         if (overlap && flashlight.x > (whatcover.x)) {
-            whatcover.fill = "#00000000";
+            whatcover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
         }
     }
     else {
-        whatcover.fill = "#0d4f4b";
+        whatcover.fill = "#0d4f4b"; // if there is no overlapping the color goes back to the original color
     }
 }
 
