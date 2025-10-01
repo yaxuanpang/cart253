@@ -102,6 +102,7 @@ function draw() {
     drawPainting(); // drawing the painting
     drawPhone(); //drawing the phone
     drawOrange(); //drawing the orange
+    // drawMusic();
     drawCover(); // darwing the cover for the bear
     drawanotherCover(); //drawing for the paitning
     drawmoreCover(); //drawing the cover for the phone
@@ -124,6 +125,7 @@ function draw() {
     moveIsCover(); // moves the cover (for the orange)
     movewhatCover(); //moves the cover (for the book)
     moveFlashlight(); // moves the flashlight
+    drawMusic();
 
 }
 
@@ -492,6 +494,18 @@ function drawOrange() {
     circle(540, 280, 50); //darwing the orange
     fill(25, 115, 18);
     ellipse(540, 260, 15, 5); // drawing the stem
+    pop();
+}
+
+function drawMusic() {
+    push();
+    noStroke();
+    fill(0);
+    ellipse(300, 90, 20, 10);
+    ellipse(340, 90, 20, 10);
+    rect(305, 60, 5, 30);
+    rect(345, 60, 5, 30);
+    rect(305, 40, 45, 20);
     pop();
 }
 
