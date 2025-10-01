@@ -9,6 +9,11 @@
 
 "use strict";
 
+let r = 255; // variable
+let g = 173; // varibale
+let b = 224; //variable
+let change = 1; //variable
+
 // constant for the first cover (bear)
 const cover = {
     x: 100,
@@ -331,7 +336,13 @@ function drawNeck() {
 function drawBody() {
     push();
     noStroke();
-    fill(255, 173, 224); // gave myself a pink dress
+    fill(r, g, b); // gave myself a pink dress
+    if (frameCount % 10 === 0) { // slows down the color change
+        r -= change;
+        g -= change;
+        b += change;
+        // the result is a blue dress
+    }
     rect(300, 395, 100, 150); // drawing the body or dress
     pop();
 }
