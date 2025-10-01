@@ -375,17 +375,52 @@ function drawEyes() {
     pop();
 }
 
-function drawPupils() {
+function drawEyes() {
     push();
-    stroke(94, 42, 7); //gave myself dark brown eyes :)
-    strokeWeight(3.5); //iris
-    fill(0);
-    circle(287, 275, 18); //pupils of left eye
-    circle(412, 275, 18); //pupils of right eye
     noStroke();
     fill(255);
-    circle(290, 272, 3); //shine of left eye
-    circle(415, 272, 3); //shine of right eye
+    circle(287, 275, 30); //white of left eye
+    circle(412, 275, 30); //white of right eye
+    pop();
+}
+
+function drawPupils() {
+    let eyeLeft = { x: 287, y: 275 };
+    let eyeRight = { x: 412, y: 275 };
+    let eyeRadius = 15;   // half of white eye (since circle diameter = 30)
+    let pupilRadius = 9;  // half of pupil (since circle diameter = 18)
+
+    // restrict pupil movement so it stays inside
+    let maxOffset = eyeRadius - pupilRadius - 2;
+
+    function pupilOffset(ex, ey) {
+        let dx = mouseX - ex;
+        let dy = mouseY - ey;
+        let d = sqrt(dx * dx + dy * dy);
+        if (d > 0) {
+            let m = min(d, maxOffset);
+            dx = dx / d * m;
+            dy = dy / d * m;
+        }
+        return { dx, dy };
+    }
+
+    let left = pupilOffset(eyeLeft.x, eyeLeft.y);
+    let right = pupilOffset(eyeRight.x, eyeRight.y);
+
+    push();
+    stroke(94, 42, 7);
+    strokeWeight(3.5);
+    fill(0);
+
+    circle(eyeLeft.x + left.dx, eyeLeft.y + left.dy, pupilRadius * 2);
+    circle(eyeRight.x + right.dx, eyeRight.y + right.dy, pupilRadius * 2);
+
+    // shine
+    noStroke();
+    fill(255);
+    circle(eyeLeft.x + left.dx + 3, eyeLeft.y + left.dy - 3, 3);
+    circle(eyeRight.x + right.dx + 3, eyeRight.y + right.dy - 3, 3);
     pop();
 }
 
