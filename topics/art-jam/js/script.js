@@ -88,7 +88,7 @@ const musiccover = {
 const flashlight = {
     x: undefined,
     y: undefined,
-    size: 200,
+    size: 100,
     fill: "#20e3d6",
 };
 
@@ -138,6 +138,28 @@ function draw() {
     movewhatCover();//moves the cover (for the book)
     movemusicCover();//moves the cover (for the music note)
     moveFlashlight(); // moves the flashlight
+
+    if (mouseIsPressed) {
+        drawnewSky();
+    }
+
+    if (mouseIsPressed) {
+        drawHair();  //drawing the hair behind my head
+        drawFace(); //drawing the head
+        drawBangs(); //drawing the bangs
+        drawEyes(); //drawing the white part of the eyes
+        drawPupils(); // drawing the pupils and the shine of the eyes
+        drawNeck(); // drawing the neck
+        drawBody(); //drawing the body
+        drawArms(); //draw the arms (i don't like them)
+        drawLegs(); // drawing the legs
+        drawMouth(); // drawing the mouth
+        drawEyelids(); //drawing the eyelids
+    }
+
+    if (mouseIsPressed) {
+        drawClouds();
+    }
 
 
 }
@@ -595,4 +617,37 @@ function drawmusicCover() {
     fill(musiccover.fill);
     circle(musiccover.x, musiccover.y, musiccover.size); //covers the book
     pop();
+}
+
+function drawnewSky() {
+    push();
+    noStroke();
+    fill(136, 218, 227);
+    rect(0, 0, 700, 700);
+    pop();
+}
+
+function drawClouds() {
+    noStroke();
+    fill(255);
+    ellipse(150, 300, 60, 40);
+    ellipse(140, 260, 60, 60);
+    ellipse(190, 280, 70, 70);
+    ellipse(100, 290, 60, 60);
+    ellipse(70, 300, 40, 40);
+    ellipse(230, 300, 40, 40);
+
+    ellipse(550, 100, 60, 40);
+    ellipse(540, 60, 60, 60);
+    ellipse(590, 80, 70, 70);
+    ellipse(500, 90, 60, 60);
+    ellipse(470, 100, 40, 40);
+    ellipse(630, 100, 40, 40);
+
+    ellipse(450, 600, 60, 40);
+    ellipse(440, 560, 60, 60);
+    ellipse(490, 580, 70, 70);
+    ellipse(400, 590, 60, 60);
+    ellipse(370, 600, 40, 40);
+    ellipse(530, 600, 40, 40);
 }
