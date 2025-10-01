@@ -74,6 +74,17 @@ const whatcover = {
     }
 };
 
+const musiccover = {
+    x: 315,
+    y: 75,
+    size: 100,
+    fill: "#0d4f4b",
+    fills: {
+        noOverlap: "#20e3d6",
+        overlap: "#20e3d6",
+    }
+};
+
 const flashlight = {
     x: undefined,
     y: undefined,
@@ -102,12 +113,13 @@ function draw() {
     drawPainting(); // drawing the painting
     drawPhone(); //drawing the phone
     drawOrange(); //drawing the orange
-    // drawMusic();
+    drawMusic();
     drawCover(); // darwing the cover for the bear
     drawanotherCover(); //drawing for the paitning
     drawmoreCover(); //drawing the cover for the phone
     drawIsCover(); //drawing the cover for the orange
     drawwhatCover(); //drawing the cover for the book
+    drawmusicCover(); // drawing the cover for the music note
     drawHair();  //drawing the hair behind my head
     drawFace(); //drawing the head
     drawBangs(); //drawing the bangs
@@ -123,9 +135,10 @@ function draw() {
     moveanotherCover(); // moves the cover (for the painting)
     movemoreCover(); // moves the cover (for the phone)
     moveIsCover(); // moves the cover (for the orange)
-    movewhatCover(); //moves the cover (for the book)
+    movewhatCover();//moves the cover (for the book)
+    movemusicCover();//moves the cover (for the music note)
     moveFlashlight(); // moves the flashlight
-    drawMusic();
+
 
 }
 
@@ -261,6 +274,33 @@ function movewhatCover() {
     }
     else {
         whatcover.fill = "#0d4f4b"; // if there is no overlapping the color goes back to the original color
+    }
+}
+
+function movemusicCover() {
+    const d = dist(flashlight.x, flashlight.y, musiccover.x, musiccover.y);
+    const overlap = (d < flashlight.size / 2 + musiccover.size / 2);
+    if (overlap) {
+        flashlight.fill = musiccover.fills.overlap;
+
+        if (overlap && flashlight.x < (musiccover.x)) {
+            musiccover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
+        }
+
+        if (overlap && flashlight.y < (musiccover.y)) {
+            musiccover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
+        }
+
+        if (overlap && flashlight.y > (musiccover.y)) {
+            musiccover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
+        }
+
+        if (overlap && flashlight.x > (musiccover.x)) {
+            musiccover.fill = "#00000000"; // if the flashlight and the cover overlaps then the cover turns transparent
+        }
+    }
+    else {
+        musiccover.fill = "#0d4f4b"; // if there is no overlapping the color goes back to the original color
     }
 }
 
@@ -546,5 +586,13 @@ function drawwhatCover() {
     noStroke();
     fill(whatcover.fill);
     circle(whatcover.x, whatcover.y, whatcover.size); //covers the book
+    pop();
+}
+
+function drawmusicCover() {
+    push();
+    noStroke();
+    fill(musiccover.fill);
+    circle(musiccover.x, musiccover.y, musiccover.size); //covers the book
     pop();
 }
