@@ -3,8 +3,8 @@
  * Yaxuan Pang
  * 
  * This is an interactive self portrait. I put some items that I like around 
- * so that the player can get to know me! Use the flashlight (mouseX and mouseY)
- * to find the hidden items.
+ * so that the user can get to know me! Use the flashlight (mouseX and mouseY)
+ * to find the hidden items. When the user clicks one the mouse, another background and clouds will appear.
  */
 
 "use strict";
@@ -16,20 +16,20 @@ let change = 1; //variable
 
 // constant for the first cover (bear)
 const cover = {
-    x: 100,
-    y: 150,
-    size: 100,
-    fill: "#0d4f4b",
+    x: 100, //position of the cover
+    y: 150, //position of the cover
+    size: 100, //size of the cover
+    fill: "#0d4f4b", //color
     fills: {
-        noOverlap: "#20e3d6",
+        noOverlap: "#20e3d6", //the flashlight color always stays the same
         overlap: "#20e3d6",
     }
 };
 
 // constant for the second cover (painting)
 const anothercover = {
-    x: 150,
-    y: 330,
+    x: 150, //position of the cover
+    y: 330, //position of the cover
     size: 130,
     fill: "#0d4f4b",
     fills: {
@@ -40,8 +40,8 @@ const anothercover = {
 
 // constant for the third cover (phone)
 const morecover = {
-    x: 500,
-    y: 120,
+    x: 500, //position of the cover
+    y: 120, //position of the cover
     size: 80,
     fill: "#0d4f4b",
     fills: {
@@ -52,8 +52,8 @@ const morecover = {
 
 // constant for the fourth cover (orange)
 const Iscover = {
-    x: 530,
-    y: 280,
+    x: 530, //position of the cover
+    y: 280, //position of the cover
     size: 80,
     fill: "#0d4f4b",
     fills: {
@@ -64,8 +64,8 @@ const Iscover = {
 
 // constant for the fifth cover (book)
 const whatcover = {
-    x: 600,
-    y: 430,
+    x: 600, //position of the cover
+    y: 430, //position of the cover
     size: 100,
     fill: "#0d4f4b",
     fills: {
@@ -75,8 +75,8 @@ const whatcover = {
 };
 
 const musiccover = {
-    x: 315,
-    y: 75,
+    x: 315, //position of the cover
+    y: 75, //position of the cover
     size: 100,
     fill: "#0d4f4b",
     fills: {
@@ -86,8 +86,8 @@ const musiccover = {
 };
 
 const flashlight = {
-    x: undefined,
-    y: undefined,
+    x: undefined, //position of the cover(mouseX)
+    y: undefined, //position of the cover(mouseY)
     size: 100,
     fill: "#20e3d6",
 };
@@ -113,7 +113,7 @@ function draw() {
     drawPainting(); // drawing the painting
     drawPhone(); //drawing the phone
     drawOrange(); //drawing the orange
-    drawMusic();
+    drawMusic(); //darwing the music note
     drawCover(); // darwing the cover for the bear
     drawanotherCover(); //drawing for the paitning
     drawmoreCover(); //drawing the cover for the phone
