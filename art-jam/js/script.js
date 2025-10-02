@@ -9,10 +9,12 @@
 
 "use strict";
 
-let r = 255; // variable
-let g = 173; // varibale
-let b = 224; //variable
-let change = 1; //variable
+let r = 255; // color for the body
+let g = 173; // color for the body
+let b = 224; //color for the body
+let change = 1;
+
+let cloudcolor = 255; // set the cloud color to white
 
 // constant for the first cover (bear)
 const cover = {
@@ -88,9 +90,10 @@ const musiccover = {
 const flashlight = {
     x: undefined, //position of the cover(mouseX)
     y: undefined, //position of the cover(mouseY)
-    size: 100,
+    size: 200,
     fill: "#20e3d6",
 };
+
 
 /**
  * Created the canvas
@@ -158,9 +161,12 @@ function draw() {
     }
 
     if (mouseIsPressed) {
+        cloudcolor = cloudcolor - 0.5; // the color of the clouds change from white to black
         drawClouds();
     }
-
+    else {
+        cloudcolor = 255;
+    }
 
 }
 
@@ -385,8 +391,8 @@ function drawEyes() {
 }
 
 function drawPupils() {
-    let eyeLeft = { x: 287, y: 275 };
-    let eyeRight = { x: 412, y: 275 };
+    let eyeLeft = { x: 287, y: 275 }; //position of the left eye
+    let eyeRight = { x: 412, y: 275 }; //position of the right ey
     let eyeRadius = 15;   // half of white eye (since circle diameter = 30)
     let pupilRadius = 9;  // half of pupil (since circle diameter = 18)
 
@@ -554,6 +560,7 @@ function drawPainting() {
     //drawing the canvas
     stroke(200);
     strokeWeight(2);
+    fill(255);
     rect(100, 300, 90, 65);
     //paint splotches (watercolor)
     noStroke();
@@ -654,7 +661,7 @@ function drawmusicCover() {
     pop();
 }
 
-function drawnewSky() {
+function drawnewSky() { //drawing the sky
     push();
     noStroke();
     fill(136, 218, 227);
@@ -662,9 +669,9 @@ function drawnewSky() {
     pop();
 }
 
-function drawClouds() {
+function drawClouds() { //drawing the clouds
     noStroke();
-    fill(255);
+    fill(cloudcolor); // color of the clouds
     ellipse(150, 300, 60, 40);
     ellipse(140, 260, 60, 60);
     ellipse(190, 280, 70, 70);

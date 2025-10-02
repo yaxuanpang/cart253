@@ -1,12 +1,10 @@
-# Art Jam: Self Portrait
+# Art-Jam: Self Portrait
 
 Yaxuan Pang
 
-[View this project online](https://yaxuanpang.github.io/cart253/topics/art-jam/)
+[View this project online](URL_FOR_THE_RUNNING_PROJECT)
 
 ## Description
-
-This is an interactive self portrait. I put some items that I like around so that the user can get to know me! Use the flashlight (mouseX and mouseY) to find the hidden items. When the user clicks one the mouse, another background and clouds will appear.
 
 This description should help the reader understand what the program is, anything they should know to be able to experience it (controls, special features, etc.), and what the desired user experience is. For example:
 
