@@ -26,8 +26,10 @@ Yaxuan Pang
 This bit should attribute any code, assets or other elements used taken from other sources. For example:
 
 > - This project uses [p5.js](https://p5js.org).
-> - The clown image is a capture of the clown from the Apple emoji character set.
-> - The barking sound effect is "single dog bark 1" by crazymonke9 from freesound.org: https://freesound.org/people/crazymonke9/sounds/418107/
+> - This projects uses the code from the variables challenge (https://concordia.yuja.com/V/Video?v=1071104&node=5700521&a=117175823)
+> - This projects uses the code form the conditionals challenge (https://yaxuanpang.github.io/cart253/topics/conditionals-challenge/).
+> - This project uses arc(), rect(), and triangle(), which I have never used before (https://p5js.org).
+
 
 ## License
 
