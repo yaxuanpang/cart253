@@ -4,7 +4,8 @@
  * 
  * This is an interactive self portrait. I put some items that I like around 
  * so that the user can get to know me! Use the flashlight (mouseX and mouseY)
- * to find the hidden items. When the user clicks one the mouse, another background and clouds will appear.
+ * to find the hidden items. When the user clicks one the mouse, another background 
+ * will appear.
  */
 
 "use strict";

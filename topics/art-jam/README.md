@@ -2,23 +2,24 @@
 
 Yaxuan Pang
 
-[View this project online](URL_FOR_THE_RUNNING_PROJECT)
+[View this project online](https://yaxuanpang.github.io/cart253/topics/art-jam)
 
 ## Description
 
-This description should help the reader understand what the program is, anything they should know to be able to experience it (controls, special features, etc.), and what the desired user experience is. For example:
+> This program is an interactive self portrait. I have hidden some of my favourite items (a bear, a music note, a painting, a phone, an orange and a book) around the girl (me).
 
-> *The Mayor of Clown Town* is a simulator experience that allows the user to control a small town populated entirely by clowns.
+## Controls
 
-> The experience is controlled via the mouse, with left click selecting a clown and bringing up a menu of options such as "slip of banana peel" or "get into impossible capacious clown-car."
+> - The experience is controlled via the mouse (flashlight), to find hidden items.
 
-> The project is meant to give the user a sense of what it would be the mayor of a town of clowns, eventually getting the sense that clowns are not taking their civic duties seriously.
+> - Click anywhere on the screen to reveal a new background. 
 
 ## Screenshot(s)
 
-This bit should have some images of the program running so that the reader has a sense of what it looks like. For example:
+> ![Image of a clown face](./assets/images/myimage.jpeg)
 
-> ![Image of a clown face](./assets/images/clown.png)
+>> ![Image of a clown face](./assets/images/anotherimage.jpeg)
+
 
 ## Attribution
 
@@ -29,7 +30,5 @@ This bit should attribute any code, assets or other elements used taken from oth
 > - The barking sound effect is "single dog bark 1" by crazymonke9 from freesound.org: https://freesound.org/people/crazymonke9/sounds/418107/
 
 ## License
-
-This bit should include the license you want to apply to your work. For example:
 
 > This project is licensed under a Creative Commons Attribution ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en)) license with the exception of libraries and other components with their own licenses.
