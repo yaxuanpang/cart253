@@ -131,7 +131,7 @@ function draw() {
     drawPupils(); // drawing the pupils and the shine of the eyes
     drawNeck(); // drawing the neck
     drawBody(); //drawing the body
-    drawArms(); //draw the arms (i don't like them)
+    drawArms(); //draw the arms
     drawLegs(); // drawing the legs
     drawMouth(); // drawing the mouth
     drawEyelids(); //drawing the eyelids
@@ -144,10 +144,10 @@ function draw() {
     moveFlashlight(); // moves the flashlight
 
     if (mouseIsPressed) {
-        drawnewSky();
+        drawnewSky(); // draw the newsky only when the mouse is pressed
     }
 
-    if (mouseIsPressed) {
+    if (mouseIsPressed) { // drawing when the mouse is pressed
         drawHair();  //drawing the hair behind my head
         drawFace(); //drawing the head
         drawBangs(); //drawing the bangs
@@ -161,12 +161,12 @@ function draw() {
         drawEyelids(); //drawing the eyelids
     }
 
-    if (mouseIsPressed) {
+    if (mouseIsPressed) { // drawing the coulds only when the mouse is pressed
         cloudcolor = cloudcolor - 0.5; // the color of the clouds change from white to black
         drawClouds();
     }
     else {
-        cloudcolor = 255;
+        cloudcolor = 255; // the clouds stay white when the mouse is not pressed
     }
 
 }
@@ -333,7 +333,7 @@ function movemusicCover() {
     }
 }
 
-function moveFlashlight() {
+function moveFlashlight() { // falshlight is controlled by the mouse
     flashlight.x = mouseX;
     flashlight.y = mouseY;
 }
@@ -368,7 +368,7 @@ function drawBangs() {
     arc(350, 250, 250, 250, 180, 360);
     triangle(225, 250, 225, 350, 270, 250); // side bangs on the left
     triangle(430, 250, 475, 350, 475, 250); // side bangs on the right
-    fill(255, 240, 201);
+    fill(255, 240, 201); //skin color
     triangle(350, 190, 270, 250, 430, 250); // sepereate the bangs
     pop();
 }
@@ -393,11 +393,11 @@ function drawEyes() {
 
 function drawPupils() {
     let eyeLeft = { x: 287, y: 275 }; //position of the left eye
-    let eyeRight = { x: 412, y: 275 }; //position of the right ey
-    let eyeRadius = 15;   // half of white eye (since circle diameter = 30)
-    let pupilRadius = 9;  // half of pupil (since circle diameter = 18)
+    let eyeRight = { x: 412, y: 275 }; //position of the right eye
+    let eyeRadius = 15;   // half of white eye 
+    let pupilRadius = 9;  // half of pupil
 
-    // restrict pupil movement so it stays inside
+    // restrict pupil movement so it stays inside the eyes
     let maxOffset = eyeRadius - pupilRadius - 2;
 
     function pupilOffset(ex, ey) {
