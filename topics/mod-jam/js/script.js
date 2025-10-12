@@ -175,8 +175,8 @@ function checkTongueFlyOverlap() {
 /**
  * Launch the tongue on click (if it's not launched yet)
  */
-function mousePressed() {
-    if (frog.tongue.state === "idle") {
+function keyPressed() {
+    if (key === ' ' && frog.tongue.state === "idle") {
         frog.tongue.state = "outbound";
     }
 }
