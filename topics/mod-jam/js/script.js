@@ -6,7 +6,7 @@
  * 
  * Instructions:
  * - Move the frog with your mouse
- * - Click to launch the tongue
+ * - Click space to launch the tongue
  * - Catch flies
  * 
  * Made with p5
@@ -16,10 +16,11 @@
 "use strict";
 
 //sky color
-let r = 135;
-let g = 207;
-let b = 235;
-let a = 0;
+let r = 135; // red
+let g = 207; // green
+let b = 235; // blue
+let a = 0; //alpha (the opacity)
+
 //change the color of the sky
 let change = 0.03;
 let night = false;
@@ -77,7 +78,7 @@ const fly2 = {
 function setup() {
     createCanvas(700, 500);
 
-    // Give the fly its first random position
+    // Give the flies and birds its first random position
     resetFly();
     resetFly2();
     resetBird();
@@ -104,9 +105,9 @@ function draw() {
 function drawNight() {
     if (night) {
         // Nighttime colors
-        r -= change;
-        g -= change;
-        b += change;
+        r -= change; // less red
+        g -= change; // less green
+        b += change; // more blue
 
         // limits the green to 85 for the nighttime color
         if (g <= 85) {
@@ -114,7 +115,7 @@ function drawNight() {
             night = false; // switch back to day
         }
     } else {
-        // Daytime colors
+        // Daytime colors (the opposite of the nighttime colors)
         r += change;
         g += change;
         b -= change;
@@ -326,10 +327,10 @@ function keyPressed() {
 function darkSky() {
     push();
     noStroke();
-    fill(0, a);
+    fill(0, a); // the rectangle is black and trasparent
     rect(0, 0, 700, 500);
     pop();
-
+    //the opacity changes (less transparent at night and more transparent during the day)
     if (night) {
         a += change;
         if (a >= 220) {
