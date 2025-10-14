@@ -19,6 +19,7 @@
 let r = 135;
 let g = 207;
 let b = 235;
+let a = 0;
 //change the color of the sky
 let change = 0.03;
 let night = false;
@@ -42,6 +43,15 @@ const frog = {
     }
 };
 
+//a bird
+//position. size, speed adn movement
+const bird = {
+    x: 0, // starts at 0
+    y: 200, // will be random
+    size: 40,
+    speed: 2,
+};
+
 // Our fly
 // Has a position, size, and speed of horizontal movement
 const fly = {
@@ -51,26 +61,43 @@ const fly = {
     speed: 3
 };
 
+//faster fly
+//position. size, speed adn movement
+const fly2 = {
+    x: 0,
+    y: 200, // Will be random
+    size: 10,
+    speed: 5 //changed the speed of the second fly
+};
+
+
 /**
  * Creates the canvas and initializes the fly
  */
 function setup() {
-    createCanvas(640, 480);
+    createCanvas(700, 500);
 
     // Give the fly its first random position
     resetFly();
+    resetFly2();
+    resetBird();
 }
 
 function draw() {
-    background(r, g, b);
-    drawNight();
-    moveFly();
-    drawFly();
-    moveFrog();
-    moveTongue();
-    drawFrog();
-    darkSky();
-    checkTongueFlyOverlap();
+    background(r, g, b); // color of the background is light blue at the beginning
+    drawNight(); // makes eveyrhting darker
+    moveFly(); // moves the fly
+    moveFly2(); // moves the second fly
+    moveBird(); // moves the bird
+    drawFly(); // draws the fly
+    drawFly2(); // draws the second fly
+    drawBird(); // draws the bird
+    moveFrog(); // moves the frog
+    moveTongue(); //moves the tongue of the frog
+    drawFrog(); // draws the frog
+    darkSky(); // makes the sky change colors (from light blue to dark blue)
+    checkTongueFlyOverlap(); // tongue overlaps with the fly
+    checkTongueFlyOverlap2(); // tongue overlaps with the second fly
 }
 
 // changes the color of the sky
@@ -113,6 +140,26 @@ function moveFly() {
     }
 }
 
+//moves the second fly
+function moveFly2() {
+    // Move the fly
+    fly2.x += fly2.speed;
+    // Handle the fly going off the canvas
+    if (fly2.x > width) {
+        resetFly2();
+    }
+}
+
+//moves the bird
+function moveBird() {
+    //move the bird
+    bird.x += bird.speed;
+    // Handle the fly going off the canvas
+    if (bird.x > width) {
+        resetBird();
+    }
+}
+
 /**
  * Draws the fly as a black circle
  */
@@ -124,12 +171,55 @@ function drawFly() {
     pop();
 }
 
+//draws the second fly
+function drawFly2() {
+    push();
+    noStroke();
+    fill("#000000");
+    ellipse(fly2.x, fly2.y, fly2.size);
+    pop();
+}
+
+//draws the bird
+function drawBird() {
+    push();
+    noStroke();
+
+    // bird body
+    fill("#fcec35");
+    ellipse(bird.x, bird.y, bird.size);
+
+    // the beak
+    fill("#f0c330");
+    triangle(
+        bird.x + bird.size * 0.7, bird.y, //tip of the beak
+        bird.x + bird.size * 0.35, bird.y - bird.size * 0.2, //top base
+        bird.x + bird.size * 0.35, bird.y + bird.size * 0.2 //bottom base
+    );
+
+    pop();
+}
+
+
+
 /**
  * Resets the fly to the left with a random y
  */
 function resetFly() {
     fly.x = 0;
     fly.y = random(0, 300);
+}
+
+//resets the second fly to the left
+function resetFly2() {
+    fly2.x = 0;
+    fly2.y = random(0, 300);
+}
+
+//resets the bird to the left
+function resetBird() {
+    bird.x = 0;
+    bird.y = random(0, 300);
 }
 
 /**
@@ -204,6 +294,20 @@ function checkTongueFlyOverlap() {
     if (eaten) {
         // Reset the fly
         resetFly();
+        // Bring back the tongue
+        frog.tongue.state = "inbound";
+    }
+}
+
+// tongue overlapping with the second fly
+function checkTongueFlyOverlap2() {
+    // Get distance from tongue to fly
+    const d = dist(frog.tongue.x, frog.tongue.y, fly2.x, fly2.y);
+    // Check if it's an overlap
+    const eaten = (d < frog.tongue.size / 2 + fly2.size / 2);
+    if (eaten) {
+        // Reset the fly
+        resetFly2();
         // Bring back the tongue
         frog.tongue.state = "inbound";
     }
