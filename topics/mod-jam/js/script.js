@@ -15,6 +15,14 @@
 
 "use strict";
 
+//sky color
+let r = 135;
+let g = 207;
+let b = 235;
+//change the color of the sky
+let change = 0.03;
+let night = false;
+
 // Our frog
 const frog = {
     // The frog's body has a position and size
@@ -28,7 +36,7 @@ const frog = {
         x: undefined,
         y: 480,
         size: 20,
-        speed: 20,
+        speed: 30,
         // Determines how the tongue moves each frame
         state: "idle" // State can be: idle, outbound, inbound
     }
@@ -54,13 +62,42 @@ function setup() {
 }
 
 function draw() {
-    background("#87ceeb");
+    background(r, g, b);
+    drawNight();
     moveFly();
     drawFly();
     moveFrog();
     moveTongue();
     drawFrog();
+    darkSky();
     checkTongueFlyOverlap();
+}
+
+// changes the color of the sky
+function drawNight() {
+    if (night) {
+        // Nighttime colors
+        r -= change;
+        g -= change;
+        b += change;
+
+        // limits the green to 85 for the nighttime color
+        if (g <= 85) {
+            g = 85;
+            night = false; // switch back to day
+        }
+    } else {
+        // Daytime colors
+        r += change;
+        g += change;
+        b -= change;
+
+        // limits the green to 207 for the daytim color
+        if (g >= 207) {
+            g = 207;
+            night = true; // switch to night
+        }
+    }
 }
 
 /**
@@ -178,5 +215,29 @@ function checkTongueFlyOverlap() {
 function keyPressed() {
     if (key === ' ' && frog.tongue.state === "idle") {
         frog.tongue.state = "outbound";
+    }
+}
+
+//make the other objects darker to give the illusion of night
+function darkSky() {
+    push();
+    noStroke();
+    fill(0, a);
+    rect(0, 0, 700, 500);
+    pop();
+
+    if (night) {
+        a += change;
+        if (a >= 220) {
+            a = 220;
+            night = false; // once fully dark, switch back to day mode
+        }
+    }
+    else {
+        a -= change;
+        if (a <= 0) {
+            a = 0;
+            night = true; // once fully bright, switch to night mode
+        }
     }
 }
