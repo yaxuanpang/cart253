@@ -22,7 +22,7 @@ let b = 235; // blue
 let a = 0; //alpha (the opacity)
 
 //change the color of the sky
-let change = 0.03;
+let change = 0.075;
 let night = false;
 
 // Our frog
