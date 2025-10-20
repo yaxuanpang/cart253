@@ -24,6 +24,15 @@ let a = 0; //alpha (the opacity)
 //change the color of the sky
 let change = 0.075;
 let night = false;
+let showBird2 = false;
+
+let frogColor = "#00ff00";
+let newfrogColor = "#6e8514";
+let badfrogColor = "#855214";
+let deadfrogColor = "#4f2409";
+
+let startTime;
+
 
 // Our frog
 const frog = {
@@ -38,7 +47,7 @@ const frog = {
         x: undefined,
         y: 480,
         size: 20,
-        speed: 30,
+        speed: 25,
         // Determines how the tongue moves each frame
         state: "idle" // State can be: idle, outbound, inbound
     }
@@ -48,9 +57,16 @@ const frog = {
 //position. size, speed adn movement
 const bird = {
     x: 0, // starts at 0
-    y: 200, // will be random
+    y: 200, // starts at 200
     size: 40,
     speed: 2,
+};
+
+const bird2 = {
+    x: 0, // starts at 0
+    y: 400, // starts at 400
+    size: 40,
+    speed: 2.5, // slightly slower than the first bird
 };
 
 // Our fly
@@ -71,6 +87,14 @@ const fly2 = {
     speed: 5 //changed the speed of the second fly
 };
 
+const fly3 = {
+    x: 0,
+    y: 400, // Will be random
+    size: 10,
+    speed: 4 //changed the speed of the third fly
+};
+
+
 
 /**
  * Creates the canvas and initializes the fly
@@ -81,24 +105,50 @@ function setup() {
     // Give the flies and birds its first random position
     resetFly();
     resetFly2();
+    resetFly3();
     resetBird();
+    resetBird2();
+
+    startTime = millis();
 }
 
 function draw() {
     background(r, g, b); // color of the background is light blue at the beginning
-    drawNight(); // makes eveyrhting darker
-    moveFly(); // moves the fly
-    moveFly2(); // moves the second fly
-    moveBird(); // moves the bird
+
+    let timePassed = millis() - startTime;
+
     drawFly(); // draws the fly
     drawFly2(); // draws the second fly
     drawBird(); // draws the bird
+    drawFrog(); // draws the frog
+
+    if (timePassed > 7000 && a <= 90) {
+        showBird2 = true;
+    }
+
+    if (showBird2) {
+        drawBird2();
+    }
+
+    if (a > 90) {
+        showBird2 = false;
+    }
+
+    drawNight(); // makes eveyrhting darker
+    darkSky(); // makes the sky change colors (from light blue to dark blue)
+
+    moveFly(); // moves the fly
+    moveFly2(); // moves the second fly
+    moveBird(); // moves the bird
     moveFrog(); // moves the frog
     moveTongue(); //moves the tongue of the frog
-    drawFrog(); // draws the frog
-    darkSky(); // makes the sky change colors (from light blue to dark blue)
+
     checkTongueFlyOverlap(); // tongue overlaps with the fly
     checkTongueFlyOverlap2(); // tongue overlaps with the second fly
+    checkTongueFlyOverlap3();
+    checkTongueBirdOverlap();
+    checkTongueBirdOverlap2();
+
 }
 
 // changes the color of the sky
@@ -151,6 +201,16 @@ function moveFly2() {
     }
 }
 
+//moves the third fly
+function moveFly3() {
+    // Move the fly
+    fly3.x += fly3.speed;
+    // Handle the fly going off the canvas
+    if (fly3.x > width) {
+        resetFly3();
+    }
+}
+
 //moves the bird
 function moveBird() {
     //move the bird
@@ -158,6 +218,16 @@ function moveBird() {
     // Handle the fly going off the canvas
     if (bird.x > width) {
         resetBird();
+    }
+}
+
+//moves the second bird
+function moveBird2() {
+    //move the bird
+    bird2.x += bird2.speed;
+    // Handle the fly going off the canvas
+    if (bird2.x > width) {
+        resetBird2();
     }
 }
 
@@ -181,10 +251,26 @@ function drawFly2() {
     pop();
 }
 
+function drawFly3() {
+    push();
+    noStroke();
+    fill("#000000");
+    ellipse(fly3.x, fly3.y, fly3.size);
+    pop();
+}
+
 //draws the bird
 function drawBird() {
     push();
     noStroke();
+
+    // bird tail
+    fill("#fcec35");
+    triangle(
+        bird.x - bird.size / 2.5, bird.y,
+        bird.x - bird.size / 2 - 17, bird.y - 5,
+        bird.x - bird.size / 2 - 10, bird.y + 5
+    );
 
     // bird body
     fill("#fcec35");
@@ -197,11 +283,43 @@ function drawBird() {
         bird.x + bird.size * 0.35, bird.y - bird.size * 0.2, //top base
         bird.x + bird.size * 0.35, bird.y + bird.size * 0.2 //bottom base
     );
+    //the eyes
+    fill(0);
+    ellipse(bird.x + bird.size / 6, bird.y - bird.size / 8, bird.size / 10);
 
     pop();
 }
 
+//draws the bird
+function drawBird2() {
+    push();
+    noStroke();
 
+    // bird tail
+    fill("#fcec35");
+    triangle(
+        bird2.x - bird2.size / 2.5, bird2.y,
+        bird2.x - bird2.size / 2 - 17, bird2.y - 5,
+        bird2.x - bird2.size / 2 - 10, bird2.y + 5
+    );
+
+    // bird body
+    fill("#fcec35");
+    ellipse(bird2.x, bird2.y, bird2.size);
+
+    // the beak
+    fill("#f0c330");
+    triangle(
+        bird2.x + bird2.size * 0.7, bird2.y, //tip of the beak
+        bird2.x + bird2.size * 0.35, bird2.y - bird2.size * 0.2, //top base
+        bird2.x + bird2.size * 0.35, bird2.y + bird2.size * 0.2 //bottom base
+    );
+    //the eyes
+    fill(0);
+    ellipse(bird2.x + bird2.size / 6, bird2.y - bird2.size / 8, bird2.size / 10);
+
+    pop();
+}
 
 /**
  * Resets the fly to the left with a random y
@@ -217,10 +335,22 @@ function resetFly2() {
     fly2.y = random(0, 300);
 }
 
+//resets the third fly to the left
+function resetFly3() {
+    fly3.x = 0;
+    fly3.y = random(0, 300);
+}
+
 //resets the bird to the left
 function resetBird() {
     bird.x = 0;
     bird.y = random(0, 300);
+}
+
+//resets the second bird to the left
+function resetBird2() {
+    bird2.x = 0;
+    bird2.y = random(0, 300);
 }
 
 /**
@@ -278,7 +408,7 @@ function drawFrog() {
 
     // Draw the frog's body
     push();
-    fill("#00ff00");
+    fill(frogColor);
     noStroke();
     ellipse(frog.body.x, frog.body.y, frog.body.size);
     pop();
@@ -311,6 +441,122 @@ function checkTongueFlyOverlap2() {
         resetFly2();
         // Bring back the tongue
         frog.tongue.state = "inbound";
+    }
+}
+
+// tongue overlapping with the third fly
+function checkTongueFlyOverlap3() {
+    // Get distance from tongue to fly
+    const d = dist(frog.tongue.x, frog.tongue.y, fly3.x, fly3.y);
+    // Check if it's an overlap
+    const eaten = (d < frog.tongue.size / 2 + fly3.size / 2);
+    if (eaten) {
+        // Reset the fly
+        resetFly3();
+        // Bring back the tongue
+        frog.tongue.state = "inbound";
+    }
+}
+
+function checkTongueBirdOverlap() {
+    // Get distance from tongue to fly
+    const d = dist(frog.tongue.x, frog.tongue.y, bird.x, bird.y);
+    // Check if it's an overlap
+    const eaten = (d < frog.tongue.size / 2 + bird.size / 2);
+    if (eaten) {
+        // Reset the fly
+        resetBird();
+        // Bring back the tongue
+        frog.tongue.state = "inbound";
+    }
+    if (eaten) {
+        resetBird();
+        frog.tongue.state = "inbound";
+
+        //frog eats bird for the first time
+        if (frogColor === "#00ff00") {
+            frogColor = newfrogColor; //frog turns dark green
+
+
+            setTimeout(() => {
+                if (frogColor === newfrogColor) {
+                    frogColor = "#00ff00"; // turns back to bright green after 5 seconds
+                }
+            }, 5000);
+
+            //frog eats bird for the second time before turning back to normal
+        } else if (frogColor === newfrogColor) {
+            frogColor = badfrogColor; //frog turns brown
+
+
+            setTimeout(() => {
+                if (frogColor === badfrogColor) {
+                    frogColor = newfrogColor;// turns back to dark green after 5 seconds
+
+
+                    setTimeout(() => {
+                        if (frogColor === newfrogColor) {
+                            frogColor = "#00ff00"; // frog turns back to bright green
+                        }
+                    }, 5000);
+                }
+            }, 5000);
+
+            //frog eats bird for the third time before turning back to normal (it dies)
+        } else if (frogColor === badfrogColor) {
+            frogColor = deadfrogColor; //frog turns dark brown
+        }
+    }
+}
+
+function checkTongueBirdOverlap2() {
+    // Get distance from tongue to fly
+    const d = dist(frog.tongue.x, frog.tongue.y, bird2.x, bird2.y);
+    // Check if it's an overlap
+    const eaten = (d < frog.tongue.size / 2 + bird2.size / 2);
+    if (eaten) {
+        // Reset the fly
+        resetBird2();
+        // Bring back the tongue
+        frog.tongue.state = "inbound";
+    }
+    if (eaten) {
+        resetBird2();
+        frog.tongue.state = "inbound";
+
+        //frog eats bird for the first time
+        if (frogColor === "#00ff00") {
+            frogColor = newfrogColor; //frog turns dark green
+
+
+            setTimeout(() => {
+                if (frogColor === newfrogColor) {
+                    frogColor = "#00ff00"; // turns back to bright green after 5 seconds
+                }
+            }, 5000);
+
+            //frog eats bird for the second time before turning back to normal
+        } else if (frogColor === newfrogColor) {
+            frogColor = badfrogColor; //frog turns brown
+
+
+            setTimeout(() => {
+                if (frogColor === badfrogColor) {
+                    frogColor = newfrogColor;// turns back to dark green after 5 seconds
+
+
+                    setTimeout(() => {
+                        if (frogColor === newfrogColor) {
+                            frogColor = "#00ff00"; // frog turns back to bright green
+                        }
+                    }, 5000);
+                }
+            }, 5000);
+
+            //frog eats bird for the third time before turning back to normal (it dies)
+        } else if (frogColor === badfrogColor) {
+            frogColor = deadfrogColor; //frog turns dark brown
+        }
     }
 }
 
