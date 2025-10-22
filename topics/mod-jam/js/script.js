@@ -32,6 +32,8 @@ let newfrogColor = "#6e8514";
 let badfrogColor = "#855214";
 let deadfrogColor = "#4f2409";
 
+let FlashLightColor;
+
 let startTime;
 
 
@@ -99,6 +101,7 @@ const flashlight = {
     x: undefined,
     y: undefined,
     size: 150,
+    fill: (FlashLightColor),
 }
 
 
@@ -108,6 +111,8 @@ const flashlight = {
  */
 function setup() {
     createCanvas(700, 500);
+
+    FlashLightColor = color(245, 218, 42, 200);
 
     // Give the flies and birds its first random position
     resetFly();
@@ -165,9 +170,22 @@ function draw() {
     if (showFlashLight) {
         drawFlashLight();
         moveFlashlight();
+        moveHunter();
     }
 
 }
+
+function moveHunter() {
+    // calculate the distance between flashlight and frog
+    const d = dist(flashlight.x, flashlight.y, frog.body.x, frog.body.y);
+    const overlap = (d < flashlight.size / 2 + frog.body.size / 2);
+
+    // if flashlight overlaps with the frog it dies
+    if (overlap) {
+        frogColor = deadfrogColor;
+    }
+}
+
 
 function spawnFlashlight() {
     if (a > 105) {
@@ -181,7 +199,7 @@ function spawnFlashlight() {
 function drawFlashLight() {
     push();
     noStroke();
-    fill(245, 218, 42, 200);
+    fill(FlashLightColor);
     circle(flashlight.x, flashlight.y, flashlight.size);
     pop();
 }
