@@ -25,6 +25,7 @@ let a = 0; //alpha (the opacity)
 let change = 0.075;
 let night = false;
 let showBird2 = false;
+let showFlashLight = false;
 
 let frogColor = "#00ff00";
 let newfrogColor = "#6e8514";
@@ -94,6 +95,12 @@ const fly3 = {
     speed: 4 //changed the speed of the third fly
 };
 
+const flashlight = {
+    x: undefined,
+    y: undefined,
+    size: 150,
+}
+
 
 
 /**
@@ -108,6 +115,9 @@ function setup() {
     resetFly3();
     resetBird();
     resetBird2();
+
+    flashlight.x = width / 2;
+    flashlight.y = width / 2;
 
     startTime = millis();
 }
@@ -140,6 +150,7 @@ function draw() {
     moveFly(); // moves the fly
     moveFly2(); // moves the second fly
     moveBird(); // moves the bird
+    moveBird2();
     moveFrog(); // moves the frog
     moveTongue(); //moves the tongue of the frog
 
@@ -149,6 +160,37 @@ function draw() {
     checkTongueBirdOverlap();
     checkTongueBirdOverlap2();
 
+    spawnFlashlight();
+
+    if (showFlashLight) {
+        drawFlashLight();
+        moveFlashlight();
+    }
+
+}
+
+function spawnFlashlight() {
+    if (a > 105) {
+        showFlashLight = true;
+    }
+    else {
+        showFlashLight = false;
+    }
+}
+
+function drawFlashLight() {
+    push();
+    noStroke();
+    fill(245, 218, 42, 200);
+    circle(flashlight.x, flashlight.y, flashlight.size);
+    pop();
+}
+
+function moveFlashlight() {
+    if (frameCount % 60 === 0) {
+        flashlight.x = random(width);
+        flashlight.y = random(300, 550);
+    }
 }
 
 // changes the color of the sky
