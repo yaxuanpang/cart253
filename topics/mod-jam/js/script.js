@@ -134,6 +134,7 @@ function draw() {
 
     drawFly(); // draws the fly
     drawFly2(); // draws the second fly
+    drawFly3();
     drawBird(); // draws the bird
     drawFrog(); // draws the frog
 
@@ -143,6 +144,8 @@ function draw() {
 
     if (showBird2) {
         drawBird2();
+        moveBird2();
+        checkTongueBirdOverlap2();
     }
 
     if (a > 90) {
@@ -154,8 +157,8 @@ function draw() {
 
     moveFly(); // moves the fly
     moveFly2(); // moves the second fly
+    moveFly3();
     moveBird(); // moves the bird
-    moveBird2();
     moveFrog(); // moves the frog
     moveTongue(); //moves the tongue of the frog
 
@@ -163,7 +166,6 @@ function draw() {
     checkTongueFlyOverlap2(); // tongue overlaps with the second fly
     checkTongueFlyOverlap3();
     checkTongueBirdOverlap();
-    checkTongueBirdOverlap2();
 
     spawnFlashlight();
 
