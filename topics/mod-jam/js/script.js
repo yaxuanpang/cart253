@@ -27,19 +27,20 @@ let night = false; // the sky color change starts off false
 let showBird2 = false; // the second bird does not appear at first
 let showFlashLight = false; // the flashlight does not appear during the day
 let showFly3 = false; // the third fly starts off false
-let showMenu = true;
+let showMenu = true; // menu with instructions start off true
+let showEnd = false; // ending starts off false
 
 //colors of the frog
 let frogColor = "#00ff00"; // original
-let newfrogColor = "#6e8514"; // taken some damage
-let badfrogColor = "#855214"; // near death
-let deadfrogColor = "#4f2409"; // dead
+let newFrogColor = "#6e8514"; // taken some damage
+let badFrogColor = "#855214"; // near death
+let deadFrogColor = "#4f2409"; // dead
 
 
 let FlashLightColor; //defining the color of the flashlight
 let startTime; //defining a start time
 let strokeColor; // the color of the stroke
-
+let fontBold; // bold font
 
 
 
@@ -194,11 +195,6 @@ function draw() {
         darkSky(); // makes the sky change colors (from light blue to dark blue)
     }
 
-    // if showmenu is true, then draw menu
-    if (showMenu) {
-        drawMenu();
-    }
-
     moveFly(); // moves the fly
     moveFly2(); // moves the second fly
     moveFly4(); // moves the fourth fly
@@ -220,6 +216,16 @@ function draw() {
         moveHunter();
     }
 
+    // if showmenu is true, then draw menu
+    if (showMenu) {
+        drawMenu();
+    }
+
+    spawnEnd();
+
+    if (showEnd) {
+        drawEnd();
+    }
 }
 
 /**
@@ -233,7 +239,7 @@ function moveHunter() {
 
     // if flashlight overlaps with the frog it dies (changes color)
     if (overlap) {
-        frogColor = deadfrogColor;
+        frogColor = deadFrogColor;
     }
 }
 
@@ -672,27 +678,27 @@ function checkTongueBirdOverlap() {
 
         //frog eats bird for the first time
         if (frogColor === "#00ff00") {
-            frogColor = newfrogColor; //frog turns dark green
+            frogColor = newFrogColor; //frog turns dark green
 
 
             setTimeout(() => {
-                if (frogColor === newfrogColor) {
+                if (frogColor === newFrogColor) {
                     frogColor = "#00ff00"; // turns back to bright green after 5 seconds
                 }
             }, 5000);
 
             //frog eats bird for the second time before turning back to normal
-        } else if (frogColor === newfrogColor) {
-            frogColor = badfrogColor; //frog turns brown
+        } else if (frogColor === newFrogColor) {
+            frogColor = badFrogColor; //frog turns brown
 
 
             setTimeout(() => {
-                if (frogColor === badfrogColor) {
-                    frogColor = newfrogColor;// turns back to dark green after 5 seconds
+                if (frogColor === badFrogColor) {
+                    frogColor = newFrogColor;// turns back to dark green after 5 seconds
 
 
                     setTimeout(() => {
-                        if (frogColor === newfrogColor) {
+                        if (frogColor === newFrogColor) {
                             frogColor = "#00ff00"; // frog turns back to bright green
                         }
                     }, 5000);
@@ -700,8 +706,8 @@ function checkTongueBirdOverlap() {
             }, 5000);
 
             //frog eats bird for the third time before turning back to normal (it dies)
-        } else if (frogColor === badfrogColor) {
-            frogColor = deadfrogColor; //frog turns dark brown
+        } else if (frogColor === badFrogColor) {
+            frogColor = deadFrogColor; //frog turns dark brown
         }
     }
 }
@@ -723,27 +729,27 @@ function checkTongueBirdOverlap2() {
 
         //frog eats bird for the first time
         if (frogColor === "#00ff00") {
-            frogColor = newfrogColor; //frog turns dark green
+            frogColor = newFrogColor; //frog turns dark green
 
 
             setTimeout(() => {
-                if (frogColor === newfrogColor) {
+                if (frogColor === newFrogColor) {
                     frogColor = "#00ff00"; // turns back to bright green after 5 seconds
                 }
             }, 5000);
 
             //frog eats bird for the second time before turning back to normal
-        } else if (frogColor === newfrogColor) {
+        } else if (frogColor === newFrogColor) {
             frogColor = badfrogColor; //frog turns brown
 
 
             setTimeout(() => {
-                if (frogColor === badfrogColor) {
+                if (frogColor === badFrogColor) {
                     frogColor = newfrogColor;// turns back to dark green after 5 seconds
 
 
                     setTimeout(() => {
-                        if (frogColor === newfrogColor) {
+                        if (frogColor === newFrogColor) {
                             frogColor = "#00ff00"; // frog turns back to bright green
                         }
                     }, 5000);
@@ -751,8 +757,8 @@ function checkTongueBirdOverlap2() {
             }, 5000);
 
             //frog eats bird for the third time before turning back to normal (it dies)
-        } else if (frogColor === badfrogColor) {
-            frogColor = deadfrogColor; //frog turns dark brown
+        } else if (frogColor === badFrogColor) {
+            frogColor = deadFrogColor; //frog turns dark brown
         }
     }
 }
@@ -772,6 +778,7 @@ function keyPressed() {
 /**
  * Menu, Instructions and Ending
  */
+//drawing the menu
 function drawMenu() {
     push();
     textAlign(CENTER, CENTER);
@@ -780,4 +787,29 @@ function drawMenu() {
     stroke(random(255), random(255), random(255));
     text('**Click space to play!**', width / 2, height / 6);
     pop();
+}
+
+//drawing the ending
+function drawEnd() {
+    push();
+    noStroke();
+    fill(0);
+    rect(0, 0, width, height);
+
+    strokeWeight(3);
+    stroke("#00ff00");
+    textAlign(CENTER, CENTER);
+    textSize(50);
+    textStyle(BOLD);
+    text('**Game Over**', width / 2, height / 2);
+    pop();
+}
+
+function spawnEnd() {
+    if (frogColor === deadFrogColor) {
+        showEnd = true;
+    }
+    else {
+        showEnd = false;
+    }
 }
