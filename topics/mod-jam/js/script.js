@@ -21,20 +21,23 @@ let g = 207; // green
 let b = 235; // blue
 let a = 0; //alpha (the opacity)
 
-//change the color of the sky
-let change = 0.075;
-let night = false;
-let showBird2 = false;
-let showFlashLight = false;
-let showFly3 = false;
 
-let frogColor = "#00ff00";
-let newfrogColor = "#6e8514";
-let badfrogColor = "#855214";
-let deadfrogColor = "#4f2409";
+let change = 0.075; //change the color of the sky
+let night = false; // the sky color change starts off false
+let showBird2 = false; // the second bird does not appear at first
+let showFlashLight = false; // the flashlight does not appear during the day
+let showFly3 = false; // the third fly starts off false
 
+//colors of the frog
+let frogColor = "#00ff00"; // original
+let newfrogColor = "#6e8514"; // taken some damage
+let badfrogColor = "#855214"; // near death
+let deadfrogColor = "#4f2409"; // dead
+
+//defining the color of the flashlight
 let FlashLightColor;
 
+//defining a start time
 let startTime;
 
 
@@ -58,16 +61,18 @@ const frog = {
 };
 
 //a bird
-//position. size, speed adn movement
+//position. size, speed and movement
 const bird = {
-    x: 0, // starts at 0
+    x: 0,
     y: 200, // starts at 200
     size: 40,
     speed: 2,
 };
 
+//a second bird
+//position. size, speed and movement
 const bird2 = {
-    x: 0, // starts at 0
+    x: 0,
     y: 400, // starts at 400
     size: 40,
     speed: 2.5, // slightly slower than the first bird
@@ -77,20 +82,21 @@ const bird2 = {
 // Has a position, size, and speed of horizontal movement
 const fly = {
     x: 0,
-    y: 200, // Will be random
+    y: 200,
     size: 10,
     speed: 3
 };
 
-//faster fly
-//position. size, speed adn movement
+//a second faster fly
+//position, size, speed and horizontal movement
 const fly2 = {
     x: 0,
     y: 300, // Will be random
     size: 12,
     speed: 5 //changed the speed of the second fly
 };
-
+//a third fly
+//position, size, speed and horizontal movement
 const fly3 = {
     x: 0,
     y: 300, // Will be random
@@ -98,6 +104,8 @@ const fly3 = {
     speed: 4 //changed the speed of the third fly
 };
 
+//a fourth fly
+//position, size, speed and horizontal movement
 const fly4 = {
     x: 0,
     y: 100, // Will be random
@@ -105,6 +113,8 @@ const fly4 = {
     speed: 3.5 //changed the speed of the third fly
 };
 
+//a falshlight
+//position, size, color
 const flashlight = {
     x: undefined,
     y: undefined,
@@ -120,6 +130,7 @@ const flashlight = {
 function setup() {
     createCanvas(700, 500);
 
+    //color of the flashlight 
     FlashLightColor = color(245, 218, 42, 200);
 
     // Give the flies and birds its first random position
@@ -130,63 +141,72 @@ function setup() {
     resetBird();
     resetBird2();
 
+    //setting position of the flashlight
     flashlight.x = width / 2;
-    flashlight.y = width / 2;
+    flashlight.y = height / 2;
 
+    //time is in milliseconds
     startTime = millis();
 }
 
 function draw() {
-    background(r, g, b); // color of the background is light blue at the beginning
+    background(r, g, b);
+    // color of the background is light blue at the beginning
 
+    // the time passed is how much milliseconds passed since the start time
     let timePassed = millis() - startTime;
 
     drawFly(); // draws the fly
     drawFly2(); // draws the second fly
 
-    spawnFly3();// draws the third fly
+    spawnFly3();// shows fly3
 
     drawFly4(); // draws the fourth fly
     drawBird(); // draws the bird
     drawFrog(); // draws the frog
 
+    //if showfly3 is true then draw fly3, move it and check if the tongue overlaps with it
     if (showFly3) {
         drawFly3();
+        moveFly3();
+        checkTongueFlyOverlap3();
     }
 
+    //if 7 seconds have passed and it is still daytime, the second bird will appear
     if (timePassed > 7000 && a <= 90) {
         showBird2 = true;
     }
 
+    //if showbird2 is true then draw bird2, move it and check if the tongue overlaps with it
     if (showBird2) {
         drawBird2();
         moveBird2();
         checkTongueBirdOverlap2();
     }
 
+    // if it is nighttime (opacity is at 90), then the second bird disappears (it went home like me)
     if (a > 90) {
         showBird2 = false;
     }
 
-    drawNight(); // makes eveyrhting darker
+    drawNight(); // makes everything darker (the rectangle I put on top of everything gets darker)
     darkSky(); // makes the sky change colors (from light blue to dark blue)
 
     moveFly(); // moves the fly
     moveFly2(); // moves the second fly
-    moveFly3();
-    moveFly4();
+    moveFly4(); // moves the fourth fly
     moveBird(); // moves the bird
     moveFrog(); // moves the frog
     moveTongue(); //moves the tongue of the frog
 
     checkTongueFlyOverlap(); // tongue overlaps with the fly
     checkTongueFlyOverlap2(); // tongue overlaps with the second fly
-    checkTongueFlyOverlap3();
-    checkTongueFlyOverlap4();
-    checkTongueBirdOverlap();
+    checkTongueFlyOverlap4(); // tongue overlaps with the fourth fly
+    checkTongueBirdOverlap(); // tongue overlaps with the first bird
 
-    spawnFlashlight();
+    spawnFlashlight(); // shows the flashlight
 
+    //if showflashlight is true then draw the flashlight, move it and check if the frog overlaps with it
     if (showFlashLight) {
         drawFlashLight();
         moveFlashlight();
@@ -195,19 +215,24 @@ function draw() {
 
 }
 
+/**
+ * draws, moves and check for overlap with frog for flashlight
+ */
+//makes the frog change colors when the flashlight overlaps with it
 function moveHunter() {
     // calculate the distance between flashlight and frog
     const d = dist(flashlight.x, flashlight.y, frog.body.x, frog.body.y);
     const overlap = (d < flashlight.size / 2 + frog.body.size / 2);
 
-    // if flashlight overlaps with the frog it dies
+    // if flashlight overlaps with the frog it dies (changes color)
     if (overlap) {
         frogColor = deadfrogColor;
     }
 }
 
-
+// makes flashlight appear and disappear
 function spawnFlashlight() {
+    // flashlight only appears if the opacity is more than 105
     if (a > 105) {
         showFlashLight = true;
     }
@@ -215,6 +240,7 @@ function spawnFlashlight() {
         showFlashLight = false;
     }
 }
+
 
 function drawFlashLight() {
     push();
@@ -225,11 +251,16 @@ function drawFlashLight() {
 }
 
 function moveFlashlight() {
+    // appears every 60 frames
     if (frameCount % 60 === 0) {
-        flashlight.x = random(width);
-        flashlight.y = random(300, 550);
+        flashlight.x = random(width); //random
+        flashlight.y = random(300, 550); // appears between 300 and 550 for y
     }
 }
+
+/**
+ * change from daytime to nighttime
+ */
 
 // changes the color of the sky
 function drawNight() {
@@ -250,7 +281,7 @@ function drawNight() {
         g += change;
         b -= change;
 
-        // limits the green to 207 for the daytim color
+        // limits the green to 207 for the daytime color
         if (g >= 207) {
             g = 207;
             night = true; // switch to night
@@ -258,9 +289,32 @@ function drawNight() {
     }
 }
 
+//make the other objects darker to give the illusion of night
+function darkSky() {
+    push();
+    noStroke();
+    fill(0, a); // the rectangle is black and trasparent
+    rect(0, 0, 700, 500);
+    pop();
+    //the opacity changes (less transparent at night and more transparent during the day)
+    if (night) {
+        a += change;
+        if (a >= 220) {
+            a = 220;
+            night = false; // once fully dark, switch back to day mode
+        }
+    }
+    else {
+        a -= change;
+        if (a <= 0) {
+            a = 0;
+            night = true; // once fully bright, switch to night mode
+        }
+    }
+}
+
 /**
  * Moves the fly according to its speed
- * Resets the fly if it gets all the way to the right
  */
 function moveFly() {
     // Move the fly
@@ -271,7 +325,7 @@ function moveFly() {
     }
 }
 
-//moves the second fly
+
 function moveFly2() {
     // Move the fly
     fly2.x += fly2.speed;
@@ -281,7 +335,7 @@ function moveFly2() {
     }
 }
 
-//moves the third fly
+
 function moveFly3() {
     // Move the fly
     fly3.x += fly3.speed;
@@ -291,6 +345,7 @@ function moveFly3() {
     }
 }
 
+//makes the third fly appear when the opacity is at 70
 function spawnFly3() {
     if (a > 70) {
         showFly3 = true;
@@ -334,7 +389,7 @@ function moveBird2() {
 }
 
 /**
- * Draws the fly as a black circle
+ * Draws the flies
  */
 function drawFly() {
     push();
@@ -344,7 +399,6 @@ function drawFly() {
     pop();
 }
 
-//draws the second fly
 function drawFly2() {
     push();
     noStroke();
@@ -368,6 +422,10 @@ function drawFly4() {
     ellipse(fly4.x, fly4.y, fly4.size);
     pop();
 }
+
+/**
+ * Draws the birds
+ */
 
 //draws the bird
 function drawBird() {
@@ -698,29 +756,5 @@ function checkTongueBirdOverlap2() {
 function keyPressed() {
     if (key === ' ' && frog.tongue.state === "idle") {
         frog.tongue.state = "outbound";
-    }
-}
-
-//make the other objects darker to give the illusion of night
-function darkSky() {
-    push();
-    noStroke();
-    fill(0, a); // the rectangle is black and trasparent
-    rect(0, 0, 700, 500);
-    pop();
-    //the opacity changes (less transparent at night and more transparent during the day)
-    if (night) {
-        a += change;
-        if (a >= 220) {
-            a = 220;
-            night = false; // once fully dark, switch back to day mode
-        }
-    }
-    else {
-        a -= change;
-        if (a <= 0) {
-            a = 0;
-            night = true; // once fully bright, switch to night mode
-        }
     }
 }
