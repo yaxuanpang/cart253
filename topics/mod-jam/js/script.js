@@ -22,11 +22,12 @@ let b = 235; // blue
 let a = 0; //alpha (the opacity)
 
 
-let change = 0.075; //change the color of the sky
+let change = 0.055; //change the color of the sky
 let night = false; // the sky color change starts off false
 let showBird2 = false; // the second bird does not appear at first
 let showFlashLight = false; // the flashlight does not appear during the day
 let showFly3 = false; // the third fly starts off false
+let showMenu = true;
 
 //colors of the frog
 let frogColor = "#00ff00"; // original
@@ -34,11 +35,12 @@ let newfrogColor = "#6e8514"; // taken some damage
 let badfrogColor = "#855214"; // near death
 let deadfrogColor = "#4f2409"; // dead
 
-//defining the color of the flashlight
-let FlashLightColor;
 
-//defining a start time
-let startTime;
+let FlashLightColor; //defining the color of the flashlight
+let startTime; //defining a start time
+let strokeColor; // the color of the stroke
+
+
 
 
 // Our frog
@@ -144,9 +146,6 @@ function setup() {
     //setting position of the flashlight
     flashlight.x = width / 2;
     flashlight.y = height / 2;
-
-    //time is in milliseconds
-    startTime = millis();
 }
 
 function draw() {
@@ -173,7 +172,7 @@ function draw() {
     }
 
     //if 7 seconds have passed and it is still daytime, the second bird will appear
-    if (timePassed > 7000 && a <= 90) {
+    if (timePassed > 5000 && a <= 90) {
         showBird2 = true;
     }
 
@@ -189,8 +188,16 @@ function draw() {
         showBird2 = false;
     }
 
-    drawNight(); // makes everything darker (the rectangle I put on top of everything gets darker)
-    darkSky(); // makes the sky change colors (from light blue to dark blue)
+    // the sky only starts darkening when menu is no longer visible
+    if (showMenu === false) {
+        drawNight(); // makes everything darker (the rectangle I put on top of everything gets darker)
+        darkSky(); // makes the sky change colors (from light blue to dark blue)
+    }
+
+    // if showmenu is true, then draw menu
+    if (showMenu) {
+        drawMenu();
+    }
 
     moveFly(); // moves the fly
     moveFly2(); // moves the second fly
@@ -232,8 +239,8 @@ function moveHunter() {
 
 // makes flashlight appear and disappear
 function spawnFlashlight() {
-    // flashlight only appears if the opacity is more than 105
-    if (a > 105) {
+    // flashlight only appears if the opacity is more than 105 and menu is false
+    if (a > 105 && showMenu === false) {
         showFlashLight = true;
     }
     else {
@@ -756,5 +763,20 @@ function checkTongueBirdOverlap2() {
 function keyPressed() {
     if (key === ' ' && frog.tongue.state === "idle") {
         frog.tongue.state = "outbound";
+        showMenu = false // menu disappears when space is pressed
+        //time is in milliseconds
+        startTime = millis();
     }
+}
+
+/**
+ * Menu, Instructions and Ending
+ */
+function drawMenu() {
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(30);
+    strokeWeight(5);
+    stroke(random(255), random(255), random(255));
+    pop();
 }
