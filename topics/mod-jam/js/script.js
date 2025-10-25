@@ -345,6 +345,8 @@ function moveFly() {
 function moveFly2() {
     // Move the fly
     fly2.x += fly2.speed;
+    // the fly moves up and down while flying to the right
+    fly2.y = fly2.startY + sin(fly2.x * 0.01) * 50;
     // Handle the fly going off the canvas
     if (fly2.x > width) {
         resetFly2();
@@ -517,6 +519,7 @@ function resetFly() {
 function resetFly2() {
     fly2.x = 0;
     fly2.y = random(0, 300);
+    fly2.startY = fly2.y;
 }
 
 //resets the third fly to the left
@@ -787,6 +790,8 @@ function drawMenu() {
     textAlign(CENTER, CENTER);
     textSize(30);
     strokeWeight(5);
+
+    //slows down the color change for the instructions
     if (frameCount % 10 === 0) {
         strokeColor = color(random(255), random(255), random(255))
     }
