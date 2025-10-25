@@ -172,8 +172,8 @@ function draw() {
         checkTongueFlyOverlap3();
     }
 
-    //if 7 seconds have passed and it is still daytime, the second bird will appear
-    if (timePassed > 5000 && a <= 90) {
+    //if 3 seconds have passed and it is still daytime, the second bird will appear
+    if (timePassed > 3000 && showMenu === false && a <= 100) {
         showBird2 = true;
     }
 
@@ -185,7 +185,7 @@ function draw() {
     }
 
     // if it is nighttime (opacity is at 90), then the second bird disappears (it went home like me)
-    if (a > 90) {
+    if (a > 100) {
         showBird2 = false;
     }
 
@@ -246,7 +246,7 @@ function moveHunter() {
 // makes flashlight appear and disappear
 function spawnFlashlight() {
     // flashlight only appears if the opacity is more than 105 and menu is false
-    if (a > 105 && showMenu === false) {
+    if (a > 110 && showMenu === false) {
         showFlashLight = true;
     }
     else {
