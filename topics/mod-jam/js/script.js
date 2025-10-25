@@ -133,6 +133,9 @@ const flashlight = {
 function setup() {
     createCanvas(700, 500);
 
+    //stroke color is a random color
+    strokeColor = color(random(255));
+
     //color of the flashlight 
     FlashLightColor = color(245, 218, 42, 200);
 
@@ -784,7 +787,10 @@ function drawMenu() {
     textAlign(CENTER, CENTER);
     textSize(30);
     strokeWeight(5);
-    stroke(random(255), random(255), random(255));
+    if (frameCount % 10 === 0) {
+        strokeColor = color(random(255), random(255), random(255))
+    }
+    stroke(strokeColor);
     text('**Click space to play!**', width / 2, height / 6);
     pop();
 }
