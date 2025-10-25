@@ -778,5 +778,6 @@ function drawMenu() {
     textSize(30);
     strokeWeight(5);
     stroke(random(255), random(255), random(255));
+    text('**Click space to play!**', width / 2, height / 6);
     pop();
 }
