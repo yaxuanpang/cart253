@@ -552,7 +552,8 @@ function resetBird2() {
  * Moves the frog to the mouse position on x
  */
 function moveFrog() {
-    frog.body.x = mouseX;
+    frog.body.x = constrain(mouseX, frog.body.size / 16,
+        width - frog.body.size / 16);
 }
 
 /**
@@ -606,6 +607,25 @@ function drawFrog() {
     fill(frogColor);
     noStroke();
     ellipse(frog.body.x, frog.body.y, frog.body.size);
+    pop();
+
+    push();
+    // Eye positions
+    let eyeOffsetX = frog.body.size * 0.3;
+    let eyeOffsetY = frog.body.size * 0.4;
+    let eyeSize = frog.body.size * 0.25;
+
+    // White part of eyes
+    noStroke();
+    fill(255);
+    ellipse(frog.body.x - eyeOffsetX, frog.body.y - eyeOffsetY, eyeSize);
+    ellipse(frog.body.x + eyeOffsetX, frog.body.y - eyeOffsetY, eyeSize);
+
+    // Pupils
+    fill(0);
+    let pupilSize = eyeSize * 0.4;
+    ellipse(frog.body.x - eyeOffsetX, frog.body.y - eyeOffsetY, pupilSize);
+    ellipse(frog.body.x + eyeOffsetX, frog.body.y - eyeOffsetY, pupilSize);
     pop();
 }
 
