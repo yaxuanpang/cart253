@@ -26,6 +26,7 @@ let change = 0.075;
 let night = false;
 let showBird2 = false;
 let showFlashLight = false;
+let showFly3 = false;
 
 let frogColor = "#00ff00";
 let newfrogColor = "#6e8514";
@@ -85,16 +86,23 @@ const fly = {
 //position. size, speed adn movement
 const fly2 = {
     x: 0,
-    y: 200, // Will be random
-    size: 10,
+    y: 300, // Will be random
+    size: 12,
     speed: 5 //changed the speed of the second fly
 };
 
 const fly3 = {
     x: 0,
-    y: 400, // Will be random
+    y: 300, // Will be random
     size: 10,
     speed: 4 //changed the speed of the third fly
+};
+
+const fly4 = {
+    x: 0,
+    y: 100, // Will be random
+    size: 12,
+    speed: 3.5 //changed the speed of the third fly
 };
 
 const flashlight = {
@@ -118,6 +126,7 @@ function setup() {
     resetFly();
     resetFly2();
     resetFly3();
+    resetFly4();
     resetBird();
     resetBird2();
 
@@ -134,9 +143,16 @@ function draw() {
 
     drawFly(); // draws the fly
     drawFly2(); // draws the second fly
-    drawFly3();
+
+    spawnFly3();// draws the third fly
+
+    drawFly4(); // draws the fourth fly
     drawBird(); // draws the bird
     drawFrog(); // draws the frog
+
+    if (showFly3) {
+        drawFly3();
+    }
 
     if (timePassed > 7000 && a <= 90) {
         showBird2 = true;
@@ -158,6 +174,7 @@ function draw() {
     moveFly(); // moves the fly
     moveFly2(); // moves the second fly
     moveFly3();
+    moveFly4();
     moveBird(); // moves the bird
     moveFrog(); // moves the frog
     moveTongue(); //moves the tongue of the frog
@@ -165,6 +182,7 @@ function draw() {
     checkTongueFlyOverlap(); // tongue overlaps with the fly
     checkTongueFlyOverlap2(); // tongue overlaps with the second fly
     checkTongueFlyOverlap3();
+    checkTongueFlyOverlap4();
     checkTongueBirdOverlap();
 
     spawnFlashlight();
@@ -273,6 +291,28 @@ function moveFly3() {
     }
 }
 
+function spawnFly3() {
+    if (a > 70) {
+        showFly3 = true;
+    }
+    else {
+        showFly3 = false;
+    }
+}
+
+function moveFly4() {
+    // Move the fly
+    fly4.x += fly4.speed;
+
+    // the fly moves up and down while flying to the right
+    fly4.y = fly4.startY + sin(fly4.x * 0.04) * 10;
+
+    // Handle the fly going off the canvas
+    if (fly4.x > width) {
+        resetFly4();
+    }
+}
+
 //moves the bird
 function moveBird() {
     //move the bird
@@ -318,6 +358,14 @@ function drawFly3() {
     noStroke();
     fill("#000000");
     ellipse(fly3.x, fly3.y, fly3.size);
+    pop();
+}
+
+function drawFly4() {
+    push();
+    noStroke();
+    fill("#000000");
+    ellipse(fly4.x, fly4.y, fly4.size);
     pop();
 }
 
@@ -401,6 +449,14 @@ function resetFly2() {
 function resetFly3() {
     fly3.x = 0;
     fly3.y = random(0, 300);
+}
+
+//resets the fourth fly to the left
+function resetFly4() {
+    fly4.x = 0;
+    fly4.y = random(0, 300);
+    fly4.startY = fly4.y; // startY is the middle height of the sine wave
+    // It changes to make sure the fly is flying towards the right, not just up and down
 }
 
 //resets the bird to the left
@@ -515,6 +571,20 @@ function checkTongueFlyOverlap3() {
     if (eaten) {
         // Reset the fly
         resetFly3();
+        // Bring back the tongue
+        frog.tongue.state = "inbound";
+    }
+}
+
+// tongue overlapping with the fourth fly
+function checkTongueFlyOverlap4() {
+    // Get distance from tongue to fly
+    const d = dist(frog.tongue.x, frog.tongue.y, fly4.x, fly4.y);
+    // Check if it's an overlap
+    const eaten = (d < frog.tongue.size / 2 + fly4.size / 2);
+    if (eaten) {
+        // Reset the fly
+        resetFly4();
         // Bring back the tongue
         frog.tongue.state = "inbound";
     }
