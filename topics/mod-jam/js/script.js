@@ -228,6 +228,7 @@ function draw() {
 
     if (showEnd) {
         drawEnd();
+        EndingFrog();
     }
 }
 
@@ -843,4 +844,33 @@ function spawnEnd() {
     else {
         showEnd = false;
     }
+}
+
+function EndingFrog() {
+    push();
+    noStroke();
+    fill(255);
+    circle(width / 2, height / 1.5, 80);
+    fill("#00ff00");
+    circle(width / 2, height / 1.47, 45);
+    circle(width / 2.1, height / 1.56, 20);
+    circle(width / 1.915, height / 1.56, 20);
+
+    fill(0);
+    textSize(13);
+    textAlign(CENTER, CENTER);
+    text("X", width / 2.1, height / 1.55);   // left eye X
+    text("X", width / 1.915, height / 1.55); // right eye X
+
+
+    fill("#ff0000");
+    ellipse(width / 1.95, height / 1.45, 5, 20);
+
+
+    fill(0);
+    rect(width / 2.1, height / 1.47, 32, 2);
+
+    fill("#00ff00");
+    rect(width / 2.1, height / 1.49, 32, 5);
+    pop();
 }
