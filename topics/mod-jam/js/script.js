@@ -41,6 +41,7 @@ let FlashLightColor; //defining the color of the flashlight
 let startTime; //defining a start time
 let strokeColor; // the color of the stroke
 let fontBold; // bold font
+let endTimeStarted = false; // timer for transition to the ending (starts off false)
 
 
 
@@ -892,11 +893,11 @@ function drawEnd() {
 }
 
 function spawnEnd() {
-    if (frogColor === deadFrogColor) {
-        showEnd = true;
-    }
-    else {
-        showEnd = false;
+    if (frogColor === deadFrogColor && endTimeStarted === false) {
+        endTimeStarted = true; // timer for the end has started
+        setTimeout(() => {
+            showEnd = true; // show the end after half a second
+        }, 500); // half a second delay
     }
 }
 
