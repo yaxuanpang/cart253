@@ -421,6 +421,18 @@ function drawFly() {
     noStroke();
     fill("#000000");
     ellipse(fly.x, fly.y, fly.size);
+
+    //drawing the wings
+    fill(200);
+    ellipse(fly.x - fly.size * 0.5,
+        fly.y - fly.size * 0.5,
+        fly.size * 0.8,
+        fly.size * 0.4);
+
+    ellipse(fly.x + fly.size * 0.5,
+        fly.y - fly.size * 0.5,
+        fly.size * 0.8,
+        fly.size * 0.4)
     pop();
 }
 
@@ -429,6 +441,18 @@ function drawFly2() {
     noStroke();
     fill("#000000");
     ellipse(fly2.x, fly2.y, fly2.size);
+
+    //drawing the wings
+    fill(200);
+    ellipse(fly2.x - fly2.size * 0.5,
+        fly2.y - fly2.size * 0.5,
+        fly2.size * 0.8,
+        fly2.size * 0.4);
+
+    ellipse(fly2.x + fly2.size * 0.5,
+        fly2.y - fly2.size * 0.5,
+        fly2.size * 0.8,
+        fly2.size * 0.4)
     pop();
 }
 
@@ -437,6 +461,18 @@ function drawFly3() {
     noStroke();
     fill("#000000");
     ellipse(fly3.x, fly3.y, fly3.size);
+
+    //drawing the wings
+    fill(200);
+    ellipse(fly3.x - fly3.size * 0.5,
+        fly3.y - fly3.size * 0.5,
+        fly3.size * 0.8,
+        fly3.size * 0.4);
+
+    ellipse(fly3.x + fly3.size * 0.5,
+        fly3.y - fly3.size * 0.5,
+        fly3.size * 0.8,
+        fly3.size * 0.4)
     pop();
 }
 
@@ -445,6 +481,18 @@ function drawFly4() {
     noStroke();
     fill("#000000");
     ellipse(fly4.x, fly4.y, fly4.size);
+
+    //drawing the wings
+    fill(200);
+    ellipse(fly4.x - fly4.size * 0.5,
+        fly4.y - fly4.size * 0.5,
+        fly4.size * 0.8,
+        fly4.size * 0.4);
+
+    ellipse(fly4.x + fly4.size * 0.5,
+        fly4.y - fly4.size * 0.5,
+        fly4.size * 0.8,
+        fly4.size * 0.4)
     pop();
 }
 
