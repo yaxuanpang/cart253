@@ -131,7 +131,7 @@ const flashlight = {
  * Creates the canvas and initializes the fly
  */
 function setup() {
-    createCanvas(700, 500);
+    createCanvas(700, 550);
 
     angleMode(DEGREES);
 
@@ -157,6 +157,8 @@ function setup() {
 function draw() {
     background(r, g, b);
     // color of the background is light blue at the beginning
+
+    drawBehindwater(); // draw the waves behind the frog
 
     // the time passed is how much milliseconds passed since the start time
     let timePassed = millis() - startTime;
@@ -193,6 +195,8 @@ function draw() {
     if (a > 100) {
         showBird2 = false;
     }
+
+    drawWater(); //draw the waves in front of the frog
 
     // the sky only starts darkening when menu is no longer visible
     if (showMenu === false) {
@@ -313,7 +317,7 @@ function darkSky() {
     push();
     noStroke();
     fill(0, a); // the rectangle is black and trasparent
-    rect(0, 0, 700, 500);
+    rect(0, 0, 700, 550);
     pop();
     //the opacity changes (less transparent at night and more transparent during the day)
     if (night) {
@@ -874,5 +878,47 @@ function EndingFrog() {
 
     fill("#00ff00");
     rect(width / 2.1, height / 1.49, 32, 5);
+    pop();
+}
+
+//draw the wave shape at the front of the frog
+function drawWater() {
+    push();
+    noStroke();
+
+    fill("#3d9cf5");
+
+    //start drawing a custom shape
+    beginShape();
+    for (let x = 0; x <= width; x += 10) {
+        // creates waves
+        let y = 495 + sin(x * 3 + frameCount * 3) * 10;
+        vertex(x, y);
+    }
+    // close off the shape
+    vertex(width, height);
+    vertex(0, height);
+    endShape(CLOSE);
+
+    pop();
+}
+
+//draw the wave shape behind the frog
+function drawBehindwater() {
+    push();
+    noStroke();
+    fill("#1ec7be");
+
+    //start drawing a custom shape
+    beginShape();
+    for (let x = 0; x <= width; x += 10) {
+        // creates waves
+        let y = 485 + sin(x * 3 - frameCount * 3) * 10;
+        vertex(x, y);
+    }
+    // close off the shape
+    vertex(width, height);
+    vertex(0, height);
+    endShape(CLOSE);
     pop();
 }
