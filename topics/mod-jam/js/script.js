@@ -133,6 +133,8 @@ const flashlight = {
 function setup() {
     createCanvas(700, 500);
 
+    angleMode(DEGREES);
+
     //stroke color is a random color
     strokeColor = color(random(255));
 
@@ -347,7 +349,7 @@ function moveFly2() {
     // Move the fly
     fly2.x += fly2.speed;
     // the fly moves up and down while flying to the right
-    fly2.y = fly2.startY + sin(fly2.x * 0.01) * 50;
+    fly2.y = fly2.startY + sin(fly2.x * 1.5) * 50;
     // Handle the fly going off the canvas
     if (fly2.x > width) {
         resetFly2();
@@ -379,7 +381,7 @@ function moveFly4() {
     fly4.x += fly4.speed;
 
     // the fly moves up and down while flying to the right
-    fly4.y = fly4.startY + sin(fly4.x * 0.04) * 10;
+    fly4.y = fly4.startY + sin(fly4.x * 4) * 10;
 
     // Handle the fly going off the canvas
     if (fly4.x > width) {
