@@ -23,12 +23,15 @@ let a = 0; //alpha (the opacity)
 
 
 let change = 0.055; //change the color of the sky
+let lastEatenTime = 0; // track when the frog last ate a fly
+
 let night = false; // the sky color change starts off false
 let showBird2 = false; // the second bird does not appear at first
 let showFlashLight = false; // the flashlight does not appear during the day
 let showFly3 = false; // the third fly starts off false
 let showMenu = true; // menu with instructions start off true
 let showEnd = false; // ending starts off false
+let ateFly = false; // frog did not eat any flies at the start
 
 //colors of the frog
 let frogColor = "#00ff00"; // original
@@ -236,6 +239,11 @@ function draw() {
     if (showEnd) {
         drawEnd();
         EndingFrog();
+    }
+
+    // 3 seconds after the game starts check if the frog ate any flies
+    if (timePassed > 3000) {
+        checkLastEaten()
     }
 }
 
@@ -822,12 +830,12 @@ function checkTongueBirdOverlap2() {
 
             //frog eats bird for the second time before turning back to normal
         } else if (frogColor === newFrogColor) {
-            frogColor = badfrogColor; //frog turns brown
+            frogColor = badFrogColor; //frog turns brown
 
 
             setTimeout(() => {
                 if (frogColor === badFrogColor) {
-                    frogColor = newfrogColor;// turns back to dark green after 5 seconds
+                    frogColor = newFrogColor;// turns back to dark green after 5 seconds
 
 
                     setTimeout(() => {
@@ -970,4 +978,22 @@ function drawBehindwater() {
     vertex(0, height);
     endShape(CLOSE);
     pop();
+}
+
+function checkLastEaten() {
+    // If 3 seconds pass without eating the frog changes colors
+    if (millis() - lastEatenTime > 3000 && frogColor === "#00ff00" && showMenu === false) {
+        frogColor = newFrogColor;
+        lastEatenTime = millis(); // reset timer
+
+    }
+    //If another 3 seconds pass (6 seconds total) without eating the frog changes colors again
+    else if (millis() - lastEatenTime > 3000 && frogColor === newFrogColor && showMenu === false) {
+        frogColor = badFrogColor;
+        lastEatenTime = millis(); // reset timer
+    }
+    //If another 3 seconds pass (9 seconds total) without eating the frog changes colors again
+    else if (millis() - lastEatenTime > 3000 && frogColor === badFrogColor && showMenu === false) {
+        frogColor = deadFrogColor;
+    }
 }
