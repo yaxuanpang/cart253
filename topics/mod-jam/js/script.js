@@ -577,19 +577,23 @@ function drawBird2() {
 function resetFly() {
     fly.x = 0;
     fly.y = random(0, 300);
+    fly.size = random(8, 12); // randomize the fly's size between 8 and 12 every time it resets
 }
 
 //resets the second fly to the left
 function resetFly2() {
     fly2.x = 0;
     fly2.y = random(0, 300);
-    fly2.startY = fly2.y;
+    fly2.startY = fly2.y;// startY is the middle height of the sine wave
+    // It changes to make sure the fly is flying towards the right, not just up and down
+    fly2.size = random(8, 12); // randomize the fly's size between 8 and 12 every time it resets
 }
 
 //resets the third fly to the left
 function resetFly3() {
     fly3.x = 0;
     fly3.y = random(0, 300);
+    fly3.size = random(8, 12); // randomize the fly's size between 8 and 12 every time it resets
 }
 
 //resets the fourth fly to the left
@@ -598,6 +602,7 @@ function resetFly4() {
     fly4.y = random(0, 300);
     fly4.startY = fly4.y; // startY is the middle height of the sine wave
     // It changes to make sure the fly is flying towards the right, not just up and down
+    fly4.size = random(8, 12); // randomize the fly's size between 8 and 12 every time it resets
 }
 
 //resets the bird to the left
