@@ -886,6 +886,41 @@ function drawMenu() {
     }
     stroke(strokeColor);
     text('**Click space to play!**', width / 2, height / 6);
+
+    //instruction background
+    noStroke();
+    fill(255);
+    rect(180, 130, 380, 360, 20);
+
+    //instructions
+    fill(0);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text('Instructions:', 375, 170);
+
+    textAlign(LEFT, CENTER);
+    text('- Control the frog with the mouse and click', 210, 200);
+    text('space to eat', 224, 220);
+    text('- Eat the flies every 3 seconds to not starve', 210, 250);
+    text('- WATCH OUT for birds and the', 210, 290);
+    text('flashlight', 224, 310);
+    text('- Birds can heal the frog, but it also', 210, 340);
+    text('damages the frog at the same time', 220, 360);
+    text('frog is hurt', 270, 390);
+    text('frog is dying', 270, 410);
+    text('frog is dead -> GAME OVER ', 270, 430);
+    text('- Survive 3 days to WIN', 210, 460);
+
+    //frog colors
+    fill("#6e8514");
+    rect(250, 385, 10, 10);
+
+    fill("#855214");
+    rect(250, 405, 10, 10);
+
+    fill("#4f2409");
+    rect(250, 425, 10, 10);
+
     pop();
 }
 
