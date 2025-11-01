@@ -183,8 +183,8 @@ function draw() {
         checkTongueFlyOverlap3();
     }
 
-    //if 3 seconds have passed and it is still daytime, the second bird will appear
-    if (timePassed > 3000 && showMenu === false && a <= 100) {
+    //if 1.5 seconds have passed and it is still daytime, the second bird will appear
+    if (timePassed > 1500 && showMenu === false && a <= 100) {
         showBird2 = true;
     }
 
