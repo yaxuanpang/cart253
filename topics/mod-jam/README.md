@@ -8,7 +8,11 @@ Yaxuan Pang
 
 This description should help the reader understand what the program is, anything they should know to be able to experience it (controls, special features, etc.), and what the desired user experience is. For example:
 
-> *The Mayor of Clown Town* is a simulator experience that allows the user to control a small town populated entirely by clowns.
+> Move the frog some side to side with the mouse and click space to launch the tongue
+
+> The frog changes colors when it gets hurt (by birds or starvation). It starts to die if it does not eat for 3 seconds
+
+>  
 
 > The experience is controlled via the mouse, with left click selecting a clown and bringing up a menu of options such as "slip of banana peel" or "get into impossible capacious clown-car."
 
@@ -16,8 +20,7 @@ This description should help the reader understand what the program is, anything
 
 ## Screenshot(s)
 
-
-> ![Image of a clown face](./assets/images/image1.jpeg)
+> ![Image of a clown face](./assets/images/image1.jpg)
 
 ## Attribution
 
