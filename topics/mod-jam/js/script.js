@@ -741,6 +741,8 @@ function checkTongueFlyOverlap() {
         resetFly();
         // Bring back the tongue
         frog.tongue.state = "inbound";
+        lastEatenTime = millis(); // record the time when fly was eaten
+        ateFly = true;
     }
 }
 
@@ -755,6 +757,8 @@ function checkTongueFlyOverlap2() {
         resetFly2();
         // Bring back the tongue
         frog.tongue.state = "inbound";
+        lastEatenTime = millis(); // record the time when fly was eaten
+        ateFly = true;
     }
 }
 
@@ -769,6 +773,8 @@ function checkTongueFlyOverlap3() {
         resetFly3();
         // Bring back the tongue
         frog.tongue.state = "inbound";
+        lastEatenTime = millis(); // record the time when fly was eaten
+        ateFly = true;
     }
 }
 
@@ -783,6 +789,8 @@ function checkTongueFlyOverlap4() {
         resetFly4();
         // Bring back the tongue
         frog.tongue.state = "inbound";
+        lastEatenTime = millis(); // record the time when fly was eaten
+        ateFly = true;
     }
 }
 
@@ -897,6 +905,7 @@ function keyPressed() {
         showMenu = false // menu disappears when space is pressed
         //time is in milliseconds
         startTime = millis();
+        lastEatenTime = millis()
     }
 }
 
