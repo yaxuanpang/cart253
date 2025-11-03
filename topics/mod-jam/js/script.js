@@ -39,6 +39,7 @@ let showMenu = true; // menu with instructions start off true
 let showEnd = false; // ending starts off false
 let showWin = false // show win starts off false
 let ateFly = false; // frog did not eat any flies at the start
+let showInstructions = false;
 
 //colors of the frog
 let frogColor = "#00ff00"; // original
@@ -237,6 +238,11 @@ function draw() {
     if (showMenu) {
         drawMenu();
     }
+
+    if (showInstructions === true) {
+        drawInstructions();
+    }
+
     if (showEnd === false) {
         spawnWin();
     }
@@ -908,19 +914,6 @@ function checkTongueBirdOverlap2() {
 }
 
 /**
- * Launch the tongue on click (if it's not launched yet)
- */
-function keyPressed() {
-    if (key === ' ' && frog.tongue.state === "idle") {
-        frog.tongue.state = "outbound";
-        showMenu = false // menu disappears when space is pressed
-        //time is in milliseconds
-        startTime = millis();
-        lastEatenTime = millis()
-    }
-}
-
-/**
  * Menu, Instructions and Ending
  */
 //drawing the menu
@@ -937,16 +930,36 @@ function drawMenu() {
     stroke(strokeColor);
     text('**Click space to play!**', width / 2, height / 6);
 
+    noStroke(0);
+    fill(255);
+    rect(340, height / 2, 40, 40);
+
+    fill(0);
+    textSize(13);
+    textAlign(CENTER, CENTER);
+    text('Click here for instructions', 360, 330);
+
+    pop();
+}
+
+function drawInstructions() {
+    push();
+    //other game modes
+    strokeWeight(4);
+    stroke(255);
+    fill(0);
+    textSize(20);
+
     //instruction background
     noStroke();
     fill(255);
-    rect(180, 130, 380, 360, 20);
+    rect(180, 130, 380, 370, 15);
 
     //instructions
     fill(0);
     textSize(17);
     textAlign(CENTER, CENTER);
-    text('Instructions:', 375, 170);
+    text('Instructions:', 375, 160);
 
     textAlign(LEFT, CENTER);
     text('- Control the frog with the mouse and click', 210, 200);
@@ -970,6 +983,13 @@ function drawMenu() {
 
     fill("#4f2409");
     rect(250, 425, 10, 10);
+
+    // button to close the instructions
+    strokeWeight(2.5);
+    stroke(200);
+    noFill();
+    rect(523.5, 130, 35, 35, 10);
+    text('X', 535, 148);
 
     pop();
 }
@@ -1151,5 +1171,27 @@ function drawWin() {
 function spawnWin() {
     if (dayCount === 5) {
         showWin = true;
+    }
+}
+
+/**
+ * Launch the tongue on click (if it's not launched yet)
+ */
+function keyPressed() {
+    if (key === ' ' && frog.tongue.state === "idle") {
+        frog.tongue.state = "outbound";
+        showMenu = false // menu disappears when space is pressed
+        //time is in milliseconds
+        startTime = millis();
+        lastEatenTime = millis()
+    }
+}
+
+function mousePressed() {
+    if (mouseX > 340 && mouseX < 380 && mouseY > 275 && mouseY < 315) {
+        showInstructions = true;
+    }
+    if (mouseX > 523.5 && mouseX < 558.5 && mouseY > 130 && mouseY < 165) {
+        showInstructions = false;
     }
 }
