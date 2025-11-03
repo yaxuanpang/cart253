@@ -28,8 +28,8 @@ let radius = 30; // radius of the progrss ring
 let direction = -1; // direction of the progress ring
 let progress = 0; // the progress
 let finalDayCount = 0; // store the final day count when game ends
-let endTimeStarted = false; // timer for transition to the ending (starts off false)
 let lastEatenTime = 0; // track when the frog last ate
+let endTimeStarted = false; // timer for transition to the ending (starts off false)
 
 let night = false; // the sky color change starts off false
 let showBird2 = false; // the second bird does not appear at first
@@ -37,6 +37,7 @@ let showFlashLight = false; // the flashlight does not appear during the day
 let showFly3 = false; // the third fly starts off false
 let showMenu = true; // menu with instructions start off true
 let showEnd = false; // ending starts off false
+let showWin = false // show win starts off false
 let ateFly = false; // frog did not eat any flies at the start
 
 //colors of the frog
@@ -236,6 +237,15 @@ function draw() {
     if (showMenu) {
         drawMenu();
     }
+    if (showEnd === false) {
+        spawnWin();
+    }
+
+    if (showWin) {
+        drawWin();
+        night = false;
+        showEnd = false;
+    }
 
     spawnEnd();
 
@@ -244,6 +254,7 @@ function draw() {
         EndingFrog();
         night = false;
         drawdayNumber();
+        showWin = false;
     }
 
     // display progess ring and the number of days
@@ -1120,4 +1131,25 @@ function drawdayNumber() {
     textAlign(CENTER, CENTER); //align the text at the center
     text("DAY " + finalDayCount, width / 2, 200); // show the value of finalDayCount
     pop();
+}
+
+function drawWin() {
+    push();
+    noStroke();
+    fill(0);
+    rect(0, 0, width, height);
+    strokeWeight(3);
+    stroke("#ffe72e");
+    textAlign(CENTER, CENTER);
+    textSize(50);
+    textStyle(BOLD);
+    text('**You Win!!**', width / 2, height / 2);
+    pop();
+}
+
+
+function spawnWin() {
+    if (dayCount === 5) {
+        showWin = true;
+    }
 }
