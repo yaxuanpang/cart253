@@ -18,7 +18,7 @@ This description should help the reader understand what the program is, anything
 
 ## Screenshot(s)
 
-> ![Image of a clown face](./assets/images/image1.jpg)
+> ![Image of my game](./assets/images/image1.jpg)
 
 ## Attribution
 

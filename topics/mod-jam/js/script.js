@@ -39,7 +39,7 @@ let showMenu = true; // menu with instructions start off true
 let showEnd = false; // ending starts off false
 let showWin = false // show win starts off false
 let ateFly = false; // frog did not eat any flies at the start
-let showInstructions = false;
+let showInstructions = false; // instructions is not visible at the beginning
 
 //colors of the frog
 let frogColor = "#00ff00"; // original
@@ -143,7 +143,7 @@ const flashlight = {
 function setup() {
     createCanvas(700, 550);
 
-    angleMode(DEGREES);
+    angleMode(DEGREES); // angle mode is in degrees
 
     //stroke color is a random color
     strokeColor = color(random(255));
@@ -166,8 +166,8 @@ function setup() {
 }
 
 function draw() {
-    background(r, g, b);
     // color of the background is light blue at the beginning
+    background(r, g, b);
 
     drawBehindwater(); // draw the waves behind the frog
 
@@ -241,22 +241,28 @@ function draw() {
         drawMenu();
     }
 
+    //if showinstructions is true, then draw instructions
     if (showInstructions === true) {
         drawInstructions();
     }
 
+    // if the player did not lose, then they win the game and the winning screen appears
     if (showEnd === false) {
         spawnWin();
     }
 
+    //if showWin is true, then draw win, show end is false and the night and day cycle stops
     if (showWin) {
         drawWin();
         night = false;
         showEnd = false;
     }
 
+    // losing screen appears
     spawnEnd();
 
+    //if show end is true, then draw end, the dead frog and the number of days the frog survived
+    //show win is false and the night and day cycle stops
     if (showEnd) {
         drawEnd();
         EndingFrog();
@@ -270,7 +276,7 @@ function draw() {
     if (g <= 85) {
         direction = 1; // green increasing
     } else if (startTime > 0 && g >= 207) {
-        // x = 207;
+        // if the game started and g is equal or bigger than 207
         direction = -1; // green decreasing
         dayCount++; // increase the number of days
     }
@@ -322,7 +328,7 @@ function spawnFlashlight() {
     }
 }
 
-
+// draws the flashlight
 function drawFlashLight() {
     push();
     noStroke();
@@ -813,6 +819,7 @@ function checkTongueFlyOverlap4() {
     }
 }
 
+//tongue overlapping with birds
 function checkTongueBirdOverlap() {
     // Get distance from tongue to fly
     const d = dist(frog.tongue.x, frog.tongue.y, bird.x, bird.y);
@@ -930,7 +937,7 @@ function drawMenu() {
         strokeColor = color(random(255), random(255), random(255))
     }
     stroke(strokeColor);
-    text('**Click space to play!**', width / 2, height / 6);
+    text('**Click space to play!**', width / 2, height / 6); // small square for instructions
 
     //title
     textAlign(CENTER, CENTER);
@@ -939,12 +946,14 @@ function drawMenu() {
     fill(255);
     strokeWeight(15);
 
+    // the color of the stroke changes once every 10 frames
     if (frameCount % 10 === 0) {
         strokeFill = color(5, random(255), random(255));
     }
     stroke(strokeFill);
     text('LIFE AS A FROG', width / 2, height / 3);
 
+    // instructions to start the game
     noStroke(0);
     fill(255);
     rect(340, height / 2, 40, 40);
@@ -1168,6 +1177,7 @@ function drawdayNumber() {
     pop();
 }
 
+// darws the winning screen
 function drawWin() {
     push();
     noStroke();
@@ -1182,7 +1192,7 @@ function drawWin() {
     pop();
 }
 
-
+// the player wins if the frog survives 5 days
 function spawnWin() {
     if (dayCount === 5) {
         showWin = true;
@@ -1195,18 +1205,19 @@ function spawnWin() {
 function keyPressed() {
     if (key === ' ' && frog.tongue.state === "idle") {
         frog.tongue.state = "outbound";
-        showMenu = false // menu disappears when space is pressed
+        showMenu = false // menu disappears when space is pressed (the game starts)
         //time is in milliseconds
         startTime = millis();
         lastEatenTime = millis()
     }
 }
 
+// click on the small white square to show instructions and click on the x to close it
 function mousePressed() {
-    if (mouseX > 340 && mouseX < 380 && mouseY > 275 && mouseY < 315) {
+    if (mouseX > 340 && mouseX < 380 && mouseY > 275 && mouseY < 315) { // click on the square to see instructions
         showInstructions = true;
     }
-    if (mouseX > 523.5 && mouseX < 558.5 && mouseY > 130 && mouseY < 165) {
+    if (mouseX > 523.5 && mouseX < 558.5 && mouseY > 130 && mouseY < 165) { // x to close the instructions
         showInstructions = false;
     }
 }
