@@ -51,6 +51,7 @@ let deadFrogColor = "#4f2409"; // dead
 let FlashLightColor; //defining the color of the flashlight
 let startTime; //defining a start time
 let strokeColor; // the color of the stroke
+let strokeFill; // the color of the stroke
 let fontBold; // bold font
 
 // Our frog
@@ -146,6 +147,7 @@ function setup() {
 
     //stroke color is a random color
     strokeColor = color(random(255));
+    strokeFill = color(5, random(255), random(255));
 
     //color of the flashlight 
     FlashLightColor = color(245, 218, 42, 200);
@@ -929,6 +931,19 @@ function drawMenu() {
     }
     stroke(strokeColor);
     text('**Click space to play!**', width / 2, height / 6);
+
+    //title
+    textAlign(CENTER, CENTER);
+    textSize(70);
+    textStyle(BOLD);
+    fill(255);
+    strokeWeight(15);
+
+    if (frameCount % 10 === 0) {
+        strokeFill = color(5, random(255), random(255));
+    }
+    stroke(strokeFill);
+    text('LIFE AS A FROG', width / 2, height / 3);
 
     noStroke(0);
     fill(255);
