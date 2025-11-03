@@ -21,9 +21,15 @@ let g = 207; // green
 let b = 235; // blue
 let a = 0; //alpha (the opacity)
 
-
 let change = 0.055; //change the color of the sky
-let lastEatenTime = 0; // track when the frog last ate a fly
+
+let dayCount = 0; // number of days
+let radius = 30; // radius of the progrss ring
+let direction = -1; // direction of the progress ring
+let progress = 0; // the progress
+let finalDayCount = 0; // store the final day count when game ends
+let endTimeStarted = false; // timer for transition to the ending (starts off false)
+let lastEatenTime = 0; // track when the frog last ate
 
 let night = false; // the sky color change starts off false
 let showBird2 = false; // the second bird does not appear at first
@@ -44,9 +50,6 @@ let FlashLightColor; //defining the color of the flashlight
 let startTime; //defining a start time
 let strokeColor; // the color of the stroke
 let fontBold; // bold font
-let endTimeStarted = false; // timer for transition to the ending (starts off false)
-
-
 
 // Our frog
 const frog = {
@@ -239,7 +242,34 @@ function draw() {
     if (showEnd) {
         drawEnd();
         EndingFrog();
+        night = false;
+        drawdayNumber();
     }
+
+    // display progess ring and the number of days
+    // Check green color value boundaries and increase or decrease
+    if (g <= 85) {
+        direction = 1; // green increasing
+    } else if (startTime > 0 && g >= 207) {
+        // x = 207;
+        direction = -1; // green decreasing
+        dayCount++; // increase the number of days
+    }
+
+
+    // calculate the progess ring's completion percentage
+    // One day = green value decreases from 207 to 85 and increases from 85 to 207 
+    //Each increment is `change = 0.0055`(total number of changes is 244)
+    if (direction === -1) {
+        // green value decreasing
+        progress = (207 - g) / 244;
+    } else {
+        // green value increasing
+        progress = (g - 85) / 244 + 0.5;
+    }
+
+    drawProgressRing(progress);  // draw the progress ring
+    showDay();  // show day
 
     // 3 seconds after the game starts check if the frog ate any flies
     if (timePassed > 3000) {
@@ -943,6 +973,7 @@ function drawEnd() {
 function spawnEnd() {
     if (frogColor === deadFrogColor && endTimeStarted === false) {
         endTimeStarted = true; // timer for the end has started
+        finalDayCount = dayCount; // save the current day count
         setTimeout(() => {
             showEnd = true; // show the end after half a second
         }, 500); // half a second delay
@@ -1036,4 +1067,48 @@ function checkLastEaten() {
     else if (millis() - lastEatenTime > 3000 && frogColor === badFrogColor && showMenu === false) {
         frogColor = deadFrogColor;
     }
+}
+
+function drawProgressRing(progress) {
+    push();
+    // draw the white ring background
+    stroke(255);
+    strokeWeight(4);
+    noFill();
+    ellipse(90, 90, radius * 2, radius * 2);
+
+    // fill the green progress ring
+    stroke(124, 252, 0);
+    strokeWeight(4);
+    strokeCap(SQUARE);
+    noFill();
+
+    // draw the progress ring clockwise from the top(-90 degree)
+    let startAngle = -90;
+    let endAngle = -90 + (progress * 360);
+
+    // draw the progress ring
+    arc(90, 90, radius * 2, radius * 2, startAngle, endAngle);
+
+    pop();
+}
+
+function showDay() {
+    push();
+    fill(0);
+    noStroke();
+    textSize(12);
+    textAlign(CENTER, CENTER);
+    text("DAY " + dayCount, 85, 40);
+    pop();
+}
+
+function drawdayNumber() {
+    push();
+    fill(255);
+    noStroke();
+    textSize(50);
+    textAlign(CENTER, CENTER); //align the text at the center
+    text("DAY " + finalDayCount, width / 2, 200); // show the value of finalDayCount
+    pop();
 }
