@@ -54,6 +54,8 @@ let strokeColor; // the color of the stroke
 let strokeFill; // the color of the stroke
 let fontBold; // bold font
 
+let cloudColor = 255;
+
 // Our frog
 const frog = {
     // The frog's body has a position and size
@@ -168,6 +170,8 @@ function setup() {
 function draw() {
     // color of the background is light blue at the beginning
     background(r, g, b);
+
+    drawClouds();
 
     drawBehindwater(); // draw the waves behind the frog
 
@@ -1207,6 +1211,31 @@ function spawnWin() {
     if (dayCount === 5) {
         showWin = true;
     }
+}
+
+function drawClouds() {
+    noStroke();
+    fill(cloudColor);
+    ellipse(130, 300, 60, 40);
+    ellipse(120, 260, 60, 60);
+    ellipse(170, 280, 70, 70);
+    ellipse(80, 290, 60, 60);
+    ellipse(50, 300, 40, 40);
+    ellipse(210, 300, 40, 40);
+
+    ellipse(550, 100, 60, 40);
+    ellipse(540, 60, 60, 60);
+    ellipse(590, 80, 70, 70);
+    ellipse(500, 90, 60, 60);
+    ellipse(470, 100, 40, 40);
+    ellipse(630, 100, 40, 40);
+
+    ellipse(565, 375, 50, 30);
+    ellipse(625, 375, 20, 20);
+    ellipse(565, 355, 55, 55);
+    ellipse(530, 370, 40, 40);
+    ellipse(510, 375, 30, 30);
+    ellipse(600, 370, 40, 40);
 }
 
 /**
