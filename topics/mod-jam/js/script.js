@@ -54,7 +54,7 @@ let strokeColor; // the color of the stroke
 let strokeFill; // the color of the stroke
 let fontBold; // bold font
 
-let cloudColor = 255;
+let cloudColor = 255; // the color of the clouds (white)
 
 // Our frog
 const frog = {
@@ -171,7 +171,7 @@ function draw() {
     // color of the background is light blue at the beginning
     background(r, g, b);
 
-    drawClouds();
+    drawClouds(); // draws the clouds
 
     drawBehindwater(); // draw the waves behind the frog
 
@@ -1213,6 +1213,7 @@ function spawnWin() {
     }
 }
 
+//draws the clouds
 function drawClouds() {
     noStroke();
     fill(cloudColor);
