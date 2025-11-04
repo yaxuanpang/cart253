@@ -67,7 +67,7 @@ const frog = {
         x: undefined,
         y: 480,
         size: 20,
-        speed: 25,
+        speed: 10,
         // Determines how the tongue moves each frame
         state: "idle" // State can be: idle, outbound, inbound
     }
@@ -764,6 +764,8 @@ function checkTongueFlyOverlap() {
     if (eaten) {
         // Reset the fly
         resetFly();
+        frog.tongue.speed = frog.tongue.speed + 1; // tongue speeds up every time the frog eats a fly
+        frog.tongue.speed = constrain(frog.tongue.speed, 10, 25); // the speed is between 10 and 25
         // Bring back the tongue
         frog.tongue.state = "inbound";
         lastEatenTime = millis(); // record the time when fly was eaten
@@ -780,6 +782,8 @@ function checkTongueFlyOverlap2() {
     if (eaten) {
         // Reset the fly
         resetFly2();
+        frog.tongue.speed = frog.tongue.speed + 1; // tongue speeds up every time the frog eats a fly
+        frog.tongue.speed = constrain(frog.tongue.speed, 10, 25); // the speed is between 10 and 25
         // Bring back the tongue
         frog.tongue.state = "inbound";
         lastEatenTime = millis(); // record the time when fly was eaten
@@ -796,6 +800,8 @@ function checkTongueFlyOverlap3() {
     if (eaten) {
         // Reset the fly
         resetFly3();
+        frog.tongue.speed = frog.tongue.speed + 1; // tongue speeds up every time the frog eats a fly
+        frog.tongue.speed = constrain(frog.tongue.speed, 10, 25); // the speed is between 10 and 25
         // Bring back the tongue
         frog.tongue.state = "inbound";
         lastEatenTime = millis(); // record the time when fly was eaten
@@ -812,6 +818,8 @@ function checkTongueFlyOverlap4() {
     if (eaten) {
         // Reset the fly
         resetFly4();
+        frog.tongue.speed = frog.tongue.speed + 1; // tongue speeds up every time the frog eats a fly
+        frog.tongue.speed = constrain(frog.tongue.speed, 10, 25); // the speed is between 10 and 25
         // Bring back the tongue
         frog.tongue.state = "inbound";
         lastEatenTime = millis(); // record the time when fly was eaten
@@ -833,6 +841,7 @@ function checkTongueBirdOverlap() {
     }
     if (eaten) {
         resetBird();
+        frog.tongue.speed = 10; // if the frog eats a frog, the tongue speed slows down to 10
         frog.tongue.state = "inbound";
 
         //frog eats bird for the first time
@@ -879,6 +888,7 @@ function checkTongueBirdOverlap2() {
     if (eaten) {
         // Reset the fly
         resetBird2();
+        frog.tongue.speed = 10; // if the frog eats a frog, the tongue speed slows down to 10
         // Bring back the tongue
         frog.tongue.state = "inbound";
     }
