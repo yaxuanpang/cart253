@@ -50,15 +50,7 @@ function draw() {
     fill("pink");
     textAlign(CENTER, CENTER);
     textSize(32);
-    text(carName, width / 2, height / 5);
-    pop();
-
-    push();
-    fill("pink");
-    textAlign(CENTER, CENTER);
-    textSize(32);
-    text(randomCar, width / 2, height / 2);
-    text(randomDinosaur, width / 2, height / 1.5);
+    text(carName, width / 2, height / 2);
     pop();
 }
 
@@ -68,4 +60,6 @@ function draw() {
 function mousePressed() {
     randomCar = random(carData.cars)
     randomDinosaur = random(dinosaurData.dinosaurs)
+
+    carName = randomCar + " " + randomDinosaur;
 }
