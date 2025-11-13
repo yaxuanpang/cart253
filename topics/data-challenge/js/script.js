@@ -46,9 +46,6 @@ function setup() {
 function draw() {
     background(0);
 
-    randomCar = random(carData.cars)
-    randomDinosaur = random(dinosaurData.dinosaurs)
-
     push();
     fill("pink");
     textAlign(CENTER, CENTER);
@@ -56,12 +53,6 @@ function draw() {
     text(carName, width / 2, height / 5);
     pop();
 
-}
-
-/**
- * Generate a new car name
- */
-function mousePressed() {
     push();
     fill("pink");
     textAlign(CENTER, CENTER);
@@ -69,4 +60,12 @@ function mousePressed() {
     text(randomCar, width / 2, height / 2);
     text(randomDinosaur, width / 2, height / 1.5);
     pop();
+}
+
+/**
+ * Generate a new car name
+ */
+function mousePressed() {
+    randomCar = random(carData.cars)
+    randomDinosaur = random(dinosaurData.dinosaurs)
 }
