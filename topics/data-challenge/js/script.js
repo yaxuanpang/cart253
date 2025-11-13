@@ -35,8 +35,8 @@ function preload() {
 function setup() {
     createCanvas(600, 400);
 
-    randomCar = random(carData.cars)
-    randomDinosaur = random(dinosaurData.dinosaurs)
+    // randomCar = random(carData.cars)
+    // randomDinosaur = random(dinosaurData.dinosaurs)
 
 }
 
@@ -45,6 +45,9 @@ function setup() {
 */
 function draw() {
     background(0);
+
+    randomCar = random(carData.cars)
+    randomDinosaur = random(dinosaurData.dinosaurs)
 
     push();
     fill("pink");
@@ -63,6 +66,7 @@ function mousePressed() {
     fill("pink");
     textAlign(CENTER, CENTER);
     textSize(32);
-    text(randomCar + randomDinosaur, width / 2, height / 2);
+    text(randomCar, width / 2, height / 2);
+    text(randomDinosaur, width / 2, height / 1.5);
     pop();
 }
