@@ -16,6 +16,7 @@ let dinosaurData = undefined;
 let langData = undefined;
 let lang = "fr";
 let randomCar;
+let randomDinosaur;
 
 // Starts with the instruction
 let carName = "Click to generate a car name.";
@@ -25,6 +26,7 @@ let carName = "Click to generate a car name.";
  */
 function preload() {
     carData = loadJSON("assets/data/cars.json")
+    dinosaurData = loadJSON("assets/data/dinosaurs.json")
 }
 
 /**
@@ -34,6 +36,8 @@ function setup() {
     createCanvas(600, 400);
 
     randomCar = random(carData.cars)
+    randomDinosaur = random(dinosaurData.dinosaurs)
+
 }
 
 /**
@@ -46,7 +50,7 @@ function draw() {
     fill("pink");
     textAlign(CENTER, CENTER);
     textSize(32);
-    text(carName, width / 2, height);
+    text(carName, width / 2, height / 5);
     pop();
 
 }
@@ -59,6 +63,6 @@ function mousePressed() {
     fill("pink");
     textAlign(CENTER, CENTER);
     textSize(32);
-    text(randomCar, width / 2, height / 2);
+    text(randomCar + randomDinosaur, width / 2, height / 2);
     pop();
 }
