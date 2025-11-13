@@ -1,6 +1,6 @@
 /**
  * Data Challenge
- * Yaxuan and Ashmitha
+ * Yaxuan, Nerly and Ashmitha
  * 
  * A program to generate new car model names using dinosaurs.
  *
@@ -15,6 +15,7 @@ let carData = undefined;
 let dinosaurData = undefined;
 let langData = undefined;
 let lang = "fr";
+let randomCar;
 
 // Starts with the instruction
 let carName = "Click to generate a car name.";
@@ -31,6 +32,8 @@ function preload() {
 */
 function setup() {
     createCanvas(600, 400);
+
+    randomCar = random(carData.cars)
 }
 
 /**
@@ -43,13 +46,19 @@ function draw() {
     fill("pink");
     textAlign(CENTER, CENTER);
     textSize(32);
-    text(carName, width / 2, height / 2);
+    text(carName, width / 2, height);
     pop();
+
 }
 
 /**
  * Generate a new car name
  */
 function mousePressed() {
-
+    push();
+    fill("pink");
+    textAlign(CENTER, CENTER);
+    textSize(32);
+    text(randomCar, width / 2, height / 2);
+    pop();
 }
