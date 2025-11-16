@@ -22,8 +22,8 @@ It makes the game more predictable every time I play again. I feel like I might 
 
 Ashmitha Kanagiah
 https://ashmyytaa.github.io/cart253/jams/mod-jam/  
-This game was really fun to play. I like the idea of locating the frog underwater instead of on land and shows a lot of creativity. The feature I like the most about the game is the background. She uses perlin noise to make waves that are different colors and it really gives the impression that the frog is deep underwater. Not only did she make waves, but she also made them move like waves with this code:
+This game was really fun to play. I like the idea of locating the frog underwater instead of on land. It was an original idea that shows a lot of thought and creativity. The feature I like the most about the game is the background. She uses perlin noise to make waves that are different colors and it really gives the impression that the frog is deep underwater. Not only did she make waves, but she also made them move up and down like waves with this line of code:
 
 let move = noiseScale * frameCount;
 
-The moving waves combined with the slower tongue speed made the experience a lot more relaxed and slow which I really enjoyed. I also really liked the gold mine ending. It is a beautiful ending to the game and it made me happy to see that I found the treasure at the end of the game.
+The moving waves combined with the slower tongue speed made the experience a lot more relaxing and slow, which I really enjoyed. I also really liked the gold mine. It is a beautiful ending to the game. The gold circles contrasted the water really well and it looked like I stumbled into an actual gold mine.
