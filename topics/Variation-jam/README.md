@@ -1,6 +1,6 @@
-# TITLE OF PROJECT
+# Variation Jam
 
-AUTHOR NAME
+Yaxuan Pang
 
 [View this project online](URL_FOR_THE_RUNNING_PROJECT)
 
