@@ -1,4 +1,4 @@
-# Variation Jam
+# Variation Jam : Life as a Frog (Seasons)
 
 Yaxuan Pang
 
