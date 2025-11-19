@@ -2,17 +2,22 @@
 
 Yaxuan Pang
 
-[View this project online](URL_FOR_THE_RUNNING_PROJECT)
+[View this project online](https://yaxuanpang.github.io/cart253/topics/Variation-jam/)
 
 ## Description
 
-This description should help the reader understand what the program is, anything they should know to be able to experience it (controls, special features, etc.), and what the desired user experience is. For example:
+Life of a Frog is a game about catching flies with the frog's tongue. It portrays a semi-realistic life of a frog.The frog (player) needs to eat flies to avoid starving to death and avoid predators. Last 3 full days to win the game!
 
-> *The Mayor of Clown Town* is a simulator experience that allows the user to control a small town populated entirely by clowns.
+There are 5 different game mode, original, spring, summer fall and winter. Each mode will give a different experience and add different challenges to the game.
 
-> The experience is controlled via the mouse, with left click selecting a clown and bringing up a menu of options such as "slip of banana peel" or "get into impossible capacious clown-car."
+## Instructions
+> Move the frog some side to side with the mouse and click space to launch the tongue.
 
-> The project is meant to give the user a sense of what it would be the mayor of a town of clowns, eventually getting the sense that clowns are not taking their civic duties seriously.
+> The frog changes colors when it gets hurt (by birds or starvation). It starts to die if it does not eat for 3 seconds. After 5 seconds of eating the bird, the frog will start healing.
+
+>  There is a night and day cycle with a ring in the top left corner that tracks the number of days the frog survives. It makes a full rotation after one full day and updates the number of days the frog has lived. 
+
+> At night, a flashlight will appear. If the flashlight overlaps with the frog, it dies.
 
 ## Screenshot(s)
 

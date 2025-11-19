@@ -1,14 +1,16 @@
 /**
- * Variation Jam : Life as a Frog (Seasons)
+ * Variation Jam : Life as a Frog (Spring)
  * Yaxuan Pang
  * 
  * A game of catching flies with the frog's tongue. 
  * It portrays a semi-realistic life of a frog.
+ * Spring version!
  * 
  * Instructions:
  * - Click on the white square for instructions and game modes
  * - Move the frog with your mouse
- * - Click space to launch the tongue to catch flies
+ * - Click space to launch the tongue to catch flies and flowers
+ * and baby birds
  * - Avoid birds
  * 
  * Made with p5

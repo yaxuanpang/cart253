@@ -1,5 +1,5 @@
 /**
- * Variation Jam : Life as a Frog (Seasons)
+ * Variation Jam : Life as a Frog (Fall)
  * Yaxuan Pang
  * 
  * A game of catching flies with the frog's tongue. 
