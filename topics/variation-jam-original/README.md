@@ -1,8 +1,8 @@
-# Variation Jam : Life as a Frog (Seasons)
+# Mod-Jam: Life as a Frog
 
 Yaxuan Pang
 
-[View this project online](https://yaxuanpang.github.io/cart253/topics/Variation-jam/)
+[View this project online](https://yaxuanpang.github.io/cart253/topics/mod-jam/)
 
 ## Description
 
@@ -10,7 +10,7 @@ Life of a Frog is a game about catching flies with the frog's tongue. It portray
 
 There are 5 different game mode, original, spring, summer fall and winter. Each mode will give a different experience and add different challenges to the game.
 
-## Instructions
+
 > Move the frog some side to side with the mouse and click space to launch the tongue.
 
 > The frog changes colors when it gets hurt (by birds or starvation). It starts to die if it does not eat for 3 seconds. After 5 seconds of eating the bird, the frog will start healing.
@@ -21,20 +21,16 @@ There are 5 different game mode, original, spring, summer fall and winter. Each 
 
 ## Screenshot(s)
 
-This bit should have some images of the program running so that the reader has a sense of what it looks like. For example:
-
-> ![Image of a clown face](./assets/images/clown.png)
+> ![Image of my game](./assets/images/image2.jpg)
+> ![Image of my game](./assets/images/image3.jpg)
+> ![Image of my game](./assets/images/image1.jpg)
 
 ## Attribution
 
-This bit should attribute any code, assets or other elements used taken from other sources. For example:
-
 > - This project uses [p5.js](https://p5js.org).
-> - The clown image is a capture of the clown from the Apple emoji character set.
-> - The barking sound effect is "single dog bark 1" by crazymonke9 from freesound.org: https://freesound.org/people/crazymonke9/sounds/418107/
+> - This projects uses the code from the variables challenge (https://concordia.yuja.com/V/Video?v=1071104&node=5700521&a=117175823)
+> - This projects uses the code from the conditionals challenge (https://yaxuanpang.github.io/cart253/topics/conditionals-challenge/).
 
 ## License
-
-This bit should include the license you want to apply to your work. For example:
 
 > This project is licensed under a Creative Commons Attribution ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en)) license with the exception of libraries and other components with their own licenses.

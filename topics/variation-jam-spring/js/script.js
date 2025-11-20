@@ -1,5 +1,5 @@
 /**
- * Variation Jam : Life as a Frog (Winter)
+ * Variation Jam : Life as a Frog
  * Yaxuan Pang
  * 
  * A game of catching flies with the frog's tongue. 
@@ -9,7 +9,6 @@
  * - Click on the white square for instructions and game modes
  * - Move the frog with your mouse
  * - Click space to launch the tongue to catch flies
- * - Keep moving to not freeze to death
  * 
  * Made with p5
  * https://p5js.org/
@@ -20,6 +19,7 @@
 // defining arrays
 let newbird = [];
 const clouds = [];
+let flowers = [];
 
 // variables
 let state = 'MENU'; // MENU, GAME, WIN, END
@@ -60,17 +60,17 @@ const frog = {
         state: "idle" // idle, outbound, inbound
     }, // frog colors
     colors: {
-        healthy: "#00ff00",
+        healthy: "#5bff45",
         damaged: "#6e8514",
         dying: "#855214",
         dead: "#4f2409"
     },
-    currentColor: "#00ff00"
+    currentColor: "#5bff45"
 };
 
 // fly array
 const flies = [ //(x, y, size, speed, isActive, isDayOnly, vx, vy, canRespawn)
-    createFly(0, 200, 10, 3, true, false),
+    //createFly(0, 200, 10, 3, true, false),
     createFly(0, 300, 12, 5, true, true, 1.5, 50),
     createFly(0, 300, 10, 4, false, false, 0, 0, true),
     createFly(0, 100, 12, 3.5, true, true, 4, 10)
@@ -212,11 +212,14 @@ function setup() {
     // Initialize all entities
     flies.forEach(fly => resetFly(fly));
     birds.forEach(bird => resetBird(bird));
+
+    createFlowers();
+
     flashlight.x = width / 2;
     flashlight.y = height / 2;
 }
 
-// drawing the game states
+// drawing the canvas and the game states
 
 function draw() {
     if (state === 'MENU') {
@@ -279,6 +282,65 @@ function menu() {
 }
 
 // ====== new functions start here ========
+
+function drawFlower(cx, cy, angle, size) {
+    push();
+    translate(cx, cy);
+    rotate(angle);  // This will now work properly with degrees
+
+    const petalCount = 5;
+    const petalRadius = 19 * size;
+    const petalSize = 22 * size;
+
+    fill(255, 209, 220);
+    noStroke();
+
+    for (let i = 0; i < petalCount; i++) {
+        let a = (360 / petalCount) * i;  // Changed from TWO_PI to 360
+        let px = cos(a) * petalRadius;
+        let py = sin(a) * petalRadius;
+
+        ellipse(px, py, petalSize);
+    }
+
+    fill(255, 255, 150);
+    ellipse(0, 0, 20 * size);
+
+    pop();
+}
+
+
+function createFlowers() {
+    for (let i = 0; i < 10; i++) {
+        flowers.push({
+            x: random(width),
+            y: random(-300, -20),
+            speed: random(1, 3),
+            // rotation
+            angle: random(360),
+            rotationSpeed: random(1, 3),  // Changed from 0.01-0.05 to 1-3 degrees per frame
+            // size variation
+            size: random(0.3, 0.6)
+        });
+    }
+}
+
+function resetFlowers() {
+    flowers.forEach(flower => {
+        flower.y += flower.speed;
+        flower.angle += flower.rotationSpeed;  // This will now add 1-3 degrees per frame
+        // reset
+        if (flower.y > height + 30) {
+            flower.y = random(-200, -50);
+            flower.x = random(width);
+            flower.size = random(0.3, 0.6);
+            flower.speed = random(1, 3);
+            flower.rotationSpeed = random(1, 3);  // Changed here too
+        }
+        drawFlower(flower.x, flower.y, flower.angle, flower.size);
+    });
+}
+
 
 //create the flies
 function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude = 0, spawnsAtNight = false) {
@@ -348,6 +410,12 @@ function drawMenuText() {
     }
     stroke(titleEffect.strokeColor);
     text('**Click space to play!**', width / 2, height / 6);
+
+    textSize(20);
+    fill(255);
+    strokeWeight(5);
+    stroke(255, 158, 234);
+    text('(Spring Variation!! 🌸)', 350, 250);
 
     textSize(70);
     textStyle(BOLD);
@@ -435,6 +503,7 @@ function game() {
     flies.forEach(fly => { if (fly.active) drawFly(fly); });
     birds.forEach(bird => { if (bird.active) drawBird(bird); });
     drawFrog();
+    resetFlowers();
     drawWater();
 
     // Update game mechanics
@@ -816,7 +885,7 @@ function drawClouds() {
 function drawBehindWater() {
     push();
     noStroke();
-    fill("#1ec7be");
+    fill("#29cde3");
     beginShape();
     for (let x = 0; x <= width; x += 10) {
         let y = 485 + sin(x * 3 - frameCount * 3) * 10;
@@ -834,7 +903,7 @@ function drawBehindWater() {
 function drawWater() {
     push();
     noStroke();
-    fill("#3d9cf5");
+    fill("#18aaf2");
     beginShape();
     for (let x = 0; x <= width; x += 10) {
         let y = 495 + sin(x * 3 + frameCount * 3) * 10;
@@ -919,6 +988,12 @@ function end() {
  * Draws the dead frog icon on the game over screen
  */
 function drawDeadFrogIcon() {
+    textSize(20);
+    fill(255);
+    strokeWeight(5);
+    stroke(255, 158, 234);
+    text('(Spring Variation!! 🌸)', 350, 130);
+
     noStroke();
     fill(255);
     circle(width / 2, height / 1.5, 80);
@@ -940,6 +1015,7 @@ function drawDeadFrogIcon() {
     fill("#00ff00");
     rect(width / 2.1, height / 1.49, 32, 5);
 }
+
 
 /**
  * Handles keyboard input
