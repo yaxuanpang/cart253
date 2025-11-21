@@ -76,7 +76,7 @@ const flies = [ //(x, y, size, speed, isActive, isDayOnly, vx, vy, canRespawn)
     createFly(0, 100, 12, 3.5, true, true, 4, 10)
 ];
 
-// bird array and parameters
+// array and parameters
 const birds = [
     {
         x: 0,
@@ -92,6 +92,13 @@ const birds = [
         speed: 2.5,
         active: false,
         spawnsInDay: true
+    },
+    {
+        x: 0,
+        y: 400,
+        size: 40,
+        speed: 3,
+        active: false,
     }
 ];
 
@@ -201,11 +208,16 @@ const keyCode = {
 };
 
 const waterFlowerArray = [
-    { x: 550, y: 530, size: 0.5, baseY: 530, flowSpeed: 0.9, flowAmount: 6 },
-    { x: 300, y: 535, size: 0.7, baseY: 535, flowSpeed: 1.2, flowAmount: 7 },
-    { x: 250, y: 520, size: 0.3, baseY: 520, flowSpeed: 0.8, flowAmount: 5 },
-    { x: 90, y: 540, size: 0.4, baseY: 540, flowSpeed: 0.6, flowAmount: 6 },
-    { x: 510, y: 540, size: 0.3, baseY: 540, flowSpeed: 0.7, flowAmount: 5 }
+    { x: 550, size: 0.5, baseY: 530, flowSpeed: 0.9, flowAmount: 6 },
+    { x: 300, size: 0.7, baseY: 535, flowSpeed: 1.2, flowAmount: 7 },
+    { x: 250, size: 0.3, baseY: 520, flowSpeed: 0.8, flowAmount: 5 },
+    { x: 90, size: 0.4, baseY: 540, flowSpeed: 0.6, flowAmount: 6 },
+    { x: 510, size: 0.3, baseY: 540, flowSpeed: 0.7, flowAmount: 5 },
+    { x: 350, size: 0.4, baseY: 535, flowSpeed: 0.7, flowAmount: 5 },
+    { x: 430, size: 0.25, baseY: 525, flowSpeed: 1, flowAmount: 5 },
+    { x: 120, size: 0.25, baseY: 525, flowSpeed: 0.5, flowAmount: 8 },
+    { x: 650, size: 0.2, baseY: 530, flowSpeed: 0.5, flowAmount: 8 },
+    { x: 40, size: 0.2, baseY: 520, flowSpeed: 0.5, flowAmount: 8 }
 ];
 
 const petals = [
@@ -349,7 +361,7 @@ function drawFlower(cx, cy, angle, size) {
     noStroke();
 
     for (let i = 0; i < petalCount; i++) {
-        let a = (360 / petalCount) * i;  // Changed from TWO_PI to 360
+        let a = (360 / petalCount) * i;
         let px = cos(a) * petalRadius;
         let py = sin(a) * petalRadius;
 
@@ -364,16 +376,15 @@ function drawFlower(cx, cy, angle, size) {
 
 
 function createFlowers() {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 6; i++) {
         flowers.push({
             x: random(width),
             y: random(-300, -20),
             speed: random(1, 3),
-            // rotation
             angle: random(360),
-            rotationSpeed: random(1, 3),  // Changed from 0.01-0.05 to 1-3 degrees per frame
-            // size variation
-            size: random(0.3, 0.6)
+            rotationSpeed: random(1, 3),
+            size: random(0.3, 0.6),
+            collisionSize: 20
         });
     }
 }
@@ -381,16 +392,22 @@ function createFlowers() {
 function resetFlowers() {
     flowers.forEach(flower => {
         flower.y += flower.speed;
-        flower.angle += flower.rotationSpeed;  // This will now add 1-3 degrees per frame
-        // reset
+        flower.angle += flower.rotationSpeed;
+
+        // reset if off screen
         if (flower.y > height + 30) {
             flower.y = random(-200, -50);
             flower.x = random(width);
             flower.size = random(0.3, 0.6);
             flower.speed = random(1, 3);
-            flower.rotationSpeed = random(1, 3);  // Changed here too
+            flower.rotationSpeed = random(1, 3);
         }
+
         drawFlower(flower.x, flower.y, flower.angle, flower.size);
+
+        // Add a size property for collision detection (approximate radius)
+        flower.size = flower.size || 20;  // Give flowers a collision radius
+        checkTongueCollision(flower, 'flower');  // Changed to 'flower'
     });
 }
 
@@ -435,7 +452,11 @@ function updateBirds(timePassed) {
 
         // --- BIRD 1 = SPAWN AFTER 0.5 SECONDS ---
         if (index === 1) {
-            bird.active = timePassed > 500;  // 500 ms = 0.5 seconds
+            bird.active = timePassed > 3000;  // 500 ms = 0.5 seconds
+        }
+
+        if (index === 2) {
+            bird.active = timePassed > 10000;
         }
 
         if (bird.active) {
@@ -465,7 +486,7 @@ function drawMenuText() {
     fill(255);
     strokeWeight(5);
     stroke(255, 158, 234);
-    text('(Spring Variation!! 🌸)', 350, 250);
+    text('(Spring Edition!! 🌸)', 350, 250);
 
     textSize(70);
     textStyle(BOLD);
@@ -500,11 +521,11 @@ function drawInstructions() {
     fill(0);
     textSize(17);
     textAlign(CENTER, CENTER);
-    text('Instructions:', 375, 160);
+    text('Instructions 🌸:', 375, 160);
 
     textAlign(LEFT, CENTER);
     text('- Control the frog with the mouse and click', 210, 200);
-    text('space to eat', 224, 220);
+    text('space to eat flies and flowers', 224, 220);
     text('- Eat the flies every 3 seconds to not starve', 210, 250);
     text('- WATCH OUT for birds and the', 210, 290);
     text('flashlight', 224, 310);
@@ -547,7 +568,7 @@ function game() {
     // Update and draw game entities
     updateFlies(timePassed);
     updateBirds(timePassed);
-    showFlashlight();
+    //showFlashlight();
 
     // Draw entities
     flies.forEach(fly => { if (fly.active) drawFly(fly); });
@@ -699,8 +720,10 @@ function drawBird(bird) {
  * Checks if the tongue collides with an entity
  */
 function checkTongueCollision(entity, type) {
+    // Use collisionSize for flowers, regular size for others
+    let entitySize = (type === 'flower' && entity.collisionSize) ? entity.collisionSize : entity.size;
     const d = dist(frog.tongue.x, frog.tongue.y, entity.x, entity.y);
-    const hit = d < frog.tongue.size / 2 + entity.size / 2;
+    const hit = d < frog.tongue.size / 2 + entitySize / 2;
 
     if (hit) {
         if (type === 'fly') {
@@ -711,11 +734,21 @@ function checkTongueCollision(entity, type) {
             resetBird(entity);
             frog.tongue.speed = 10;
             damageFrog();
+        } else if (type === 'flower') {
+            // Reset just this flower
+            entity.y = random(-200, -50);
+            entity.x = random(width);
+            entity.size = random(0.3, 0.6);
+            entity.speed = random(1, 3);
+            entity.rotationSpeed = random(1, 3);
+            entity.angle = random(360);
+
+            frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
+            lastEatenTime = millis();
         }
         frog.tongue.state = "inbound";
     }
 }
-
 /**
  * Damages the frog when it eats a bird
  */
@@ -1043,7 +1076,7 @@ function drawDeadFrogIcon() {
     fill(255);
     strokeWeight(5);
     stroke(255, 158, 234);
-    text('(Spring Variation!! 🌸)', 350, 130);
+    text('(Spring Edition!! 🌸)', 350, 130);
 
     noStroke();
     fill(255);
