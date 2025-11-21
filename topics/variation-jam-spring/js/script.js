@@ -200,6 +200,23 @@ const keyCode = {
     space: 32
 };
 
+const waterFlowerArray = [
+    { x: 550, y: 530, size: 0.5, baseY: 530, flowSpeed: 0.9, flowAmount: 6 },
+    { x: 300, y: 535, size: 0.7, baseY: 535, flowSpeed: 1.2, flowAmount: 7 },
+    { x: 250, y: 520, size: 0.3, baseY: 520, flowSpeed: 0.8, flowAmount: 5 },
+    { x: 90, y: 540, size: 0.4, baseY: 540, flowSpeed: 0.6, flowAmount: 6 },
+    { x: 510, y: 540, size: 0.3, baseY: 540, flowSpeed: 0.7, flowAmount: 5 }
+];
+
+const petals = [
+    [0, 10],
+    [13, -8],
+    [-13, -8],
+    [22, 3],
+    [-22, 3]
+];
+
+
 // Create the canvas, set an angle mode and initialize entities (birds, flies and flashlight)
 function setup() {
     createCanvas(700, 550);
@@ -275,6 +292,7 @@ function menu() {
     drawMenuText();
     drawProgressRing();
     drawDayCounter();
+    waterFlowers();
 
     if (showInstructions === true) {
         drawInstructions();
@@ -282,6 +300,41 @@ function menu() {
 }
 
 // ====== new functions start here ========
+
+function waterFlowers() {
+    waterFlowerArray.forEach(flower => {
+        // Calculate flowing offset using sine wave (in degrees)
+        let angle = (frameCount * flower.flowSpeed) % 360;
+        flower.y = flower.baseY + sin(angle) * flower.flowAmount;
+        drawWaterFlower(flower.x, flower.y, flower.size);
+    });
+}
+
+function drawWaterFlower(cx, cy, size) {
+    push();
+    translate(cx, cy);
+
+    const petals = [
+        [0, 10],
+        [13, -8],
+        [-13, -8],
+        [22, 3],
+        [-22, 3]
+    ];
+
+    fill(255, 209, 220);
+    noStroke();
+
+    for (let i = 0; i < petals.length; i++) {
+        ellipse(petals[i][0] * size, petals[i][1] * size, 25 * size, 10 * size);
+    }
+
+    // Center
+    fill(255, 255, 150);
+    ellipse(0, 0, 25 * size, 10 * size);
+
+    pop();
+}
 
 function drawFlower(cx, cy, angle, size) {
     push();
@@ -391,9 +444,6 @@ function updateBirds(timePassed) {
         }
     });
 }
-
-
-
 
 /**
  * Draws the menu text and title
@@ -505,6 +555,7 @@ function game() {
     drawFrog();
     resetFlowers();
     drawWater();
+    waterFlowers();
 
     // Update game mechanics
     updateSky();
