@@ -17,7 +17,6 @@
 "use strict";
 
 // defining arrays
-let newbird = [];
 const clouds = [];
 let flowers = [];
 
@@ -100,6 +99,24 @@ const birds = [
         speed: 3,
         active: false,
     }
+];
+
+const smallBirds = [
+    {
+        x: 0,
+        y: 200,
+        size: 30,
+        speed: 2,
+        active: true
+    },
+    {
+        x: 0,
+        y: 400,
+        size: 30,
+        speed: 2.5,
+        active: false,
+        spawnsInDay: true
+    },
 ];
 
 // flashlight parameters
@@ -241,6 +258,7 @@ function setup() {
     // Initialize all entities
     flies.forEach(fly => resetFly(fly));
     birds.forEach(bird => resetBird(bird));
+    smallBirds.forEach(sb => resetSmallBird(sb));
 
     createFlowers();
 
@@ -265,19 +283,55 @@ function draw() {
     }
 }
 
+/**
+ * Handles keyboard input
+ */
+function keyPressed(event) {
+    if ((event.keyCode) === 32) {
+        if (state === 'MENU' && frog.tongue.state === "idle") {
+            frog.tongue.state = "outbound";
+            state = 'GAME';
+            startTime = millis();
+            lastEatenTime = millis();
+        } else if (state === 'GAME' && frog.tongue.state === "idle") {
+            frog.tongue.state = "outbound";
+        }
+    }
+}
+
+/**
+ * Handles mouse clicks
+ */
+function mousePressed() {
+    if (state === 'MENU') {
+        if (mouseX > menuButton.x && mouseX < menuButton.x + menuButton.size &&
+            mouseY > menuButton.y && mouseY < menuButton.y + menuButton.size) {
+            showInstructions = true;
+        }
+        if (mouseX > instructions.closeButton.x &&
+            mouseX < instructions.closeButton.x + instructions.closeButton.size &&
+            mouseY > instructions.closeButton.y &&
+            mouseY < instructions.closeButton.y + instructions.closeButton.size) {
+            showInstructions = false;
+        }
+    }
+}
+
 // drawing all the elements that will appear in the menu state
 
 function menu() {
     background(sky.fill.r, sky.fill.g, sky.fill.b);
 
-    FrogMenuMovement();
+    moveMenuFrog();
 
 
     drawClouds();
     drawBehindWater();
     drawMenuBird();
 
+
     updateBirds(0); // or moveBird(bird)
+    updateSmallBirds(0);
     updateFlies(0);// move flies
 
 
@@ -311,8 +365,99 @@ function menu() {
     }
 }
 
+// drawing all the elements that will appear in the game state
+function game() {
+    background(sky.fill.r, sky.fill.g, sky.fill.b);
+
+    const timePassed = millis() - startTime;
+
+    // Draw environment
+    drawClouds();
+    drawBehindWater();
+
+    // Update and draw game entities
+    updateFlies(timePassed);
+    updateBirds(timePassed);
+    updateSmallBirds(timePassed);
+    //showFlashlight();
+
+    // Draw entities
+    flies.forEach(fly => { if (fly.active) drawFly(fly); });
+    birds.forEach(bird => { if (bird.active) drawBird(bird); });
+
+    drawFrog();
+    resetFlowers();
+    drawWater();
+    waterFlowers();
+
+    // Update game mechanics
+    updateSky();
+    updateProgress();
+    if (timePassed > 3000) checkStarvation();
+
+    // Draw flashlight in front of everything
+    if (flashlight.active) {
+        drawFlashlight();
+        checkFlashlightCollision();
+    }
+
+    // Draw UI
+    drawProgressRing();
+    drawDayCounter();
+
+    // Check win/lose conditions
+    GameEnd();
+}
+
+/**
+ * Checks if the game should end (win or lose)
+ */
+function GameEnd() {
+    if (frog.currentColor === frog.colors.dead && endTimerStarted === false) {
+        endTimerStarted = true;
+        finalDayCount = dayCount;
+        setTimeout(() => { state = 'END'; }, 500);
+    }
+
+    if (dayCount === 3) {
+        state = 'WIN';
+    }
+}
+
 // ====== new functions start here ========
 
+function resetSmallBird(smallBird) { smallBird.x = 0; smallBird.y = random(0, 300); }
+function moveSmallBird(smallBird) {
+    smallBird.x += smallBird.speed;
+    if (smallBird.x > width) resetSmallBird(smallBird);
+}
+
+function updateSmallBirds(timePassed) {
+    smallBirds.forEach((smallBird, index) => {
+        if (index === 0) smallBird.active = sky.fill.transparency < 100;
+        if (index === 1) smallBird.active = timePassed > 5000;
+        if (index === 2) smallBird.active = timePassed > 15000;
+
+        if (smallBird.active) {
+            moveSmallBird(smallBird);
+            drawSmallBird(smallBird);
+            checkTongueCollision(smallBird, 'smallBird');
+        }
+    });
+}
+
+function drawSmallBird(b) {
+    push();
+    noStroke();
+    fill("#f5d311");
+    triangle(b.x - b.size / 2.5, b.y, b.x - b.size / 2 - 17, b.y - 5, b.x - b.size / 2 - 10, b.y + 5);
+    ellipse(b.x, b.y, b.size);
+    fill("#dead10");
+    triangle(b.x + b.size * 0.7, b.y, b.x + b.size * 0.35, b.y - b.size * 0.2, b.x + b.size * 0.35, b.y + b.size * 0.2);
+    fill(0);
+    ellipse(b.x + b.size / 6, b.y - b.size / 8, b.size / 10);
+    pop();
+}
 function waterFlowers() {
     waterFlowerArray.forEach(flower => {
         // Calculate flowing offset using sine wave (in degrees)
@@ -394,22 +539,23 @@ function resetFlowers() {
         flower.y += flower.speed;
         flower.angle += flower.rotationSpeed;
 
-        // reset if off screen
         if (flower.y > height + 30) {
             flower.y = random(-200, -50);
             flower.x = random(width);
             flower.size = random(0.3, 0.6);
             flower.speed = random(1, 3);
             flower.rotationSpeed = random(1, 3);
+            flower.angle = random(360);
         }
 
         drawFlower(flower.x, flower.y, flower.angle, flower.size);
 
-        // Add a size property for collision detection (approximate radius)
-        flower.size = flower.size || 20;  // Give flowers a collision radius
-        checkTongueCollision(flower, 'flower');  // Changed to 'flower'
+        flower.radius = 20;
+
+        checkTongueCollision(flower, 'flower');
     });
 }
+
 
 
 //create the flies
@@ -428,7 +574,7 @@ function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude
     };
 }
 
-function FrogMenuMovement() {
+function moveMenuFrog() {
     frog.x = mouseX;
 }
 
@@ -438,6 +584,14 @@ function drawMenuBird() {
     moveBird(b);
     drawBird(b);
     birds.speed += 2;
+}
+
+function drawSmallMenuBird() {
+    let sb = newSmallBirds[0, 1];   // use the first bird only for menu
+    sb.active = true;
+    moveSmallBird(sb);
+    drawSmallBird(sb);
+    smallBirds.speed += 2;
 }
 
 
@@ -555,63 +709,6 @@ function drawInstructions() {
     pop();
 }
 
-// drawing all the elements that will appear in the game state
-function game() {
-    background(sky.fill.r, sky.fill.g, sky.fill.b);
-
-    const timePassed = millis() - startTime;
-
-    // Draw environment
-    drawClouds();
-    drawBehindWater();
-
-    // Update and draw game entities
-    updateFlies(timePassed);
-    updateBirds(timePassed);
-    //showFlashlight();
-
-    // Draw entities
-    flies.forEach(fly => { if (fly.active) drawFly(fly); });
-    birds.forEach(bird => { if (bird.active) drawBird(bird); });
-    drawFrog();
-    resetFlowers();
-    drawWater();
-    waterFlowers();
-
-    // Update game mechanics
-    updateSky();
-    updateProgress();
-    if (timePassed > 3000) checkStarvation();
-
-    // Draw flashlight in front of everything
-    if (flashlight.active) {
-        drawFlashlight();
-        checkFlashlightCollision();
-    }
-
-    // Draw UI
-    drawProgressRing();
-    drawDayCounter();
-
-    // Check win/lose conditions
-    GameEnd();
-}
-
-/**
- * Checks if the game should end (win or lose)
- */
-function GameEnd() {
-    if (frog.currentColor === frog.colors.dead && endTimerStarted === false) {
-        endTimerStarted = true;
-        finalDayCount = dayCount;
-        setTimeout(() => { state = 'END'; }, 500);
-    }
-
-    if (dayCount === 3) {
-        state = 'WIN';
-    }
-}
-
 // fly systems
 /**
  * Updates all flies
@@ -720,22 +817,31 @@ function drawBird(bird) {
  * Checks if the tongue collides with an entity
  */
 function checkTongueCollision(entity, type) {
-    // Use collisionSize for flowers, regular size for others
-    let entitySize = (type === 'flower' && entity.collisionSize) ? entity.collisionSize : entity.size;
+    // Determine collision size
+    let entitySize = entity.size;
+    if (type === "flower") {
+        if (entity.collisionSize) {
+            entitySize = entity.collisionSize;
+        }
+    }
+
     const d = dist(frog.tongue.x, frog.tongue.y, entity.x, entity.y);
-    const hit = d < frog.tongue.size / 2 + entitySize / 2;
+    const hit = d < (frog.tongue.size / 2 + entitySize / 2);
 
     if (hit) {
-        if (type === 'fly') {
+        if (type === "fly") {
             resetFly(entity);
             frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
             lastEatenTime = millis();
-        } else if (type === 'bird') {
+        }
+
+        if (type === "bird") {
             resetBird(entity);
             frog.tongue.speed = 10;
             damageFrog();
-        } else if (type === 'flower') {
-            // Reset just this flower
+        }
+
+        if (type === "flower") {
             entity.y = random(-200, -50);
             entity.x = random(width);
             entity.size = random(0.3, 0.6);
@@ -746,9 +852,24 @@ function checkTongueCollision(entity, type) {
             frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
             lastEatenTime = millis();
         }
+
+        if (type === "smallBird") {
+            resetSmallBird(entity);
+            frog.tongue.speed = 10;
+            if (frog.currentColor === frog.colors.healthy) {
+                damageFrog();
+            }
+            else if (frog.currentColor === frog.colors.damaged || frog.currentColor === frog.colors.dying) {
+                frog.currentColor = frog.colors.healthy;
+                lastEatenTime = millis();
+            }
+
+        }
+
         frog.tongue.state = "inbound";
     }
 }
+
 /**
  * Damages the frog when it eats a bird
  */
@@ -1098,39 +1219,4 @@ function drawDeadFrogIcon() {
     rect(width / 2.1, height / 1.47, 32, 2);
     fill("#00ff00");
     rect(width / 2.1, height / 1.49, 32, 5);
-}
-
-
-/**
- * Handles keyboard input
- */
-function keyPressed() {
-    if (key === ' ') {
-        if (state === 'MENU' && frog.tongue.state === "idle") {
-            frog.tongue.state = "outbound";
-            state = 'GAME';
-            startTime = millis();
-            lastEatenTime = millis();
-        } else if (state === 'GAME' && frog.tongue.state === "idle") {
-            frog.tongue.state = "outbound";
-        }
-    }
-}
-
-/**
- * Handles mouse clicks
- */
-function mousePressed() {
-    if (state === 'MENU') {
-        if (mouseX > menuButton.x && mouseX < menuButton.x + menuButton.size &&
-            mouseY > menuButton.y && mouseY < menuButton.y + menuButton.size) {
-            showInstructions = true;
-        }
-        if (mouseX > instructions.closeButton.x &&
-            mouseX < instructions.closeButton.x + instructions.closeButton.size &&
-            mouseY > instructions.closeButton.y &&
-            mouseY < instructions.closeButton.y + instructions.closeButton.size) {
-            showInstructions = false;
-        }
-    }
 }
