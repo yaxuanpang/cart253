@@ -23,6 +23,7 @@ let flowers = [];
 // variables
 let state = 'MENU'; // MENU, GAME, WIN, END
 let showInstructions = false;
+let showSecondPage = false;
 let dayCount = 0;
 let finalDayCount = 0;
 let progress = 0;
@@ -219,11 +220,6 @@ const menuButton = {
     size: 40
 };
 
-// key codes
-const keyCode = {
-    space: 32
-};
-
 const waterFlowerArray = [
     { x: 550, size: 0.5, baseY: 530, flowSpeed: 0.9, flowAmount: 6 },
     { x: 300, size: 0.7, baseY: 535, flowSpeed: 1.2, flowAmount: 7 },
@@ -297,6 +293,14 @@ function keyPressed(event) {
             frog.tongue.state = "outbound";
         }
     }
+    if ((event.keyCode) === 39) {
+        showInstructions = false;
+        showSecondPage = true;
+    }
+    if ((event.keyCode) === 37) {
+        showInstructions = true;
+        showSecondPage = false;
+    }
 }
 
 /**
@@ -313,6 +317,7 @@ function mousePressed() {
             mouseY > instructions.closeButton.y &&
             mouseY < instructions.closeButton.y + instructions.closeButton.size) {
             showInstructions = false;
+            showSecondPage = false;
         }
     }
 }
@@ -362,6 +367,9 @@ function menu() {
 
     if (showInstructions === true) {
         drawInstructions();
+    }
+    if (showSecondPage === true) {
+        drawSecondPage();
     }
 }
 
@@ -539,6 +547,7 @@ function resetFlowers() {
         flower.y += flower.speed;
         flower.angle += flower.rotationSpeed;
 
+        // Reset if off-screen
         if (flower.y > height + 30) {
             flower.y = random(-200, -50);
             flower.x = random(width);
@@ -583,15 +592,13 @@ function drawMenuBird() {
     b.active = true;
     moveBird(b);
     drawBird(b);
-    birds.speed += 2;
 }
 
 function drawSmallMenuBird() {
-    let sb = newSmallBirds[0, 1];   // use the first bird only for menu
+    let sb = smallBirds[0];
     sb.active = true;
     moveSmallBird(sb);
     drawSmallBird(sb);
-    smallBirds.speed += 2;
 }
 
 
@@ -677,14 +684,14 @@ function drawInstructions() {
     textAlign(CENTER, CENTER);
     text('Instructions 🌸:', 375, 160);
 
-    textAlign(LEFT, CENTER);
+    textAlign(LEFT);
     text('- Control the frog with the mouse and click', 210, 200);
-    text('space to eat flies and flowers', 224, 220);
+    text('space to eat', 224, 220);
     text('- Eat the flies every 3 seconds to not starve', 210, 250);
     text('- WATCH OUT for birds and the', 210, 290);
     text('flashlight', 224, 310);
-    text('- Birds can heal the frog, but it also', 210, 340);
-    text('damages the frog at the same time', 220, 360);
+    text('- The frog gets hurt if it eats the bird, but', 210, 340);
+    text('the frog will start healing itself in 5 seconds', 220, 360);
     text('frog is hurt', 270, 390);
     text('frog is dying', 270, 410);
     text('frog is dead -> GAME OVER ', 270, 430);
@@ -706,6 +713,156 @@ function drawInstructions() {
     fill(0);
     noStroke();
     text('X', 535, 148);
+
+    textSize(12);
+    text('Click on the right arrow  -->', 400, 485);
+    pop();
+}
+
+function drawSecondPage() {
+    push();
+    noStroke();
+    fill(255);
+    rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
+
+    fill(0);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text('Instructions 🌸:', 375, 160);
+
+    textAlign(LEFT);
+    text('- If the frog eats a small bird while healthy,', 210, 200);
+    text('it will get hurt', 224, 220);
+    // text('- Eat the flies every 3 seconds to not starve', 210, 250);
+    // text('- WATCH OUT for birds and the', 210, 290);
+    text('- If the frog eats a small bird while it is hurt', 210, 310);
+    text('or is dying, it will heal instantly', 224, 330);
+    // text('the frog will start healing itself in 5 seconds', 220, 360);
+    // text('frog is hurt', 270, 390);
+    // text('frog is dying', 270, 410);
+    // text('frog is dead -> GAME OVER ', 270, 430);
+    // text('- Survive 3 days to WIN', 210, 460);
+
+    fill(frog.colors.healthy);
+    arc(230, 280, 50, 50, 180, 0);
+    circle(217, 257, 15);
+    circle(243, 257, 15);
+    fill(255);
+    circle(217, 257, 10);
+    circle(243, 257, 10);
+    fill(0);
+    circle(217, 257, 3);
+    circle(243, 257, 3);
+
+    fill(frog.colors.damaged);
+    arc(430, 280, 50, 50, 180, 0);
+    circle(417, 257, 15);
+    circle(443, 257, 15);
+    fill(255);
+    circle(417, 257, 10);
+    circle(443, 257, 10);
+    fill(0);
+    circle(417, 257, 3);
+    circle(443, 257, 3);
+
+    fill("#f5d311");
+    circle(330, 265, 25);
+    triangle(320, 265, 300, 260, 310, 270);
+    fill("#dead10");
+    triangle(337, 259, 337, 271, 348, 265);
+    fill(0);
+    circle(333, 262, 3);
+
+    textSize(10);
+    text('+', 270, 265);
+    text('-->', 360, 265);
+    text('(small bird)', 305, 290);
+
+
+    fill(frog.colors.damaged);
+    arc(230, 390, 50, 50, 180, 0);
+    circle(217, 367, 15);
+    circle(243, 367, 15);
+    fill(255);
+    circle(217, 367, 10);
+    circle(243, 367, 10);
+    fill(0);
+    circle(217, 367, 3);
+    circle(243, 367, 3);
+
+    text('or', 260, 375);
+
+    fill(frog.colors.dying);
+    arc(300, 390, 50, 50, 180, 0);
+    circle(287, 367, 15);
+    circle(313, 367, 15);
+    fill(255);
+    circle(287, 367, 10);
+    circle(313, 367, 10);
+    fill(0);
+    circle(287, 367, 3);
+    circle(313, 367, 3);
+
+    text('+', 340, 375);
+
+    fill("#f5d311");
+    circle(390, 375, 25);
+    triangle(380, 375, 360, 370, 370, 380);
+    fill("#dead10");
+    triangle(397, 369, 397, 381, 408, 375);
+    fill(0);
+    circle(393, 372, 3);
+    text('-->', 420, 375);
+
+    fill(frog.colors.healthy);
+    arc(480, 390, 50, 50, 180, 0);
+    circle(467, 367, 15);
+    circle(493, 367, 15);
+    fill(255);
+    circle(467, 367, 10);
+    circle(493, 367, 10);
+    fill(0);
+    circle(467, 367, 3);
+    circle(493, 367, 3);
+
+    textSize(10);
+    text('(small bird)', 365, 395);
+
+    fill("#f5d311");
+    circle(420, 435, 25);
+    triangle(410, 435, 390, 430, 400, 440);
+    fill("#dead10");
+    triangle(427, 429, 427, 441, 438, 435);
+    fill(0);
+    circle(423, 432, 3);
+
+    text('(This is a small bird)', 375, 460);
+
+    fill("#fcec35");
+    triangle(300, 435, 280, 430, 290, 440);
+    ellipse(320, 435, 40);
+
+    fill("#f0c330");
+    triangle(334, 428, 334, 442, 347, 435);
+    fill(0);
+    ellipse(328, 430, 3);
+
+    text('(This is a normal bird)', 265, 460);
+
+    strokeWeight(2.5);
+    stroke(200);
+    noFill();
+    rect(instructions.closeButton.x, instructions.closeButton.y,
+        instructions.closeButton.size, instructions.closeButton.size,
+        instructions.closeButton.corner);
+    fill(0);
+    noStroke();
+
+    textSize(17);
+    text('X', 535, 148);
+
+    textSize(12);
+    text('<--  Click on the right arrow', 195, 485);
     pop();
 }
 
