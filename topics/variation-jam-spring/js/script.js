@@ -687,9 +687,9 @@ function drawInstructions() {
     textAlign(LEFT);
     text('- Control the frog with the mouse and click', 210, 200);
     text('space to eat', 224, 220);
-    text('- Eat the flies every 3 seconds to not starve', 210, 250);
+    text('- Eat flies or flower every 3 seconds', 210, 250);
     text('- WATCH OUT for birds and the', 210, 290);
-    text('flashlight', 224, 310);
+    text('flashlight (flashlight only appears at night)', 224, 310);
     text('- The frog gets hurt if it eats the bird, but', 210, 340);
     text('the frog will start healing itself in 5 seconds', 220, 360);
     text('frog is hurt', 270, 390);
@@ -829,26 +829,25 @@ function drawSecondPage() {
     text('(small bird)', 365, 395);
 
     fill("#f5d311");
-    circle(420, 435, 25);
-    triangle(410, 435, 390, 430, 400, 440);
+    circle(420, 445, 25);
+    triangle(410, 445, 390, 440, 400, 450);
     fill("#dead10");
-    triangle(427, 429, 427, 441, 438, 435);
+    triangle(427, 439, 427, 451, 438, 445);
     fill(0);
-    circle(423, 432, 3);
+    circle(423, 442, 3);
 
-    text('(This is a small bird)', 375, 460);
+    text('(This is a small bird)', 375, 470);
 
     fill("#fcec35");
-    triangle(300, 435, 280, 430, 290, 440);
-    ellipse(320, 435, 40);
+    triangle(300, 445, 280, 440, 290, 450);
+    ellipse(320, 445, 40);
 
     fill("#f0c330");
-    triangle(334, 428, 334, 442, 347, 435);
+    triangle(334, 438, 334, 452, 347, 445);
     fill(0);
-    ellipse(328, 430, 3);
+    ellipse(328, 440, 3);
 
-    text('(This is a normal bird)', 265, 460);
-
+    text('(This is a normal bird)', 265, 470);
     strokeWeight(2.5);
     stroke(200);
     noFill();
