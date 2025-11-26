@@ -24,6 +24,7 @@ let flowers = [];
 let state = "MENU"; // MENU, GAME, WIN, END
 let showInstructions = false;
 let showSecondPage = false;
+let showThirdPage = false;
 let dayCount = 0;
 let finalDayCount = 0;
 let progress = 0;
@@ -317,12 +318,30 @@ function keyPressed(event) {
         }
     }
     if (event.keyCode === 39) {
-        showInstructions = false;
-        showSecondPage = true;
+        if (showInstructions) {
+            showInstructions = false;
+            showSecondPage = true;
+            showThirdPage = false;
+        }
+        else if (showSecondPage) {
+            showInstructions = false;
+            showSecondPage = false;
+            showThirdPage = true;
+        }
     }
+
+
     if (event.keyCode === 37) {
-        showInstructions = true;
-        showSecondPage = false;
+        if (showThirdPage) {
+            showThirdPage = false;
+            showSecondPage = true;
+            showInstructions = false;
+        }
+        else if (showSecondPage) {
+            showSecondPage = false;
+            showInstructions = true;
+            showThirdPage = false;
+        }
     }
 }
 
@@ -347,6 +366,7 @@ function mousePressed() {
         ) {
             showInstructions = false;
             showSecondPage = false;
+            showThirdPage = false;
         }
     }
 }
@@ -400,6 +420,9 @@ function menu() {
     }
     if (showSecondPage === true) {
         drawSecondPage();
+    }
+    if (showThirdPage === true) {
+        drawThirdPage();
     }
 }
 
@@ -1405,6 +1428,93 @@ function drawInstructions() {
     pop();
 }
 
+
+function drawThirdPage() {
+    push();
+    noStroke();
+    fill(255);
+    rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
+
+    fill(0);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text('Instructions 🌸:', 375, 160);
+
+    textAlign(LEFT);
+    text('- If the frog eats the pink fly, it will become', 210, 200);
+    text('invincible for 10 seconds', 224, 220);
+
+
+    fill(frog.colors.healthy);
+    arc(230, 280, 50, 50, 180, 0);
+    circle(217, 257, 15);
+    circle(243, 257, 15);
+    fill(255);
+    circle(217, 257, 10);
+    circle(243, 257, 10);
+    fill(0);
+    circle(217, 257, 3);
+    circle(243, 257, 3);
+
+    fill(frog.colors.pink);
+    arc(430, 280, 50, 50, 180, 0);
+    circle(417, 257, 15);
+    circle(443, 257, 15);
+    fill(255);
+    circle(417, 257, 10);
+    circle(443, 257, 10);
+    fill(0);
+    circle(417, 257, 3);
+    circle(443, 257, 3);
+
+    textSize(10);
+    text('+', 270, 265);
+    text('-->', 360, 265);
+
+
+    fill("#f5d311");
+    circle(440, 345, 25);
+    triangle(430, 345, 410, 340, 420, 350);
+    fill("#dead10");
+    triangle(447, 339, 447, 351, 458, 345);
+    fill(0);
+    circle(443, 342, 3);
+
+    text('(This is a small bird)', 395, 380);
+
+    fill("#fcec35");
+    triangle(310, 340, 290, 335, 300, 345);
+    ellipse(330, 340, 40);
+
+    fill("#f0c330");
+    triangle(345, 333, 345, 347, 358, 340);
+    fill(0);
+    ellipse(338, 336, 3);
+
+    text('(This is a normal bird)', 275, 380);
+    text('(pink fly)', 302, 280);
+
+    strokeWeight(2.5);
+    stroke(200);
+    noFill();
+    rect(instructions.closeButton.x, instructions.closeButton.y,
+        instructions.closeButton.size, instructions.closeButton.size,
+        instructions.closeButton.corner);
+    fill(0);
+    noStroke();
+    textSize(17);
+    text('X', 535, 148);
+
+    textSize(12);
+    text('<--  Click on the right arrow', 195, 485);
+    textSize(20);
+    text("Enjoy The Game!!", 290, 440);
+
+    drawStaticPinkFly(320, 265, 10);
+
+    pop();
+}
+
 function drawSecondPage() {
     push();
     noStroke();
@@ -1425,15 +1535,8 @@ function drawSecondPage() {
     textAlign(LEFT);
     text("- If the frog eats a small bird while healthy,", 210, 200);
     text("it will get hurt", 224, 220);
-    // text('- Eat the flies every 3 seconds to not starve', 210, 250);
-    // text('- WATCH OUT for birds and the', 210, 290);
     text("- If the frog eats a small bird while it is hurt", 210, 310);
     text("or dying, it will heal instantly", 224, 330);
-    // text('the frog will start healing itself in 5 seconds', 220, 360);
-    // text('frog is hurt', 270, 390);
-    // text('frog is dying', 270, 410);
-    // text('frog is dead -> GAME OVER ', 270, 430);
-    // text('- Survive 3 days to WIN', 210, 460);
 
     secondPageDrawings();
 
@@ -1455,10 +1558,12 @@ function drawSecondPage() {
 
     textSize(12);
     text("<--  Click on the right arrow", 195, 485);
+    text("Click on the right arrow  -->", 400, 485);
     pop();
 }
 
 function secondPageDrawings() {
+    push();
     fill(frog.colors.healthy);
     arc(230, 280, 50, 50, 180, 0);
     circle(217, 257, 15);
@@ -1542,25 +1647,28 @@ function secondPageDrawings() {
 
     textSize(10);
     text("(small bird)", 365, 395);
-
-    fill("#f5d311");
-    circle(420, 445, 25);
-    triangle(410, 445, 390, 440, 400, 450);
-    fill("#dead10");
-    triangle(427, 439, 427, 451, 438, 445);
-    fill(0);
-    circle(423, 442, 3);
-
-    text("(This is a small bird)", 375, 470);
-
-    fill("#fcec35");
-    triangle(300, 445, 280, 440, 290, 450);
-    ellipse(320, 445, 40);
-
-    fill("#f0c330");
-    triangle(334, 438, 334, 452, 347, 445);
-    fill(0);
-    ellipse(328, 440, 3);
-
-    text("(This is a normal bird)", 265, 470);
+    pop();
 }
+
+function drawStaticPinkFly(x, y, size = 10) {
+    push();
+    noStroke();
+    fill("#ff8cf4");
+    ellipse(x, y, size);
+
+    fill(200);
+    ellipse(
+        x - size * 0.5,
+        y - size * 0.5,
+        size * 0.8,
+        size * 0.4
+    );
+    ellipse(
+        x + size * 0.5,
+        y - size * 0.5,
+        size * 0.8,
+        size * 0.4
+    );
+    pop();
+}
+
