@@ -21,7 +21,7 @@ const clouds = [];
 let flowers = [];
 
 // variables
-let state = 'MENU'; // MENU, GAME, WIN, END
+let state = "MENU"; // MENU, GAME, WIN, END
 let showInstructions = false;
 let showSecondPage = false;
 let dayCount = 0;
@@ -37,12 +37,12 @@ const sky = {
         r: 135,
         g: 207,
         b: 235,
-        transparency: 0
+        transparency: 0,
     },
     change: 0.055,
     isNight: false,
     direction: -1,
-    cloudColor: 255
+    cloudColor: 255,
 };
 
 // frog parameters
@@ -50,30 +50,32 @@ const frog = {
     body: {
         x: 320,
         y: 520,
-        size: 150
+        size: 150,
     },
     tongue: {
         x: undefined,
         y: 480,
         size: 20,
         speed: 10,
-        state: "idle" // idle, outbound, inbound
+        state: "idle", // idle, outbound, inbound
     }, // frog colors
     colors: {
         healthy: "#5bff45",
         damaged: "#6e8514",
         dying: "#855214",
-        dead: "#4f2409"
+        dead: "#4f2409",
+        pink: "#ffa6f6",
     },
-    currentColor: "#5bff45"
+    currentColor: "#5bff45",
 };
 
 // fly array
-const flies = [ //(x, y, size, speed, isActive, isDayOnly, vx, vy, canRespawn)
+const flies = [
+    //(x, y, size, speed, isActive, isDayOnly, vx, vy, canRespawn)
     //createFly(0, 200, 10, 3, true, false),
     createFly(0, 300, 12, 5, true, true, 1.5, 50),
     createFly(0, 300, 10, 4, false, false, 0, 0, true),
-    createFly(0, 100, 12, 3.5, true, true, 4, 10)
+    createFly(0, 100, 12, 3.5, true, true, 4, 10),
 ];
 
 // array and parameters
@@ -83,7 +85,7 @@ const birds = [
         y: 200,
         size: 40,
         speed: 2,
-        active: true
+        active: true,
     },
     {
         x: 0,
@@ -91,7 +93,7 @@ const birds = [
         size: 40,
         speed: 2.5,
         active: false,
-        spawnsInDay: true
+        spawnsInDay: true,
     },
     {
         x: 0,
@@ -99,7 +101,7 @@ const birds = [
         size: 40,
         speed: 3,
         active: false,
-    }
+    },
 ];
 
 const smallBirds = [
@@ -108,7 +110,7 @@ const smallBirds = [
         y: 200,
         size: 30,
         speed: 2,
-        active: true
+        active: true,
     },
     {
         x: 0,
@@ -116,7 +118,7 @@ const smallBirds = [
         size: 30,
         speed: 2.5,
         active: false,
-        spawnsInDay: true
+        spawnsInDay: true,
     },
 ];
 
@@ -126,7 +128,7 @@ const flashlight = {
     y: 275,
     size: 150,
     color: null,
-    active: false
+    active: false,
 };
 
 // cloud positions
@@ -134,46 +136,61 @@ const flashlight = {
 //create a cloud with position and size
 function createCloud(newcloud, size = 1) {
     const cloud = [];
-    newcloud.forEach(newcloud => {
+    newcloud.forEach((newcloud) => {
         cloud.push([
             newcloud[0] * size,
             newcloud[1] * size,
             newcloud[2] * size,
-            newcloud[3] * size
+            newcloud[3] * size,
         ]);
     });
     return cloud;
 }
 
 // Cloud 1 - left side
-clouds.push(createCloud([
-    [130, 300, 60, 40],
-    [120, 260, 60, 60],
-    [170, 280, 70, 70],
-    [80, 290, 60, 60],
-    [50, 300, 40, 40],
-    [210, 300, 40, 40]
-], 1));
+clouds.push(
+    createCloud(
+        [
+            [130, 300, 60, 40],
+            [120, 260, 60, 60],
+            [170, 280, 70, 70],
+            [80, 290, 60, 60],
+            [50, 300, 40, 40],
+            [210, 300, 40, 40],
+        ],
+        1
+    )
+);
 
 // Cloud 2 - top right
-clouds.push(createCloud([
-    [550, 100, 60, 40],
-    [540, 60, 60, 60],
-    [590, 80, 70, 70],
-    [500, 90, 60, 60],
-    [470, 100, 40, 40],
-    [630, 100, 40, 40]
-], 1));
+clouds.push(
+    createCloud(
+        [
+            [550, 100, 60, 40],
+            [540, 60, 60, 60],
+            [590, 80, 70, 70],
+            [500, 90, 60, 60],
+            [470, 100, 40, 40],
+            [630, 100, 40, 40],
+        ],
+        1
+    )
+);
 
 // Cloud 3 - bottom right
-clouds.push(createCloud([
-    [565, 375, 50, 30],
-    [625, 375, 20, 20],
-    [565, 355, 55, 55],
-    [530, 370, 40, 40],
-    [510, 375, 30, 30],
-    [600, 370, 40, 40]
-], 1));
+clouds.push(
+    createCloud(
+        [
+            [565, 375, 50, 30],
+            [625, 375, 20, 20],
+            [565, 355, 55, 55],
+            [530, 370, 40, 40],
+            [510, 375, 30, 30],
+            [600, 370, 40, 40],
+        ],
+        1
+    )
+);
 
 // progress ring parameters
 const progressRing = {
@@ -186,16 +203,15 @@ const progressRing = {
         progress: {
             r: 124,
             g: 252,
-            b: 0
-        }
-    }
+            b: 0,
+        },
+    },
 };
-
 
 // visual effects for the title
 const titleEffect = {
     strokeColor: null,
-    strokeFill: null
+    strokeFill: null,
 };
 
 // instruction box parameters
@@ -209,15 +225,15 @@ const instructions = {
         x: 523.5,
         y: 130,
         size: 35,
-        corner: 10
-    }
+        corner: 10,
+    },
 };
 
 // menu button parameters
 const menuButton = {
     x: 340,
     y: 275,
-    size: 40
+    size: 40,
 };
 
 const waterFlowerArray = [
@@ -230,7 +246,7 @@ const waterFlowerArray = [
     { x: 430, size: 0.25, baseY: 525, flowSpeed: 1, flowAmount: 5 },
     { x: 120, size: 0.25, baseY: 525, flowSpeed: 0.5, flowAmount: 8 },
     { x: 650, size: 0.2, baseY: 530, flowSpeed: 0.5, flowAmount: 8 },
-    { x: 40, size: 0.2, baseY: 520, flowSpeed: 0.5, flowAmount: 8 }
+    { x: 40, size: 0.2, baseY: 520, flowSpeed: 0.5, flowAmount: 8 },
 ];
 
 const petals = [
@@ -238,8 +254,16 @@ const petals = [
     [13, -8],
     [-13, -8],
     [22, 3],
-    [-22, 3]
+    [-22, 3],
 ];
+
+const pinkFly = {
+    x: 0,
+    y: 200,
+    startY: 200,
+    size: 10,
+    speed: 3
+};
 
 
 // Create the canvas, set an angle mode and initialize entities (birds, flies and flashlight)
@@ -252,11 +276,12 @@ function setup() {
     flashlight.color = color(245, 218, 42, 200);
 
     // Initialize all entities
-    flies.forEach(fly => resetFly(fly));
-    birds.forEach(bird => resetBird(bird));
-    smallBirds.forEach(sb => resetSmallBird(sb));
+    flies.forEach((fly) => resetFly(fly));
+    birds.forEach((bird) => resetBird(bird));
+    smallBirds.forEach((sb) => resetSmallBird(sb));
 
     createFlowers();
+    resetPinkFly();
 
     flashlight.x = width / 2;
     flashlight.y = height / 2;
@@ -265,16 +290,13 @@ function setup() {
 // drawing the canvas and the game states
 
 function draw() {
-    if (state === 'MENU') {
+    if (state === "MENU") {
         menu();
-    }
-    else if (state === 'GAME') {
+    } else if (state === "GAME") {
         game();
-    }
-    else if (state === 'WIN') {
+    } else if (state === "WIN") {
         win();
-    }
-    else if (state === 'END') {
+    } else if (state === "END") {
         end();
     }
 }
@@ -283,21 +305,21 @@ function draw() {
  * Handles keyboard input
  */
 function keyPressed(event) {
-    if ((event.keyCode) === 32) {
-        if (state === 'MENU' && frog.tongue.state === "idle") {
+    if (event.keyCode === 32) {
+        if (state === "MENU" && frog.tongue.state === "idle") {
             frog.tongue.state = "outbound";
-            state = 'GAME';
+            state = "GAME";
             startTime = millis();
             lastEatenTime = millis();
-        } else if (state === 'GAME' && frog.tongue.state === "idle") {
+        } else if (state === "GAME" && frog.tongue.state === "idle") {
             frog.tongue.state = "outbound";
         }
     }
-    if ((event.keyCode) === 39) {
+    if (event.keyCode === 39) {
         showInstructions = false;
         showSecondPage = true;
     }
-    if ((event.keyCode) === 37) {
+    if (event.keyCode === 37) {
         showInstructions = true;
         showSecondPage = false;
     }
@@ -307,15 +329,21 @@ function keyPressed(event) {
  * Handles mouse clicks
  */
 function mousePressed() {
-    if (state === 'MENU') {
-        if (mouseX > menuButton.x && mouseX < menuButton.x + menuButton.size &&
-            mouseY > menuButton.y && mouseY < menuButton.y + menuButton.size) {
+    if (state === "MENU") {
+        if (
+            mouseX > menuButton.x &&
+            mouseX < menuButton.x + menuButton.size &&
+            mouseY > menuButton.y &&
+            mouseY < menuButton.y + menuButton.size
+        ) {
             showInstructions = true;
         }
-        if (mouseX > instructions.closeButton.x &&
+        if (
+            mouseX > instructions.closeButton.x &&
             mouseX < instructions.closeButton.x + instructions.closeButton.size &&
             mouseY > instructions.closeButton.y &&
-            mouseY < instructions.closeButton.y + instructions.closeButton.size) {
+            mouseY < instructions.closeButton.y + instructions.closeButton.size
+        ) {
             showInstructions = false;
             showSecondPage = false;
         }
@@ -329,19 +357,15 @@ function menu() {
 
     moveMenuFrog();
 
-
     drawClouds();
     drawBehindWater();
     drawMenuBird();
 
-
     updateBirds(0); // or moveBird(bird)
     updateSmallBirds(0);
-    updateFlies(0);// move flies
+    updateFlies(0); // move flies
 
-
-
-    flies.forEach(fly => {
+    flies.forEach((fly) => {
         if (!fly.spawnsAtNight) {
             fly.active = true;
 
@@ -357,6 +381,9 @@ function menu() {
             drawFly(fly);
         }
     });
+
+    drawPinkFly();
+    movePinkFly();
 
     drawFrog();
     drawWater();
@@ -387,11 +414,19 @@ function game() {
     updateFlies(timePassed);
     updateBirds(timePassed);
     updateSmallBirds(timePassed);
-    //showFlashlight();
+    showFlashlight();
 
     // Draw entities
-    flies.forEach(fly => { if (fly.active) drawFly(fly); });
-    birds.forEach(bird => { if (bird.active) drawBird(bird); });
+    flies.forEach((fly) => {
+        if (fly.active) drawFly(fly);
+    });
+    birds.forEach((bird) => {
+        if (bird.active) drawBird(bird);
+    });
+
+    drawPinkFly();
+    movePinkFly();
+    checkTongueCollision(pinkFly, "pinkFly");
 
     drawFrog();
     resetFlowers();
@@ -424,17 +459,22 @@ function GameEnd() {
     if (frog.currentColor === frog.colors.dead && endTimerStarted === false) {
         endTimerStarted = true;
         finalDayCount = dayCount;
-        setTimeout(() => { state = 'END'; }, 500);
+        setTimeout(() => {
+            state = "END";
+        }, 500);
     }
 
     if (dayCount === 3) {
-        state = 'WIN';
+        state = "WIN";
     }
 }
 
 // ====== new functions start here ========
 
-function resetSmallBird(smallBird) { smallBird.x = 0; smallBird.y = random(0, 300); }
+function resetSmallBird(smallBird) {
+    smallBird.x = 0;
+    smallBird.y = random(0, 300);
+}
 function moveSmallBird(smallBird) {
     smallBird.x += smallBird.speed;
     if (smallBird.x > width) resetSmallBird(smallBird);
@@ -449,7 +489,7 @@ function updateSmallBirds(timePassed) {
         if (smallBird.active) {
             moveSmallBird(smallBird);
             drawSmallBird(smallBird);
-            checkTongueCollision(smallBird, 'smallBird');
+            checkTongueCollision(smallBird, "smallBird");
         }
     });
 }
@@ -458,16 +498,30 @@ function drawSmallBird(b) {
     push();
     noStroke();
     fill("#f5d311");
-    triangle(b.x - b.size / 2.5, b.y, b.x - b.size / 2 - 17, b.y - 5, b.x - b.size / 2 - 10, b.y + 5);
+    triangle(
+        b.x - b.size / 2.5,
+        b.y,
+        b.x - b.size / 2 - 17,
+        b.y - 5,
+        b.x - b.size / 2 - 10,
+        b.y + 5
+    );
     ellipse(b.x, b.y, b.size);
     fill("#dead10");
-    triangle(b.x + b.size * 0.7, b.y, b.x + b.size * 0.35, b.y - b.size * 0.2, b.x + b.size * 0.35, b.y + b.size * 0.2);
+    triangle(
+        b.x + b.size * 0.7,
+        b.y,
+        b.x + b.size * 0.35,
+        b.y - b.size * 0.2,
+        b.x + b.size * 0.35,
+        b.y + b.size * 0.2
+    );
     fill(0);
     ellipse(b.x + b.size / 6, b.y - b.size / 8, b.size / 10);
     pop();
 }
 function waterFlowers() {
-    waterFlowerArray.forEach(flower => {
+    waterFlowerArray.forEach((flower) => {
         // Calculate flowing offset using sine wave (in degrees)
         let angle = (frameCount * flower.flowSpeed) % 360;
         flower.y = flower.baseY + sin(angle) * flower.flowAmount;
@@ -484,7 +538,7 @@ function drawWaterFlower(cx, cy, size) {
         [13, -8],
         [-13, -8],
         [22, 3],
-        [-22, 3]
+        [-22, 3],
     ];
 
     fill(255, 209, 220);
@@ -504,7 +558,7 @@ function drawWaterFlower(cx, cy, size) {
 function drawFlower(cx, cy, angle, size) {
     push();
     translate(cx, cy);
-    rotate(angle);  // This will now work properly with degrees
+    rotate(angle); // This will now work properly with degrees
 
     const petalCount = 5;
     const petalRadius = 19 * size;
@@ -527,7 +581,6 @@ function drawFlower(cx, cy, angle, size) {
     pop();
 }
 
-
 function createFlowers() {
     for (let i = 0; i < 6; i++) {
         flowers.push({
@@ -537,13 +590,13 @@ function createFlowers() {
             angle: random(360),
             rotationSpeed: random(1, 3),
             size: random(0.3, 0.6),
-            collisionSize: 20
+            collisionSize: 20,
         });
     }
 }
 
 function resetFlowers() {
-    flowers.forEach(flower => {
+    flowers.forEach((flower) => {
         flower.y += flower.speed;
         flower.angle += flower.rotationSpeed;
 
@@ -561,14 +614,22 @@ function resetFlowers() {
 
         flower.radius = 20;
 
-        checkTongueCollision(flower, 'flower');
+        checkTongueCollision(flower, "flower");
     });
 }
 
-
-
 //create the flies
-function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude = 0, spawnsAtNight = false) {
+function createFly(
+    x,
+    y,
+    size,
+    speed,
+    active,
+    wave,
+    waveSpeed = 0,
+    waveAmplitude = 0,
+    spawnsAtNight = false
+) {
     return {
         x: x,
         y: y,
@@ -579,7 +640,7 @@ function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude
         wave: wave,
         waveSpeed: waveSpeed,
         waveAmplitude: waveAmplitude,
-        spawnsAtNight: spawnsAtNight
+        spawnsAtNight: spawnsAtNight,
     };
 }
 
@@ -588,7 +649,7 @@ function moveMenuFrog() {
 }
 
 function drawMenuBird() {
-    let b = birds[0];   // use the first bird only for menu
+    let b = birds[0]; // use the first bird only for menu
     b.active = true;
     moveBird(b);
     drawBird(b);
@@ -601,11 +662,8 @@ function drawSmallMenuBird() {
     drawSmallBird(sb);
 }
 
-
 function updateBirds(timePassed) {
-
     birds.forEach((bird, index) => {
-
         // --- BIRD 0 = ALWAYS ACTIVE IN GAME ---
         if (index === 0) {
             bird.active = sky.fill.transparency < 100;
@@ -613,7 +671,7 @@ function updateBirds(timePassed) {
 
         // --- BIRD 1 = SPAWN AFTER 0.5 SECONDS ---
         if (index === 1) {
-            bird.active = timePassed > 3000;  // 500 ms = 0.5 seconds
+            bird.active = timePassed > 3000; // 500 ms = 0.5 seconds
         }
 
         if (index === 2) {
@@ -622,7 +680,7 @@ function updateBirds(timePassed) {
 
         if (bird.active) {
             moveBird(bird);
-            checkTongueCollision(bird, 'bird');
+            checkTongueCollision(bird, "bird");
         }
     });
 }
@@ -641,13 +699,13 @@ function drawMenuText() {
         titleEffect.strokeColor = color(random(255), random(255), random(255));
     }
     stroke(titleEffect.strokeColor);
-    text('**Click space to play!**', width / 2, height / 6);
+    text("**Click space to play!**", width / 2, height / 6);
 
     textSize(20);
     fill(255);
     strokeWeight(5);
     stroke(255, 158, 234);
-    text('(Spring Edition!! 🌸)', 350, 250);
+    text("(Spring Edition!! 🌸)", 350, 250);
 
     textSize(70);
     textStyle(BOLD);
@@ -658,7 +716,7 @@ function drawMenuText() {
         titleEffect.strokeFill = color(5, random(255), random(255));
     }
     stroke(titleEffect.strokeFill);
-    text('LIFE AS A FROG', width / 2, height / 3);
+    text("LIFE AS A FROG", width / 2, height / 3);
 
     noStroke();
     fill(255);
@@ -666,205 +724,9 @@ function drawMenuText() {
 
     fill(0);
     textSize(13);
-    text('Click here for instructions', 360, 330);
+    text("Click here for instructions", 360, 330);
     pop();
 }
-
-/**
- * Draws the instructions overlay
- */
-function drawInstructions() {
-    push();
-    noStroke();
-    fill(255);
-    rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
-
-    fill(0);
-    textSize(17);
-    textAlign(CENTER, CENTER);
-    text('Instructions 🌸:', 375, 160);
-
-    textAlign(LEFT);
-    text('- Control the frog with the mouse and click', 210, 200);
-    text('space to eat', 224, 220);
-    text('- Eat flies or flower every 3 seconds', 210, 250);
-    text('- WATCH OUT for birds and the', 210, 290);
-    text('flashlight (flashlight only appears at night)', 224, 310);
-    text('- The frog gets hurt if it eats the bird, but', 210, 340);
-    text('the frog will start healing itself in 5 seconds', 220, 360);
-    text('frog is hurt', 270, 390);
-    text('frog is dying', 270, 410);
-    text('frog is dead -> GAME OVER ', 270, 430);
-    text('- Survive 3 days to WIN', 210, 460);
-
-    fill(frog.colors.damaged);
-    rect(250, 385, 10, 10);
-    fill(frog.colors.dying);
-    rect(250, 405, 10, 10);
-    fill(frog.colors.dead);
-    rect(250, 425, 10, 10);
-
-    strokeWeight(2.5);
-    stroke(200);
-    noFill();
-    rect(instructions.closeButton.x, instructions.closeButton.y,
-        instructions.closeButton.size, instructions.closeButton.size,
-        instructions.closeButton.corner);
-    fill(0);
-    noStroke();
-    text('X', 535, 148);
-
-    textSize(12);
-    text('Click on the right arrow  -->', 400, 485);
-    pop();
-}
-
-function drawSecondPage() {
-    push();
-    noStroke();
-    fill(255);
-    rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
-
-    fill(0);
-    textSize(17);
-    textAlign(CENTER, CENTER);
-    text('Instructions 🌸:', 375, 160);
-
-    textAlign(LEFT);
-    text('- If the frog eats a small bird while healthy,', 210, 200);
-    text('it will get hurt', 224, 220);
-    // text('- Eat the flies every 3 seconds to not starve', 210, 250);
-    // text('- WATCH OUT for birds and the', 210, 290);
-    text('- If the frog eats a small bird while it is hurt', 210, 310);
-    text('or is dying, it will heal instantly', 224, 330);
-    // text('the frog will start healing itself in 5 seconds', 220, 360);
-    // text('frog is hurt', 270, 390);
-    // text('frog is dying', 270, 410);
-    // text('frog is dead -> GAME OVER ', 270, 430);
-    // text('- Survive 3 days to WIN', 210, 460);
-
-    fill(frog.colors.healthy);
-    arc(230, 280, 50, 50, 180, 0);
-    circle(217, 257, 15);
-    circle(243, 257, 15);
-    fill(255);
-    circle(217, 257, 10);
-    circle(243, 257, 10);
-    fill(0);
-    circle(217, 257, 3);
-    circle(243, 257, 3);
-
-    fill(frog.colors.damaged);
-    arc(430, 280, 50, 50, 180, 0);
-    circle(417, 257, 15);
-    circle(443, 257, 15);
-    fill(255);
-    circle(417, 257, 10);
-    circle(443, 257, 10);
-    fill(0);
-    circle(417, 257, 3);
-    circle(443, 257, 3);
-
-    fill("#f5d311");
-    circle(330, 265, 25);
-    triangle(320, 265, 300, 260, 310, 270);
-    fill("#dead10");
-    triangle(337, 259, 337, 271, 348, 265);
-    fill(0);
-    circle(333, 262, 3);
-
-    textSize(10);
-    text('+', 270, 265);
-    text('-->', 360, 265);
-    text('(small bird)', 305, 290);
-
-
-    fill(frog.colors.damaged);
-    arc(230, 390, 50, 50, 180, 0);
-    circle(217, 367, 15);
-    circle(243, 367, 15);
-    fill(255);
-    circle(217, 367, 10);
-    circle(243, 367, 10);
-    fill(0);
-    circle(217, 367, 3);
-    circle(243, 367, 3);
-
-    text('or', 260, 375);
-
-    fill(frog.colors.dying);
-    arc(300, 390, 50, 50, 180, 0);
-    circle(287, 367, 15);
-    circle(313, 367, 15);
-    fill(255);
-    circle(287, 367, 10);
-    circle(313, 367, 10);
-    fill(0);
-    circle(287, 367, 3);
-    circle(313, 367, 3);
-
-    text('+', 340, 375);
-
-    fill("#f5d311");
-    circle(390, 375, 25);
-    triangle(380, 375, 360, 370, 370, 380);
-    fill("#dead10");
-    triangle(397, 369, 397, 381, 408, 375);
-    fill(0);
-    circle(393, 372, 3);
-    text('-->', 420, 375);
-
-    fill(frog.colors.healthy);
-    arc(480, 390, 50, 50, 180, 0);
-    circle(467, 367, 15);
-    circle(493, 367, 15);
-    fill(255);
-    circle(467, 367, 10);
-    circle(493, 367, 10);
-    fill(0);
-    circle(467, 367, 3);
-    circle(493, 367, 3);
-
-    textSize(10);
-    text('(small bird)', 365, 395);
-
-    fill("#f5d311");
-    circle(420, 445, 25);
-    triangle(410, 445, 390, 440, 400, 450);
-    fill("#dead10");
-    triangle(427, 439, 427, 451, 438, 445);
-    fill(0);
-    circle(423, 442, 3);
-
-    text('(This is a small bird)', 375, 470);
-
-    fill("#fcec35");
-    triangle(300, 445, 280, 440, 290, 450);
-    ellipse(320, 445, 40);
-
-    fill("#f0c330");
-    triangle(334, 438, 334, 452, 347, 445);
-    fill(0);
-    ellipse(328, 440, 3);
-
-    text('(This is a normal bird)', 265, 470);
-    strokeWeight(2.5);
-    stroke(200);
-    noFill();
-    rect(instructions.closeButton.x, instructions.closeButton.y,
-        instructions.closeButton.size, instructions.closeButton.size,
-        instructions.closeButton.corner);
-    fill(0);
-    noStroke();
-
-    textSize(17);
-    text('X', 535, 148);
-
-    textSize(12);
-    text('<--  Click on the right arrow', 195, 485);
-    pop();
-}
-
 // fly systems
 /**
  * Updates all flies
@@ -877,7 +739,7 @@ function updateFlies(timePassed) {
 
         if (fly.active) {
             moveFly(fly);
-            checkTongueCollision(fly, 'fly');
+            checkTongueCollision(fly, "fly");
         }
     });
 }
@@ -915,60 +777,21 @@ function drawFly(fly) {
     ellipse(fly.x, fly.y, fly.size);
 
     fill(200);
-    ellipse(fly.x - fly.size * 0.5, fly.y - fly.size * 0.5, fly.size * 0.8, fly.size * 0.4);
-    ellipse(fly.x + fly.size * 0.5, fly.y - fly.size * 0.5, fly.size * 0.8, fly.size * 0.4);
+    ellipse(
+        fly.x - fly.size * 0.5,
+        fly.y - fly.size * 0.5,
+        fly.size * 0.8,
+        fly.size * 0.4
+    );
+    ellipse(
+        fly.x + fly.size * 0.5,
+        fly.y - fly.size * 0.5,
+        fly.size * 0.8,
+        fly.size * 0.4
+    );
     pop();
 }
 
-// bird systems
-/**
- * Updates all birds
- */
-/**
- * Moves a bird horizontally
- */
-function moveBird(bird) {
-    bird.x += bird.speed;
-    if (bird.x > width) resetBird(bird);
-}
-
-/**
- * Resets a bird to the left
- */
-function resetBird(bird) {
-    bird.x = 0;
-    bird.y = random(0, 300);
-}
-
-/**
- * Draws a bird
- */
-function drawBird(bird) {
-    push();
-    noStroke();
-
-    fill("#fcec35");
-    triangle(
-        bird.x - bird.size / 2.5, bird.y,
-        bird.x - bird.size / 2 - 17, bird.y - 5,
-        bird.x - bird.size / 2 - 10, bird.y + 5
-    );
-
-    ellipse(bird.x, bird.y, bird.size);
-
-    fill("#f0c330");
-    triangle(
-        bird.x + bird.size * 0.7, bird.y,
-        bird.x + bird.size * 0.35, bird.y - bird.size * 0.2,
-        bird.x + bird.size * 0.35, bird.y + bird.size * 0.2
-    );
-
-    fill(0);
-    ellipse(bird.x + bird.size / 6, bird.y - bird.size / 8, bird.size / 10);
-    pop();
-}
-
-// collision system
 /**
  * Checks if the tongue collides with an entity
  */
@@ -982,7 +805,7 @@ function checkTongueCollision(entity, type) {
     }
 
     const d = dist(frog.tongue.x, frog.tongue.y, entity.x, entity.y);
-    const hit = d < (frog.tongue.size / 2 + entitySize / 2);
+    const hit = d < frog.tongue.size / 2 + entitySize / 2;
 
     if (hit) {
         if (type === "fly") {
@@ -1014,17 +837,104 @@ function checkTongueCollision(entity, type) {
             frog.tongue.speed = 10;
             if (frog.currentColor === frog.colors.healthy) {
                 damageFrog();
-            }
-            else if (frog.currentColor === frog.colors.damaged || frog.currentColor === frog.colors.dying) {
+            } else if (
+                frog.currentColor === frog.colors.damaged ||
+                frog.currentColor === frog.colors.dying
+            ) {
                 frog.currentColor = frog.colors.healthy;
                 lastEatenTime = millis();
             }
-
         }
 
         frog.tongue.state = "inbound";
     }
+    if (hit) {
+        if (type === "pinkFly") {
+            resetPinkFly(entity);
+            frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
+            lastEatenTime = millis();
+            frog.currentColor = frog.colors.pink;
+            frog.tongue.state = "inbound";
+        }
+    }
 }
+
+
+function movePinkFly() {
+    // Move the fly
+    pinkFly.x += pinkFly.speed;
+    // the fly moves up and down while flying to the right
+    pinkFly.y = pinkFly.startY + sin(pinkFly.x * 1.5) * 50;
+    // Handle the fly going off the canvas
+    if (pinkFly.x > width) {
+        resetPinkFly();
+    }
+    checkTongueCollision(pinkFly, "pinkFly");
+}
+
+function resetPinkFly() {
+    pinkFly.x = 0;
+    pinkFly.y = random(0, 300);
+    pinkFly.startY = pinkFly.y;
+    pinkFly.size = random(8, 12);
+}
+
+// bird systems
+/**
+ * Updates all birds
+ */
+/**
+ * Moves a bird horizontally
+ */
+function moveBird(bird) {
+    bird.x += bird.speed;
+    if (bird.x > width) resetBird(bird);
+}
+
+/**
+ * Resets a bird to the left
+ */
+function resetBird(bird) {
+    bird.x = 0;
+    bird.y = random(0, 300);
+}
+
+/**
+ * Draws a bird
+ */
+function drawBird(bird) {
+    push();
+    noStroke();
+
+    fill("#fcec35");
+    triangle(
+        bird.x - bird.size / 2.5,
+        bird.y,
+        bird.x - bird.size / 2 - 17,
+        bird.y - 5,
+        bird.x - bird.size / 2 - 10,
+        bird.y + 5
+    );
+
+    ellipse(bird.x, bird.y, bird.size);
+
+    fill("#f0c330");
+    triangle(
+        bird.x + bird.size * 0.7,
+        bird.y,
+        bird.x + bird.size * 0.35,
+        bird.y - bird.size * 0.2,
+        bird.x + bird.size * 0.35,
+        bird.y + bird.size * 0.2
+    );
+
+    fill(0);
+    ellipse(bird.x + bird.size / 6, bird.y - bird.size / 8, bird.size / 10);
+    pop();
+}
+
+// collision system
+
 
 /**
  * Damages the frog when it eats a bird
@@ -1140,8 +1050,12 @@ function drawFrog() {
     ellipse(frog.body.x + eyeOffsetX, frog.body.y - eyeOffsetY, pupilSize);
     pop();
 
-    if (state === 'GAME' || state === 'MENU') {
-        frog.body.x = constrain(mouseX, frog.body.size / 16, width - frog.body.size / 16);
+    if (state === "GAME" || state === "MENU") {
+        frog.body.x = constrain(
+            mouseX,
+            frog.body.size / 16,
+            width - frog.body.size / 16
+        );
         updateTongue();
     }
 }
@@ -1223,7 +1137,6 @@ function updateProgress() {
     } else {
         progress = (g - 85) / 244 + 0.5;
     }
-
 }
 
 /**
@@ -1233,8 +1146,8 @@ function drawClouds() {
     noStroke();
     fill(sky.cloudColor);
 
-    clouds.forEach(cloudGroup => {
-        cloudGroup.forEach(cloud => {
+    clouds.forEach((cloudGroup) => {
+        cloudGroup.forEach((cloud) => {
             ellipse(cloud[0], cloud[1], cloud[2], cloud[3]);
         });
     });
@@ -1285,12 +1198,28 @@ function drawProgressRing() {
     stroke(progressRing.fill.background);
     strokeWeight(progressRing.strokeWeight);
     noFill();
-    ellipse(progressRing.x, progressRing.y, progressRing.radius * 2, progressRing.radius * 2);
+    ellipse(
+        progressRing.x,
+        progressRing.y,
+        progressRing.radius * 2,
+        progressRing.radius * 2
+    );
 
-    stroke(progressRing.fill.progress.r, progressRing.fill.progress.g, progressRing.fill.progress.b);
+    stroke(
+        progressRing.fill.progress.r,
+        progressRing.fill.progress.g,
+        progressRing.fill.progress.b
+    );
     strokeCap(SQUARE);
-    let endAngle = -90 + (progress * 360);
-    arc(progressRing.x, progressRing.y, progressRing.radius * 2, progressRing.radius * 2, -90, endAngle);
+    let endAngle = -90 + progress * 360;
+    arc(
+        progressRing.x,
+        progressRing.y,
+        progressRing.radius * 2,
+        progressRing.radius * 2,
+        -90,
+        endAngle
+    );
     pop();
 }
 
@@ -1318,7 +1247,7 @@ function win() {
     textAlign(CENTER, CENTER);
     textSize(50);
     textStyle(BOLD);
-    text('**You Win!!**', width / 2, height / 2);
+    text("**You Win!!**", width / 2, height / 2);
     pop();
 }
 
@@ -1334,7 +1263,7 @@ function end() {
     textAlign(CENTER, CENTER);
     textSize(50);
     textStyle(BOLD);
-    text('**Game Over**', width / 2, height / 2);
+    text("**Game Over**", width / 2, height / 2);
 
     fill(255);
     noStroke();
@@ -1353,7 +1282,7 @@ function drawDeadFrogIcon() {
     fill(255);
     strokeWeight(5);
     stroke(255, 158, 234);
-    text('(Spring Edition!! 🌸)', 350, 130);
+    text("(Spring Edition!! 🌸)", 350, 130);
 
     noStroke();
     fill(255);
@@ -1375,4 +1304,245 @@ function drawDeadFrogIcon() {
     rect(width / 2.1, height / 1.47, 32, 2);
     fill("#00ff00");
     rect(width / 2.1, height / 1.49, 32, 5);
+}
+
+function drawPinkFly() {
+    push();
+    noStroke();
+    fill("#ff8cf4");
+    ellipse(pinkFly.x, pinkFly.y, pinkFly.size);
+
+    fill(200);
+    ellipse(
+        pinkFly.x - pinkFly.size * 0.5,
+        pinkFly.y - pinkFly.size * 0.5,
+        pinkFly.size * 0.8,
+        pinkFly.size * 0.4
+    );
+    ellipse(
+        pinkFly.x + pinkFly.size * 0.5,
+        pinkFly.y - pinkFly.size * 0.5,
+        pinkFly.size * 0.8,
+        pinkFly.size * 0.4
+    );
+    pop();
+}
+
+/**
+ * Draws the instructions overlay
+ */
+function drawInstructions() {
+    push();
+    noStroke();
+    fill(255);
+    rect(
+        instructions.x,
+        instructions.y,
+        instructions.w,
+        instructions.h,
+        instructions.corner
+    );
+
+    fill(0);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text("Instructions 🌸:", 375, 160);
+
+    textAlign(LEFT);
+    text("- Control the frog with the mouse and click", 210, 200);
+    text("space to eat", 224, 220);
+    text("- Eat flies or flower every 3 seconds", 210, 250);
+    text("- WATCH OUT for birds and the", 210, 290);
+    text("flashlight (flashlight only appears at night)", 224, 310);
+    text("- The frog gets hurt if it eats the bird, but", 210, 340);
+    text("the frog will start healing itself in 5 seconds", 220, 360);
+    text("frog is hurt", 270, 390);
+    text("frog is dying", 270, 410);
+    text("frog is dead -> GAME OVER ", 270, 430);
+    text("- Survive 3 days to WIN", 210, 460);
+
+    fill(frog.colors.damaged);
+    rect(250, 385, 10, 10);
+    fill(frog.colors.dying);
+    rect(250, 405, 10, 10);
+    fill(frog.colors.dead);
+    rect(250, 425, 10, 10);
+
+    strokeWeight(2.5);
+    stroke(200);
+    noFill();
+    rect(
+        instructions.closeButton.x,
+        instructions.closeButton.y,
+        instructions.closeButton.size,
+        instructions.closeButton.size,
+        instructions.closeButton.corner
+    );
+    fill(0);
+    noStroke();
+    text("X", 535, 148);
+
+    textSize(12);
+    text("Click on the right arrow  -->", 400, 485);
+    pop();
+}
+
+function drawSecondPage() {
+    push();
+    noStroke();
+    fill(255);
+    rect(
+        instructions.x,
+        instructions.y,
+        instructions.w,
+        instructions.h,
+        instructions.corner
+    );
+
+    fill(0);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text("Instructions 🌸:", 375, 160);
+
+    textAlign(LEFT);
+    text("- If the frog eats a small bird while healthy,", 210, 200);
+    text("it will get hurt", 224, 220);
+    // text('- Eat the flies every 3 seconds to not starve', 210, 250);
+    // text('- WATCH OUT for birds and the', 210, 290);
+    text("- If the frog eats a small bird while it is hurt", 210, 310);
+    text("or dying, it will heal instantly", 224, 330);
+    // text('the frog will start healing itself in 5 seconds', 220, 360);
+    // text('frog is hurt', 270, 390);
+    // text('frog is dying', 270, 410);
+    // text('frog is dead -> GAME OVER ', 270, 430);
+    // text('- Survive 3 days to WIN', 210, 460);
+
+    secondPageDrawings();
+
+    strokeWeight(2.5);
+    stroke(200);
+    noFill();
+    rect(
+        instructions.closeButton.x,
+        instructions.closeButton.y,
+        instructions.closeButton.size,
+        instructions.closeButton.size,
+        instructions.closeButton.corner
+    );
+    fill(0);
+    noStroke();
+
+    textSize(17);
+    text("X", 535, 148);
+
+    textSize(12);
+    text("<--  Click on the right arrow", 195, 485);
+    pop();
+}
+
+function secondPageDrawings() {
+    fill(frog.colors.healthy);
+    arc(230, 280, 50, 50, 180, 0);
+    circle(217, 257, 15);
+    circle(243, 257, 15);
+    fill(255);
+    circle(217, 257, 10);
+    circle(243, 257, 10);
+    fill(0);
+    circle(217, 257, 3);
+    circle(243, 257, 3);
+
+    fill(frog.colors.damaged);
+    arc(430, 280, 50, 50, 180, 0);
+    circle(417, 257, 15);
+    circle(443, 257, 15);
+    fill(255);
+    circle(417, 257, 10);
+    circle(443, 257, 10);
+    fill(0);
+    circle(417, 257, 3);
+    circle(443, 257, 3);
+
+    fill("#f5d311");
+    circle(330, 265, 25);
+    triangle(320, 265, 300, 260, 310, 270);
+    fill("#dead10");
+    triangle(337, 259, 337, 271, 348, 265);
+    fill(0);
+    circle(333, 262, 3);
+
+    textSize(10);
+    text("+", 270, 265);
+    text("-->", 360, 265);
+    text("(small bird)", 305, 290);
+
+    fill(frog.colors.damaged);
+    arc(230, 390, 50, 50, 180, 0);
+    circle(217, 367, 15);
+    circle(243, 367, 15);
+    fill(255);
+    circle(217, 367, 10);
+    circle(243, 367, 10);
+    fill(0);
+    circle(217, 367, 3);
+    circle(243, 367, 3);
+
+    text("or", 260, 375);
+
+    fill(frog.colors.dying);
+    arc(300, 390, 50, 50, 180, 0);
+    circle(287, 367, 15);
+    circle(313, 367, 15);
+    fill(255);
+    circle(287, 367, 10);
+    circle(313, 367, 10);
+    fill(0);
+    circle(287, 367, 3);
+    circle(313, 367, 3);
+
+    text("+", 340, 375);
+
+    fill("#f5d311");
+    circle(390, 375, 25);
+    triangle(380, 375, 360, 370, 370, 380);
+    fill("#dead10");
+    triangle(397, 369, 397, 381, 408, 375);
+    fill(0);
+    circle(393, 372, 3);
+    text("-->", 420, 375);
+
+    fill(frog.colors.healthy);
+    arc(480, 390, 50, 50, 180, 0);
+    circle(467, 367, 15);
+    circle(493, 367, 15);
+    fill(255);
+    circle(467, 367, 10);
+    circle(493, 367, 10);
+    fill(0);
+    circle(467, 367, 3);
+    circle(493, 367, 3);
+
+    textSize(10);
+    text("(small bird)", 365, 395);
+
+    fill("#f5d311");
+    circle(420, 445, 25);
+    triangle(410, 445, 390, 440, 400, 450);
+    fill("#dead10");
+    triangle(427, 439, 427, 451, 438, 445);
+    fill(0);
+    circle(423, 442, 3);
+
+    text("(This is a small bird)", 375, 470);
+
+    fill("#fcec35");
+    triangle(300, 445, 280, 440, 290, 450);
+    ellipse(320, 445, 40);
+
+    fill("#f0c330");
+    triangle(334, 438, 334, 452, 347, 445);
+    fill(0);
+    ellipse(328, 440, 3);
+
+    text("(This is a normal bird)", 265, 470);
 }
