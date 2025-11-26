@@ -30,6 +30,7 @@ let progress = 0;
 let startTime = 0;
 let lastEatenTime = 0;
 let endTimerStarted = false;
+let showPinkFly = true;
 
 // sky parameters
 const sky = {
@@ -382,8 +383,10 @@ function menu() {
         }
     });
 
-    drawPinkFly();
-    movePinkFly();
+    if (showPinkFly === true) {
+        drawPinkFly();
+        movePinkFly();
+    }
 
     drawFrog();
     drawWater();
@@ -424,9 +427,11 @@ function game() {
         if (bird.active) drawBird(bird);
     });
 
-    drawPinkFly();
-    movePinkFly();
-    checkTongueCollision(pinkFly, "pinkFly");
+    if (showPinkFly === true) {
+        drawPinkFly();
+        movePinkFly();
+        checkTongueCollision(pinkFly, "pinkFly");
+    }
 
     drawFrog();
     resetFlowers();
@@ -850,10 +855,14 @@ function checkTongueCollision(entity, type) {
     }
     if (hit) {
         if (type === "pinkFly") {
-            resetPinkFly(entity);
+            showPinkFly = false;
+            //resetPinkFly(entity);
             frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
-            lastEatenTime = millis();
+
             frog.currentColor = frog.colors.pink;
+            setTimeout(() => {
+                frog.currentColor = frog.colors.healthy;
+            }, 10000);
             frog.tongue.state = "inbound";
         }
     }
@@ -869,7 +878,6 @@ function movePinkFly() {
     if (pinkFly.x > width) {
         resetPinkFly();
     }
-    checkTongueCollision(pinkFly, "pinkFly");
 }
 
 function resetPinkFly() {
@@ -877,6 +885,13 @@ function resetPinkFly() {
     pinkFly.y = random(0, 300);
     pinkFly.startY = pinkFly.y;
     pinkFly.size = random(8, 12);
+}
+
+function checkPinkFly() {
+    if (showPinkFly === true) {
+        drawPinkFly();
+        movePinkFly();
+    }
 }
 
 // bird systems
@@ -1012,7 +1027,10 @@ function drawFlashlight() {
  */
 function checkFlashlightCollision() {
     const d = dist(flashlight.x, flashlight.y, frog.body.x, frog.body.y);
-    if (d < flashlight.size / 2 + frog.body.size / 2) {
+    if (frog.currentColor === frog.colors.pink && d < flashlight.size / 2 + frog.body.size / 2) {
+        frog.currentColor = frog.colors.pink;
+    }
+    else if (d < flashlight.size / 2 + frog.body.size / 2) {
         frog.currentColor = frog.colors.dead;
     }
 }
