@@ -17,7 +17,6 @@
 "use strict";
 
 // defining arrays
-let newbird = [];
 const clouds = [];
 
 // variables
@@ -59,12 +58,12 @@ const frog = {
         state: "idle" // idle, outbound, inbound
     }, // frog colors
     colors: {
-        healthy: "#00ff00",
-        damaged: "#6e8514",
-        dying: "#855214",
-        dead: "#4f2409"
+        healthy: "#85fc35",
+        damaged: "#98b81a",
+        dying: "#a36e2e",
+        dead: "#753c19"
     },
-    currentColor: "#00ff00"
+    currentColor: "#85fc35"
 };
 
 // fly array
@@ -215,7 +214,7 @@ function setup() {
     flashlight.y = height / 2;
 }
 
-// drawing the canvas and the game states
+// drawing the game states
 
 function draw() {
     if (state === 'MENU') {
@@ -346,7 +345,13 @@ function drawMenuText() {
         titleEffect.strokeColor = color(random(255), random(255), random(255));
     }
     stroke(titleEffect.strokeColor);
-    text('**Click space to play!**', width / 2, height / 6);
+    text("**Click space to play!**", width / 2, height / 6);
+
+    textSize(20);
+    fill(255);
+    strokeWeight(5);
+    stroke(235, 183, 14);
+    text("(Summer Edition!! ☀️)", 350, 250);
 
     textSize(70);
     textStyle(BOLD);
@@ -357,7 +362,7 @@ function drawMenuText() {
         titleEffect.strokeFill = color(5, random(255), random(255));
     }
     stroke(titleEffect.strokeFill);
-    text('LIFE AS A FROG', width / 2, height / 3);
+    text("LIFE AS A FROG", width / 2, height / 3);
 
     noStroke();
     fill(255);
@@ -365,7 +370,7 @@ function drawMenuText() {
 
     fill(0);
     textSize(13);
-    text('Click here for instructions', 360, 330);
+    text("Click here for instructions", 360, 330);
     pop();
 }
 
@@ -376,25 +381,31 @@ function drawInstructions() {
     push();
     noStroke();
     fill(255);
-    rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
+    rect(
+        instructions.x,
+        instructions.y,
+        instructions.w,
+        instructions.h,
+        instructions.corner
+    );
 
     fill(0);
     textSize(17);
     textAlign(CENTER, CENTER);
-    text('Instructions:', 375, 160);
+    text("Instructions ☀️:", 375, 160);
 
-    textAlign(LEFT, CENTER);
-    text('- Control the frog with the mouse and click', 210, 200);
-    text('space to eat', 224, 220);
-    text('- Eat the flies every 3 seconds to not starve', 210, 250);
-    text('- WATCH OUT for birds and the', 210, 290);
-    text('flashlight', 224, 310);
-    text('- Birds can heal the frog, but it also', 210, 340);
-    text('damages the frog at the same time', 220, 360);
-    text('frog is hurt', 270, 390);
-    text('frog is dying', 270, 410);
-    text('frog is dead -> GAME OVER ', 270, 430);
-    text('- Survive 3 days to WIN', 210, 460);
+    textAlign(LEFT);
+    text("- Control the frog with the mouse and click", 210, 200);
+    text("space to eat", 224, 220);
+    text("- Eat flies every 3 seconds", 210, 250);
+    text("- WATCH OUT for birds and the", 210, 290);
+    text("flashlight (flashlight only appears at night)", 224, 310);
+    text("- The frog gets hurt if it eats the bird, but", 210, 340);
+    text("the frog will start healing itself in 5 seconds", 220, 360);
+    text("frog is hurt", 270, 390);
+    text("frog is dying", 270, 410);
+    text("frog is dead -> GAME OVER ", 270, 430);
+    text("- Survive 3 days to WIN", 210, 460);
 
     fill(frog.colors.damaged);
     rect(250, 385, 10, 10);
@@ -406,14 +417,23 @@ function drawInstructions() {
     strokeWeight(2.5);
     stroke(200);
     noFill();
-    rect(instructions.closeButton.x, instructions.closeButton.y,
-        instructions.closeButton.size, instructions.closeButton.size,
-        instructions.closeButton.corner);
+    rect(
+        instructions.closeButton.x,
+        instructions.closeButton.y,
+        instructions.closeButton.size,
+        instructions.closeButton.size,
+        instructions.closeButton.corner
+    );
     fill(0);
     noStroke();
-    text('X', 535, 148);
+    text("X", 535, 148);
+
+    textSize(12);
+    text("Click on the right arrow  -->", 400, 485);
     pop();
 }
+
+
 
 // drawing all the elements that will appear in the game state
 function game() {
@@ -815,7 +835,7 @@ function drawClouds() {
 function drawBehindWater() {
     push();
     noStroke();
-    fill("#1ec7be");
+    fill("#28ebe0");
     beginShape();
     for (let x = 0; x <= width; x += 10) {
         let y = 485 + sin(x * 3 - frameCount * 3) * 10;
@@ -833,7 +853,7 @@ function drawBehindWater() {
 function drawWater() {
     push();
     noStroke();
-    fill("#3d9cf5");
+    fill("#0fcffa");
     beginShape();
     for (let x = 0; x <= width; x += 10) {
         let y = 495 + sin(x * 3 + frameCount * 3) * 10;
@@ -918,6 +938,13 @@ function end() {
  * Draws the dead frog icon on the game over screen
  */
 function drawDeadFrogIcon() {
+    push();
+    textSize(20);
+    fill(255);
+    strokeWeight(5);
+    stroke(235, 183, 14);
+    text("(Summer Edition!! ☀️)", 350, 130);
+
     noStroke();
     fill(255);
     circle(width / 2, height / 1.5, 80);
@@ -938,6 +965,7 @@ function drawDeadFrogIcon() {
     rect(width / 2.1, height / 1.47, 32, 2);
     fill("#00ff00");
     rect(width / 2.1, height / 1.49, 32, 5);
+    pop();
 }
 
 /**
