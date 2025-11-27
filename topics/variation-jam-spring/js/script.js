@@ -1444,6 +1444,9 @@ function drawThirdPage() {
     text('- If the frog eats the pink fly, it will become', 210, 200);
     text('invincible for 10 seconds', 224, 220);
 
+    text("- If eaten, the pink fly will not appear again", 210, 310);
+
+
 
     fill(frog.colors.healthy);
     arc(230, 280, 50, 50, 180, 0);
@@ -1471,27 +1474,26 @@ function drawThirdPage() {
     text('+', 270, 265);
     text('-->', 360, 265);
 
-
     fill("#f5d311");
-    circle(440, 345, 25);
-    triangle(430, 345, 410, 340, 420, 350);
+    circle(440, 375, 25);
+    triangle(430, 375, 410, 370, 420, 380);
     fill("#dead10");
-    triangle(447, 339, 447, 351, 458, 345);
+    triangle(447, 369, 447, 381, 458, 375);
     fill(0);
-    circle(443, 342, 3);
+    circle(443, 372, 3);
 
-    text('(This is a small bird)', 395, 380);
+    text('(This is a small bird)', 395, 405);
 
     fill("#fcec35");
-    triangle(310, 340, 290, 335, 300, 345);
-    ellipse(330, 340, 40);
+    triangle(310, 370, 290, 365, 300, 375);
+    ellipse(330, 370, 40);
 
     fill("#f0c330");
-    triangle(345, 333, 345, 347, 358, 340);
+    triangle(345, 363, 345, 377, 358, 370);
     fill(0);
-    ellipse(338, 336, 3);
+    ellipse(338, 366, 3);
 
-    text('(This is a normal bird)', 275, 380);
+    text('(This is a normal bird)', 275, 405);
     text('(pink fly)', 302, 280);
 
     strokeWeight(2.5);
