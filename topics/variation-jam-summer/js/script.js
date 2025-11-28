@@ -18,6 +18,7 @@
 
 // defining arrays
 const clouds = [];
+let nextCloud = 0;
 
 // variables
 let state = 'MENU'; // MENU, GAME, WIN, END
@@ -101,6 +102,74 @@ const flashlight = {
     color: null,
     active: false
 };
+
+
+const cloudPatterns = [
+    [
+        [245, 175, 50, 30],
+        [305, 175, 20, 20],
+        [245, 155, 55, 55],
+        [210, 170, 40, 40],
+        [190, 175, 30, 30],
+        [280, 170, 40, 40]
+    ],
+    [
+        [310, 35, 60, 40],
+        [300, -5, 60, 60],
+        [350, 15, 70, 70],
+        [260, 25, 60, 60],
+        [230, 35, 40, 40],
+        [390, 35, 40, 40]
+    ],
+    [
+        [435, 175, 50, 30],
+        [495, 175, 20, 20],
+        [435, 155, 55, 55],
+        [400, 170, 40, 40],
+        [380, 175, 30, 30],
+        [470, 170, 40, 40]
+    ],
+    [
+        [80, 20, 60, 40],
+        [70, -10, 60, 60],
+        [120, 0, 70, 70],
+        [30, 10, 60, 60],
+        [0, 20, 40, 40],
+        [160, 20, 40, 40]
+    ],
+    [
+        [130, 95, 60, 40],
+        [120, 55, 60, 60],
+        [170, 75, 70, 70],
+        [80, 85, 60, 60],
+        [50, 95, 40, 40],
+        [210, 95, 40, 40]
+    ],
+    [
+        [230, 30, 60, 40],
+        [220, 0, 60, 60],
+        [270, 10, 70, 70],
+        [180, 20, 60, 60],
+        [150, 30, 40, 40],
+        [310, 30, 40, 40]
+    ],
+    [
+        [450, 30, 60, 40],
+        [440, 0, 60, 60],
+        [490, 10, 70, 70],
+        [400, 20, 60, 60],
+        [370, 30, 40, 40],
+        [530, 30, 40, 40]
+    ],
+    [
+        [210, 35, 60, 40],
+        [200, -5, 60, 60],
+        [250, 15, 70, 70],
+        [160, 25, 60, 60],
+        [130, 35, 40, 40],
+        [290, 35, 40, 40]
+    ],
+];
 
 // cloud positions
 
@@ -328,8 +397,32 @@ function updateBirds(timePassed) {
     });
 }
 
+/**
+ * Handles mouse clicks
+ */
+function mousePressed() {
+    if (state === 'MENU') {
+        if (mouseX > menuButton.x && mouseX < menuButton.x + menuButton.size &&
+            mouseY > menuButton.y && mouseY < menuButton.y + menuButton.size) {
+            showInstructions = true;
+        }
+        if (mouseX > instructions.closeButton.x &&
+            mouseX < instructions.closeButton.x + instructions.closeButton.size &&
+            mouseY > instructions.closeButton.y &&
+            mouseY < instructions.closeButton.y + instructions.closeButton.size) {
+            showInstructions = false;
+        }
+    }
+    if (state === 'GAME') {
+        const cloudShape = cloudPatterns[nextCloud];
 
+        // add the cloud
+        clouds.push(createCloud(cloudShape, 1.4));
 
+        // update index
+        nextCloud = (nextCloud + 1) % cloudPatterns.length;
+    }
+}
 
 /**
  * Draws the menu text and title
@@ -980,24 +1073,6 @@ function keyPressed() {
             lastEatenTime = millis();
         } else if (state === 'GAME' && frog.tongue.state === "idle") {
             frog.tongue.state = "outbound";
-        }
-    }
-}
-
-/**
- * Handles mouse clicks
- */
-function mousePressed() {
-    if (state === 'MENU') {
-        if (mouseX > menuButton.x && mouseX < menuButton.x + menuButton.size &&
-            mouseY > menuButton.y && mouseY < menuButton.y + menuButton.size) {
-            showInstructions = true;
-        }
-        if (mouseX > instructions.closeButton.x &&
-            mouseX < instructions.closeButton.x + instructions.closeButton.size &&
-            mouseY > instructions.closeButton.y &&
-            mouseY < instructions.closeButton.y + instructions.closeButton.size) {
-            showInstructions = false;
         }
     }
 }
