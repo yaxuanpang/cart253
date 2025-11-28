@@ -19,6 +19,8 @@
 // defining arrays
 const clouds = [];
 let nextCloud = 0;
+var rain = [];
+let rainingNow = false
 
 // variables
 let state = 'MENU'; // MENU, GAME, WIN, END
@@ -271,6 +273,9 @@ const keyCode = {
 function setup() {
     createCanvas(700, 550);
     angleMode(DEGREES);
+    for (i = 0; i < 200; i++) {
+        rain[i] = new Rain(random(50, 550), random(0, -3000));
+    }
 
     titleEffect.strokeColor = color(random(255));
     titleEffect.strokeFill = color(5, random(255), random(255));
@@ -281,6 +286,7 @@ function setup() {
     birds.forEach(bird => resetBird(bird));
     flashlight.x = width / 2;
     flashlight.y = height / 2;
+
 }
 
 // drawing the game states
@@ -415,11 +421,7 @@ function mousePressed() {
     }
     if (state === 'GAME') {
         const cloudShape = cloudPatterns[nextCloud];
-
-        // add the cloud
         clouds.push(createCloud(cloudShape, 1.4));
-
-        // update index
         nextCloud = (nextCloud + 1) % cloudPatterns.length;
     }
 }
@@ -559,13 +561,26 @@ function game() {
         drawFlashlight();
         checkFlashlightCollision();
     }
+    if (clouds.length >= 10) {
+        rainingNow = true;
+    } else {
+        rainingNow = false;
+    }
+
+    // Draw rain if active
+    if (rainingNow == true) {
+        for (i = 0; i < rain.length; i++) {
+            rain[i].dropRain();
+            rain[i].splash();
+        }
+    }
 
     // Draw UI
     drawProgressRing();
     drawDayCounter();
 
     // Check win/lose conditions
-    GameEnd();
+    //GameEnd();
 }
 
 /**
@@ -1073,6 +1088,49 @@ function keyPressed() {
             lastEatenTime = millis();
         } else if (state === 'GAME' && frog.tongue.state === "idle") {
             frog.tongue.state = "outbound";
+        }
+    }
+}
+
+function Rain(x, y) {
+    this.x = x;
+    this.y = y;
+    this.length = 15;
+    this.r = 0;
+    this.opacity = 200;
+
+    this.dropRain = function () {
+        noStroke();
+        fill(190, 224, 237);
+        ellipse(this.x, this.y, 3, this.length);
+        this.y = this.y + 6;
+
+        if (this.y > 530) {
+            this.length = this.length - 5;
+        }
+        if (this.length < 0) {
+            this.length = 0;
+        }
+    }
+
+    this.splash = function () {
+        strokeWeight(2);
+        stroke(190, 224, 237, this.opacity);
+        noFill();
+
+        if (this.y > 520) {
+            ellipse(this.x, 530, this.r * 2, this.r / 2);
+            this.r++;
+            this.opacity = this.opacity - 10;
+
+            // Keep the rain dropping - reset to random position across ENTIRE width
+            if (this.opacity < 0) {
+                this.x = random(0, width);
+                this.y = random(0, -100);
+                this.length = 15;
+                this.r = 0;
+                this.opacity = 200;
+            }
         }
     }
 }
