@@ -18,9 +18,9 @@
 
 // defining arrays
 const clouds = [];
-let nextCloud = 0;
-var rain = [];
-let rainingNow = false
+const dynamicClouds = [];
+let rain = [];
+let cloudTime = [];
 
 // variables
 let state = 'MENU'; // MENU, GAME, WIN, END
@@ -30,7 +30,11 @@ let finalDayCount = 0;
 let progress = 0;
 let startTime = 0;
 let lastEatenTime = 0;
+let nextCloud = 0;
 let endTimerStarted = false;
+let rainingNow = false;
+let cloudFade = 0;
+let fadeDirection = 1;
 
 // sky parameters
 const sky = {
@@ -264,9 +268,12 @@ const menuButton = {
     size: 40
 };
 
-// key codes
-const keyCode = {
-    space: 32
+const pinkFly = {
+    x: 0,
+    y: 200,
+    startY: 200,
+    size: 10,
+    speed: 3
 };
 
 // Create the canvas, set an angle mode and initialize entities (birds, flies and flashlight)
@@ -286,6 +293,8 @@ function setup() {
     birds.forEach(bird => resetBird(bird));
     flashlight.x = width / 2;
     flashlight.y = height / 2;
+
+    resetPinkFly();
 
 }
 
@@ -314,7 +323,7 @@ function menu() {
     FrogMenuMovement();
 
 
-    drawClouds();
+    drawBackgroundClouds();
     drawBehindWater();
     drawMenuBird();
 
@@ -340,11 +349,15 @@ function menu() {
         }
     });
 
+
+
     drawFrog();
     drawWater();
     drawMenuText();
     drawProgressRing();
     drawDayCounter();
+
+    drawLilyPad();
 
     if (showInstructions === true) {
         drawInstructions();
@@ -352,6 +365,47 @@ function menu() {
 }
 
 // ====== new functions start here ========
+function drawPinkFly() {
+    push();
+    noStroke();
+    fill("#ff8cf4");
+    ellipse(pinkFly.x, pinkFly.y, pinkFly.size);
+
+    fill(200);
+    ellipse(
+        pinkFly.x - pinkFly.size * 0.5,
+        pinkFly.y - pinkFly.size * 0.5,
+        pinkFly.size * 0.8,
+        pinkFly.size * 0.4
+    );
+    ellipse(
+        pinkFly.x + pinkFly.size * 0.5,
+        pinkFly.y - pinkFly.size * 0.5,
+        pinkFly.size * 0.8,
+        pinkFly.size * 0.4
+    );
+    pop();
+}
+
+
+function movePinkFly() {
+    // Move the fly
+    pinkFly.x += pinkFly.speed;
+    // the fly moves up and down while flying to the right
+    pinkFly.y = pinkFly.startY + sin(pinkFly.x * 1.5) * 50;
+    // Handle the fly going off the canvas
+    if (pinkFly.x > width) {
+        resetPinkFly();
+    }
+}
+
+function resetPinkFly() {
+    pinkFly.x = 0;
+    pinkFly.y = random(0, 300);
+    pinkFly.startY = pinkFly.y;
+    pinkFly.size = random(8, 12);
+}
+
 
 //create the flies
 function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude = 0, spawnsAtNight = false) {
@@ -419,11 +473,18 @@ function mousePressed() {
             showInstructions = false;
         }
     }
-    if (state === 'GAME') {
-        const cloudShape = cloudPatterns[nextCloud];
-        clouds.push(createCloud(cloudShape, 1.4));
-        nextCloud = (nextCloud + 1) % cloudPatterns.length;
-    }
+    const cloudShape = cloudPatterns[nextCloud];
+    const newCloud = createCloud(cloudShape, 1.4);
+    dynamicClouds.push(newCloud); // Changed from clouds to dynamicClouds
+    nextCloud = (nextCloud + 1) % cloudPatterns.length;
+
+    // Remove this cloud after 10 seconds
+    setTimeout(() => {
+        const index = dynamicClouds.indexOf(newCloud); // Changed array
+        if (index > -1) { // Changed condition - remove any dynamic cloud
+            dynamicClouds.splice(index, 1);
+        }
+    }, 10000);
 }
 
 /**
@@ -536,14 +597,13 @@ function game() {
 
     const timePassed = millis() - startTime;
 
-    // Draw environment
-    drawClouds();
+    drawBackgroundClouds();
     drawBehindWater();
 
     // Update and draw game entities
     updateFlies(timePassed);
     updateBirds(timePassed);
-    showFlashlight();
+    //showFlashlight();
 
     // Draw entities
     flies.forEach(fly => { if (fly.active) drawFly(fly); });
@@ -551,17 +611,7 @@ function game() {
     drawFrog();
     drawWater();
 
-    // Update game mechanics
-    updateSky();
-    updateProgress();
-    if (timePassed > 3000) checkStarvation();
-
-    // Draw flashlight in front of everything
-    if (flashlight.active) {
-        drawFlashlight();
-        checkFlashlightCollision();
-    }
-    if (clouds.length >= 10) {
+    if (clouds.length + dynamicClouds.length >= 7) {
         rainingNow = true;
     } else {
         rainingNow = false;
@@ -574,6 +624,24 @@ function game() {
             rain[i].splash();
         }
     }
+
+    drawForegroundClouds();
+
+    // Update game mechanics
+    updateSky();
+    updateProgress();
+    if (timePassed > 3000) checkStarvation();
+
+
+    drawPinkFly();
+    movePinkFly();
+
+
+    if (flashlight.active) {
+        drawFlashlight();
+        checkFlashlightCollision();
+    }
+
 
     // Draw UI
     drawProgressRing();
@@ -924,13 +992,37 @@ function updateProgress() {
 }
 
 /**
- * Draws clouds in the sky
+ * Draws background clouds (original 3)
  */
-function drawClouds() {
+function drawBackgroundClouds() {
     noStroke();
     fill(sky.cloudColor);
 
     clouds.forEach(cloudGroup => {
+        cloudGroup.forEach(cloud => {
+            ellipse(cloud[0], cloud[1], cloud[2], cloud[3]);
+        });
+    });
+    if (clouds.length + dynamicClouds.length >= 7) {
+        fadeDirection = 1;
+    } else {
+        fadeDirection = -1;
+    }
+    cloudFade += 0.01 * fadeDirection;
+    cloudFade = constrain(cloudFade, 0, 1);
+
+    sky.cloudColor = lerpColor(255, 200, cloudFade);
+
+}
+
+/**
+ * Draws foreground clouds (clicked clouds)
+ */
+function drawForegroundClouds() {
+    noStroke();
+    fill(sky.cloudColor);
+
+    dynamicClouds.forEach(cloudGroup => {
         cloudGroup.forEach(cloud => {
             ellipse(cloud[0], cloud[1], cloud[2], cloud[3]);
         });
@@ -1103,7 +1195,7 @@ function Rain(x, y) {
         noStroke();
         fill(190, 224, 237);
         ellipse(this.x, this.y, 3, this.length);
-        this.y = this.y + 6;
+        this.y = this.y + 4;
 
         if (this.y > 530) {
             this.length = this.length - 5;
@@ -1133,4 +1225,25 @@ function Rain(x, y) {
             }
         }
     }
+}
+
+function drawLilyPad() {
+    push();
+    noStroke();
+    fill(54, 163, 29);
+
+    let wave1 = sin(frameCount * 1) * 5;
+    let wave2 = sin(frameCount * 2 + 20) * 3;
+    let wave3 = sin(frameCount * 3 + 40) * 3;
+    let wave4 = sin(frameCount * 2 + 60) * 3;
+    let wave5 = sin(frameCount * 3.5 + 80) * 5;
+    let wave6 = sin(frameCount * 3 + 20) * 4;
+
+    ellipse(390, 540 + wave1, 40, 10);
+    ellipse(80, 525 + wave2, 60, 10);
+    arc(465, 525 + wave3, 90, 20, 90, 10);
+    arc(600, 530 + wave4, 60, 10, 0, 270);
+    arc(200, 540 + wave5, 60, 10, 90, 360);
+    arc(300, 530 + wave6, 40, 7, 270, 180);
+    pop();
 }
