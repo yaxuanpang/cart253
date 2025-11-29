@@ -16,13 +16,12 @@
 
 "use strict";
 
-// defining arrays
+// defining arrays and variables
 const clouds = [];
 const dynamicClouds = [];
+const rainFlies = [];
 let rain = [];
 let cloudTime = [];
-
-// variables
 let state = 'MENU'; // MENU, GAME, WIN, END
 let showInstructions = false;
 let dayCount = 0;
@@ -35,6 +34,7 @@ let endTimerStarted = false;
 let rainingNow = false;
 let cloudFade = 0;
 let fadeDirection = 1;
+
 
 // sky parameters
 const sky = {
@@ -76,7 +76,10 @@ const frog = {
 // fly array
 const flies = [ //(x, y, size, speed, isActive, isDayOnly, vx, vy, canRespawn)
     createFly(0, 200, 10, 3, true, false),
+    createFly(0, 400, 10, 2, true, false),
     createFly(0, 300, 12, 5, true, true, 1.5, 50),
+    createFly(0, 200, 12, 3.5, true, true, 1.5, 50),
+    createFly(0, 300, 10, 4, false, false, 0, 0, true),
     createFly(0, 300, 10, 4, false, false, 0, 0, true),
     createFly(0, 100, 12, 3.5, true, true, 4, 10)
 ];
@@ -97,6 +100,13 @@ const birds = [
         speed: 2.5,
         active: false,
         spawnsInDay: true
+    },
+    {
+        x: 0,
+        y: 300,
+        size: 40,
+        speed: 1.5,
+        active: true,
     }
 ];
 
@@ -268,7 +278,7 @@ const menuButton = {
     size: 40
 };
 
-const pinkFly = {
+const rainFly = {
     x: 0,
     y: 200,
     startY: 200,
@@ -294,7 +304,11 @@ function setup() {
     flashlight.x = width / 2;
     flashlight.y = height / 2;
 
-    resetPinkFly();
+    for (let i = 0; i < 5; i++) {
+        const newRainFly = { ...rainFly };
+        rainFlies.push(newRainFly);
+        resetRainFly(newRainFly);
+    }
 
 }
 
@@ -349,15 +363,14 @@ function menu() {
         }
     });
 
-
-
     drawFrog();
     drawWater();
+
+    drawLilyPad();
     drawMenuText();
     drawProgressRing();
     drawDayCounter();
 
-    drawLilyPad();
 
     if (showInstructions === true) {
         drawInstructions();
@@ -365,45 +378,44 @@ function menu() {
 }
 
 // ====== new functions start here ========
-function drawPinkFly() {
+function drawRainFly(fly) {
     push();
     noStroke();
-    fill("#ff8cf4");
-    ellipse(pinkFly.x, pinkFly.y, pinkFly.size);
+    fill("#dbb50d");
+    ellipse(fly.x, fly.y, fly.size);
 
     fill(200);
     ellipse(
-        pinkFly.x - pinkFly.size * 0.5,
-        pinkFly.y - pinkFly.size * 0.5,
-        pinkFly.size * 0.8,
-        pinkFly.size * 0.4
+        fly.x - fly.size * 0.5,
+        fly.y - fly.size * 0.5,
+        fly.size * 0.8,
+        fly.size * 0.4
     );
     ellipse(
-        pinkFly.x + pinkFly.size * 0.5,
-        pinkFly.y - pinkFly.size * 0.5,
-        pinkFly.size * 0.8,
-        pinkFly.size * 0.4
+        fly.x + fly.size * 0.5,
+        fly.y - fly.size * 0.5,
+        fly.size * 0.8,
+        fly.size * 0.4
     );
     pop();
 }
 
+function moveRainFly(fly) {
+    fly.x += fly.speed;
+    fly.y = fly.startY + sin(fly.x * 1.5) * 50;
 
-function movePinkFly() {
-    // Move the fly
-    pinkFly.x += pinkFly.speed;
-    // the fly moves up and down while flying to the right
-    pinkFly.y = pinkFly.startY + sin(pinkFly.x * 1.5) * 50;
-    // Handle the fly going off the canvas
-    if (pinkFly.x > width) {
-        resetPinkFly();
+    if (fly.x > width) {
+        resetRainFly(fly);
     }
 }
 
-function resetPinkFly() {
-    pinkFly.x = 0;
-    pinkFly.y = random(0, 300);
-    pinkFly.startY = pinkFly.y;
-    pinkFly.size = random(8, 12);
+
+function resetRainFly(fly) {
+    fly.x = 0;
+    fly.y = random(0, 300);
+    fly.startY = fly.y;
+    fly.size = random(8, 12);
+    fly.speed = random(2, 4);
 }
 
 
@@ -450,6 +462,10 @@ function updateBirds(timePassed) {
             bird.active = timePassed > 500;  // 500 ms = 0.5 seconds
         }
 
+        if (index === 2) {
+            bird.active = timePassed > 5000;  // 500 ms = 0.5 seconds
+        }
+
         if (bird.active) {
             moveBird(bird);
             checkTongueCollision(bird, 'bird');
@@ -473,18 +489,20 @@ function mousePressed() {
             showInstructions = false;
         }
     }
-    const cloudShape = cloudPatterns[nextCloud];
-    const newCloud = createCloud(cloudShape, 1.4);
-    dynamicClouds.push(newCloud); // Changed from clouds to dynamicClouds
-    nextCloud = (nextCloud + 1) % cloudPatterns.length;
+    if (state === 'GAME') {
+        const cloudShape = cloudPatterns[nextCloud];
+        const newCloud = createCloud(cloudShape, 1.4);
+        dynamicClouds.push(newCloud); // Changed from clouds to dynamicClouds
+        nextCloud = (nextCloud + 1) % cloudPatterns.length;
 
-    // Remove this cloud after 10 seconds
-    setTimeout(() => {
-        const index = dynamicClouds.indexOf(newCloud); // Changed array
-        if (index > -1) { // Changed condition - remove any dynamic cloud
-            dynamicClouds.splice(index, 1);
-        }
-    }, 10000);
+        // Remove this cloud after 10 seconds
+        setTimeout(() => {
+            const index = dynamicClouds.indexOf(newCloud); // Changed array
+            if (index > -1) { // Changed condition - remove any dynamic cloud
+                dynamicClouds.splice(index, 1);
+            }
+        }, 10000);
+    }
 }
 
 /**
@@ -611,6 +629,8 @@ function game() {
     drawFrog();
     drawWater();
 
+    drawLilyPad();
+
     if (clouds.length + dynamicClouds.length >= 7) {
         rainingNow = true;
     } else {
@@ -627,14 +647,25 @@ function game() {
 
     drawForegroundClouds();
 
+
+    if (rainingNow === true) {
+        rainFlies.forEach(fly => {
+            fly.x += fly.speed;
+            fly.y = fly.startY + sin(fly.x * 1.5) * 50;
+            if (fly.x > width) {
+                resetRainFly(fly);
+            }
+            drawRainFly(fly);
+        });
+    }
+
+
     // Update game mechanics
     updateSky();
     updateProgress();
     if (timePassed > 3000) checkStarvation();
 
 
-    drawPinkFly();
-    movePinkFly();
 
 
     if (flashlight.active) {
@@ -1194,10 +1225,10 @@ function Rain(x, y) {
     this.dropRain = function () {
         noStroke();
         fill(190, 224, 237);
-        ellipse(this.x, this.y, 3, this.length);
+        ellipse(this.x, this.y, 2, this.length);
         this.y = this.y + 4;
 
-        if (this.y > 530) {
+        if (this.y > 520) {
             this.length = this.length - 5;
         }
         if (this.length < 0) {
@@ -1215,7 +1246,7 @@ function Rain(x, y) {
             this.r++;
             this.opacity = this.opacity - 10;
 
-            // Keep the rain dropping - reset to random position across ENTIRE width
+
             if (this.opacity < 0) {
                 this.x = random(0, width);
                 this.y = random(0, -100);
