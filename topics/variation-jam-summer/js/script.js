@@ -25,6 +25,7 @@ let rain = [];
 let cloudTime = [];
 let state = 'MENU'; // MENU, GAME, WIN, END
 let showInstructions = false;
+let showSecondPage = false;
 let dayCount = 0;
 let finalDayCount = 0;
 let progress = 0;
@@ -351,6 +352,76 @@ function draw() {
     }
 }
 
+/**
+ * Handles mouse clicks
+ */
+function mousePressed() {
+    if (state === "MENU") {
+        if (
+            mouseX > menuButton.x &&
+            mouseX < menuButton.x + menuButton.size &&
+            mouseY > menuButton.y &&
+            mouseY < menuButton.y + menuButton.size
+        ) {
+            showInstructions = true;
+        }
+        if (
+            mouseX > instructions.closeButton.x &&
+            mouseX < instructions.closeButton.x + instructions.closeButton.size &&
+            mouseY > instructions.closeButton.y &&
+            mouseY < instructions.closeButton.y + instructions.closeButton.size
+        ) {
+            showInstructions = false;
+            showSecondPage = false;
+        }
+    }
+    if (state === "GAME") {
+        const cloudShape = cloudPatterns[nextCloud];
+        const newCloud = createCloud(cloudShape, 1.4);
+        dynamicClouds.push(newCloud); // Changed from clouds to dynamicClouds
+        nextCloud = (nextCloud + 1) % cloudPatterns.length;
+
+        // Remove this cloud after 10 seconds
+        setTimeout(() => {
+            const index = dynamicClouds.indexOf(newCloud); // Changed array
+            if (index > -1) {
+                // Changed condition - remove any dynamic cloud
+                dynamicClouds.splice(index, 1);
+            }
+        }, 10000);
+    }
+}
+
+
+/**
+ * Handles keyboard input
+ */
+function keyPressed(event) {
+    if (event.keyCode === 32) {
+        if (state === "MENU" && frog.tongue.state === "idle") {
+            frog.tongue.state = "outbound";
+            state = "GAME";
+            startTime = millis();
+            lastEatenTime = millis();
+        } else if (state === "GAME" && frog.tongue.state === "idle") {
+            frog.tongue.state = "outbound";
+        }
+    }
+    if (event.keyCode === 39) {
+        if (showInstructions) {
+            showInstructions = false;
+            showSecondPage = true;
+        }
+    }
+
+    if (event.keyCode === 37) {
+        if (showSecondPage) {
+            showSecondPage = false;
+            showInstructions = true;
+        }
+    }
+}
+
 // drawing all the elements that will appear in the menu state
 
 function menu() {
@@ -399,6 +470,92 @@ function menu() {
 
     if (showInstructions === true) {
         drawInstructions();
+    }
+    if (showSecondPage === true) {
+        drawSecondPage();
+    }
+}
+
+// drawing all the elements that will appear in the game state
+function game() {
+    background(sky.fill.r, sky.fill.g, sky.fill.b);
+
+    const timePassed = millis() - startTime;
+
+    drawBackgroundClouds();
+    drawBehindWater();
+
+    // Update and draw game entities
+    updateFlies(timePassed);
+    updateBirds(timePassed);
+    showFlashlight();
+
+    // Draw entities
+    flies.forEach(fly => { if (fly.active) drawFly(fly); });
+    birds.forEach(bird => { if (bird.active) drawBird(bird); });
+    drawFrog();
+    drawWater();
+
+    drawLilyPad();
+
+    drawDropNumber();
+
+    drawForegroundClouds();
+
+
+    // Update game mechanics
+    updateSky();
+    updateProgress();
+    if (timePassed > 3000) checkStarvation();
+
+    if (flashlight.active) {
+        drawFlashlight();
+        checkFlashlightCollision();
+    }
+
+    if (rainingNow === true) {
+        rainFlies.forEach(fly => {
+            fly.x += fly.speed;
+            fly.y = fly.startY + sin(fly.x * 1.5) * 50;
+            if (fly.x > width) {
+                resetRainFly(fly);
+            }
+            checkTongueCollision(fly, 'rainfly');
+            drawRainFly(fly);
+        });
+    }
+
+    if (showGreenBird === true) {
+        spawnGreenBird();
+    }
+
+    if (frog.currentColor === frog.colors.green) {
+        showGreenBird = false;
+    }
+    else {
+        showGreenBird = true;
+    }
+
+
+    drawProgressRing();
+    drawDayCounter();
+
+    // Check win/lose conditions
+    //GameEnd();
+}
+
+/**
+ * Checks if the game should end (win or lose)
+ */
+function GameEnd() {
+    if (frog.currentColor === frog.colors.dead && endTimerStarted === false) {
+        endTimerStarted = true;
+        finalDayCount = dayCount;
+        setTimeout(() => { state = 'END'; }, 500);
+    }
+
+    if (dayCount === 3) {
+        state = 'WIN';
     }
 }
 
@@ -505,38 +662,6 @@ function updateBirds(timePassed) {
 }
 
 /**
- * Handles mouse clicks
- */
-function mousePressed() {
-    if (state === 'MENU') {
-        if (mouseX > menuButton.x && mouseX < menuButton.x + menuButton.size &&
-            mouseY > menuButton.y && mouseY < menuButton.y + menuButton.size) {
-            showInstructions = true;
-        }
-        if (mouseX > instructions.closeButton.x &&
-            mouseX < instructions.closeButton.x + instructions.closeButton.size &&
-            mouseY > instructions.closeButton.y &&
-            mouseY < instructions.closeButton.y + instructions.closeButton.size) {
-            showInstructions = false;
-        }
-    }
-    if (state === 'GAME') {
-        const cloudShape = cloudPatterns[nextCloud];
-        const newCloud = createCloud(cloudShape, 1.4);
-        dynamicClouds.push(newCloud); // Changed from clouds to dynamicClouds
-        nextCloud = (nextCloud + 1) % cloudPatterns.length;
-
-        // Remove this cloud after 10 seconds
-        setTimeout(() => {
-            const index = dynamicClouds.indexOf(newCloud); // Changed array
-            if (index > -1) { // Changed condition - remove any dynamic cloud
-                dynamicClouds.splice(index, 1);
-            }
-        }, 10000);
-    }
-}
-
-/**
  * Draws the menu text and title
  */
 function drawMenuText() {
@@ -582,6 +707,9 @@ function drawMenuText() {
 /**
  * Draws the instructions overlay
  */
+/**
+ * Draws the instructions overlay
+ */
 function drawInstructions() {
     push();
     noStroke();
@@ -602,11 +730,11 @@ function drawInstructions() {
     textAlign(LEFT);
     text("- Control the frog with the mouse and click", 210, 200);
     text("space to eat", 224, 220);
-    text("- Eat flies every 3 seconds", 210, 250);
-    text("- WATCH OUT for birds and the", 210, 290);
+    text("- Eat black or yellow flies every 3 seconds", 210, 250);
+    text("- WATCH OUT for the yellow birds and the", 210, 290);
     text("flashlight (flashlight only appears at night)", 224, 310);
-    text("- The frog gets hurt if it eats the bird, but", 210, 340);
-    text("the frog will start healing itself in 5 seconds", 220, 360);
+    text("- Click repeatedly on the mouse to make", 210, 340);
+    text("more clouds (need 7 clouds to make rain)", 220, 360);
     text("frog is hurt", 270, 390);
     text("frog is dying", 270, 410);
     text("frog is dead -> GAME OVER ", 270, 430);
@@ -639,88 +767,178 @@ function drawInstructions() {
 }
 
 
+function drawSecondPage() {
+    push();
+    noStroke();
+    fill(255);
+    rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
 
-// drawing all the elements that will appear in the game state
-function game() {
-    background(sky.fill.r, sky.fill.g, sky.fill.b);
+    fill(0);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text('Instructions ☀️:', 375, 160);
 
-    const timePassed = millis() - startTime;
-
-    drawBackgroundClouds();
-    drawBehindWater();
-
-    // Update and draw game entities
-    updateFlies(timePassed);
-    updateBirds(timePassed);
-    showFlashlight();
-
-    // Draw entities
-    flies.forEach(fly => { if (fly.active) drawFly(fly); });
-    birds.forEach(bird => { if (bird.active) drawBird(bird); });
-    drawFrog();
-    drawWater();
-
-    drawLilyPad();
-
-    drawDropNumber();
-
-    drawForegroundClouds();
+    textAlign(LEFT);
+    text('- The frog get hurt if it eats the yellow bird,', 210, 200);
+    text('but it will start healing itself in 5 seconds', 224, 220);
 
 
-    // Update game mechanics
-    updateSky();
-    updateProgress();
-    if (timePassed > 3000) checkStarvation();
-
-    if (flashlight.active) {
-        drawFlashlight();
-        checkFlashlightCollision();
-    }
-
-    if (rainingNow === true) {
-        rainFlies.forEach(fly => {
-            fly.x += fly.speed;
-            fly.y = fly.startY + sin(fly.x * 1.5) * 50;
-            if (fly.x > width) {
-                resetRainFly(fly);
-            }
-            checkTongueCollision(fly, 'rainfly');
-            drawRainFly(fly);
-        });
-    }
-
-    if (showGreenBird === true) {
-        spawnGreenBird();
-    }
-
-    if (frog.currentColor === frog.colors.green) {
-        showGreenBird = false;
-    }
-    else {
-        showGreenBird = true;
-    }
+    text("- If the frog eats the green bird, it cannot be", 210, 325);
+    text("killed by the flashlight (lasts 10 seconds)", 224, 345);
 
 
-    drawProgressRing();
-    drawDayCounter();
 
-    // Check win/lose conditions
-    //GameEnd();
-}
+    fill(frog.colors.healthy);
+    arc(210, 280, 50, 50, 180, 0);
+    circle(197, 257, 15);
+    circle(223, 257, 15);
+    fill(255);
+    circle(197, 257, 10);
+    circle(223, 257, 10);
+    fill(0);
+    circle(197, 257, 3);
+    circle(223, 257, 3);
 
-/**
- * Checks if the game should end (win or lose)
- */
-function GameEnd() {
-    if (frog.currentColor === frog.colors.dead && endTimerStarted === false) {
-        endTimerStarted = true;
-        finalDayCount = dayCount;
-        setTimeout(() => { state = 'END'; }, 500);
-    }
 
-    if (dayCount === 3) {
-        state = 'WIN';
-    }
+    fill(frog.colors.healthy);
+    arc(260, 400, 50, 50, 180, 0);
+    circle(247, 377, 15);
+    circle(273, 377, 15);
+    fill(255);
+    circle(247, 377, 10);
+    circle(273, 377, 10);
+    fill(0);
+    circle(247, 377, 3);
+    circle(273, 377, 3);
+
+    fill(frog.colors.damaged);
+    arc(400, 280, 50, 50, 180, 0);
+    circle(387, 257, 15);
+    circle(413, 257, 15);
+    fill(255);
+    circle(387, 257, 10);
+    circle(413, 257, 10);
+    fill(0);
+    circle(387, 257, 3);
+    circle(413, 257, 3);
+
+    fill(frog.colors.dying);
+    arc(465, 280, 50, 50, 180, 0);
+    circle(452, 257, 15);
+    circle(478, 257, 15);
+    fill(255);
+    circle(452, 257, 10);
+    circle(478, 257, 10);
+    fill(0);
+    circle(452, 257, 3);
+    circle(478, 257, 3);
+
+    fill(frog.colors.dead);
+    arc(530, 280, 50, 50, 180, 0);
+    circle(517, 257, 15);
+    circle(543, 257, 15);
+    fill(255);
+    circle(517, 257, 10);
+    circle(543, 257, 10);
+    fill(0);
+    circle(517, 257, 3);
+    circle(543, 257, 3);
+
+    fill(frog.colors.green);
+    arc(475, 400, 50, 50, 180, 0);
+    circle(462, 377, 15);
+    circle(488, 377, 15);
+    fill(255);
+    circle(462, 377, 10);
+    circle(488, 377, 10);
+    fill(0);
+    circle(462, 377, 3);
+    circle(488, 377, 3);
+
+
+    textSize(10);
+    text('+', 255, 265);
+    text('-->', 350, 265);
+    text('+', 305, 385);
+    text('-->', 423, 385);
+    text('(yellow bird)', 282, 295);
+    text('(green bird)', 345, 410);
+
+    strokeWeight(2.5);
+    stroke(200);
+    noFill();
+    rect(instructions.closeButton.x, instructions.closeButton.y,
+        instructions.closeButton.size, instructions.closeButton.size,
+        instructions.closeButton.corner);
+    fill(0);
+    noStroke();
+    textSize(17);
+    text('X', 535, 148);
+
+    textSize(12);
+    text('<--  Click on the left arrow', 195, 485);
+    textSize(20);
+    text("Enjoy The Game!!", 290, 440);
+
+
+    noStroke();
+
+    // Back wing
+    fill("#941212");
+    triangle(
+        352, 385,
+        328, 380,
+        335, 390
+    );
+
+    // Body (ellipse at x-3)
+    fill("#1a8f14");
+    ellipse(372, 385, 50, 30);
+
+    // Beak
+    fill("#bd660f");
+    triangle(
+        407, 385,
+        391, 378.2,
+        391, 391.8
+    );
+
+    // Front wing
+    fill("#941212");
+    triangle(
+        373.33, 385,
+        358.73, 380,
+        365.73, 390
+    );
+
+    // Eye
+    fill(0);
+    ellipse(383, 383, 4, 4);
+
+
+    noStroke();
+
+    fill("#fcec35");
+    // Left wing
+    triangle(294, 265, 273, 260, 280, 270);
+
+    // Body (size 40)
+    fill("#fcec35");
+    ellipse(310, 265, 40);
+
+    fill("#f0c330");
+    // Right wing
+    triangle(
+        338, 265,
+        324, 257,
+        324, 273
+    );
+
+    // Eye
+    fill(0);
+    ellipse(316.67, 260, 4, 4);
+
+    pop();
 }
 
 // fly systems
@@ -1238,22 +1456,6 @@ function drawDeadFrogIcon() {
     fill("#00ff00");
     rect(width / 2.1, height / 1.49, 32, 5);
     pop();
-}
-
-/**
- * Handles keyboard input
- */
-function keyPressed() {
-    if (key === ' ') {
-        if (state === 'MENU' && frog.tongue.state === "idle") {
-            frog.tongue.state = "outbound";
-            state = 'GAME';
-            startTime = millis();
-            lastEatenTime = millis();
-        } else if (state === 'GAME' && frog.tongue.state === "idle") {
-            frog.tongue.state = "outbound";
-        }
-    }
 }
 
 function dropRain(raindrop) {
