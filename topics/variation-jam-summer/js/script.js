@@ -18,6 +18,7 @@
 
 // defining arrays and variables
 const clouds = [];
+const flies = [];
 const dynamicClouds = [];
 const rainFlies = [];
 let rain = [];
@@ -72,17 +73,6 @@ const frog = {
     },
     currentColor: "#85fc35"
 };
-
-// fly array
-const flies = [ //(x, y, size, speed, isActive, isDayOnly, vx, vy, canRespawn)
-    createFly(0, 200, 10, 3, true, false),
-    createFly(0, 400, 10, 2, true, false),
-    createFly(0, 300, 12, 5, true, true, 1.5, 50),
-    createFly(0, 200, 12, 3.5, true, true, 1.5, 50),
-    createFly(0, 300, 10, 4, false, false, 0, 0, true),
-    createFly(0, 300, 10, 4, false, false, 0, 0, true),
-    createFly(0, 100, 12, 3.5, true, true, 4, 10)
-];
 
 // bird array and parameters
 const birds = [
@@ -286,30 +276,50 @@ const rainFly = {
     speed: 3
 };
 
+const raindrop = {
+    x: 0,
+    y: 0,
+    length: 15,
+    radius: 0,
+    opacity: 200
+}
+
 // Create the canvas, set an angle mode and initialize entities (birds, flies and flashlight)
 function setup() {
     createCanvas(700, 550);
     angleMode(DEGREES);
-    for (i = 0; i < 200; i++) {
-        rain[i] = new Rain(random(50, 550), random(0, -3000));
+
+    flies.push(createFly(0, 200, 10, 3, true, false));
+    flies.push(createFly(0, 400, 10, 2, true, false));
+    flies.push(createFly(0, 300, 12, 5, true, true, 1.5, 50));
+    flies.push(createFly(0, 200, 12, 3.5, true, true, 1.5, 50));
+    flies.push(createFly(0, 300, 10, 4, false, false, 0, 0, true));
+    flies.push(createFly(0, 300, 10, 4, false, false, 0, 0, true));
+    flies.push(createFly(0, 100, 12, 3.5, true, true, 4, 10));
+
+    for (let i = 0; i < 300; i++) {
+        const newRaindrop = { ...raindrop };
+        newRaindrop.x = random(50, 550);
+        newRaindrop.y = random(0, 700);
+        rain.push(newRaindrop);
     }
 
     titleEffect.strokeColor = color(random(255));
     titleEffect.strokeFill = color(5, random(255), random(255));
     flashlight.color = color(245, 218, 42, 200);
 
-    // Initialize all entities
+
     flies.forEach(fly => resetFly(fly));
     birds.forEach(bird => resetBird(bird));
     flashlight.x = width / 2;
     flashlight.y = height / 2;
+
 
     for (let i = 0; i < 5; i++) {
         const newRainFly = { ...rainFly };
         rainFlies.push(newRainFly);
         resetRainFly(newRainFly);
     }
-
 }
 
 // drawing the game states
@@ -621,7 +631,7 @@ function game() {
     // Update and draw game entities
     updateFlies(timePassed);
     updateBirds(timePassed);
-    //showFlashlight();
+    showFlashlight();
 
     // Draw entities
     flies.forEach(fly => { if (fly.active) drawFly(fly); });
@@ -631,22 +641,20 @@ function game() {
 
     drawLilyPad();
 
-    if (clouds.length + dynamicClouds.length >= 7) {
-        rainingNow = true;
-    } else {
-        rainingNow = false;
-    }
-
-    // Draw rain if active
-    if (rainingNow == true) {
-        for (i = 0; i < rain.length; i++) {
-            rain[i].dropRain();
-            rain[i].splash();
-        }
-    }
+    drawDropNumber();
 
     drawForegroundClouds();
 
+
+    // Update game mechanics
+    updateSky();
+    updateProgress();
+    if (timePassed > 3000) checkStarvation();
+
+    if (flashlight.active) {
+        drawFlashlight();
+        checkFlashlightCollision();
+    }
 
     if (rainingNow === true) {
         rainFlies.forEach(fly => {
@@ -655,26 +663,11 @@ function game() {
             if (fly.x > width) {
                 resetRainFly(fly);
             }
+            checkTongueCollision(fly, 'rainfly');
             drawRainFly(fly);
         });
     }
 
-
-    // Update game mechanics
-    updateSky();
-    updateProgress();
-    if (timePassed > 3000) checkStarvation();
-
-
-
-
-    if (flashlight.active) {
-        drawFlashlight();
-        checkFlashlightCollision();
-    }
-
-
-    // Draw UI
     drawProgressRing();
     drawDayCounter();
 
@@ -817,6 +810,10 @@ function checkTongueCollision(entity, type) {
             resetBird(entity);
             frog.tongue.speed = 10;
             damageFrog();
+        } else if (type === 'rainfly') {
+            resetRainFly(entity);
+            frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
+            lastEatenTime = millis();
         }
         frog.tongue.state = "inbound";
     }
@@ -1042,7 +1039,7 @@ function drawBackgroundClouds() {
     cloudFade += 0.01 * fadeDirection;
     cloudFade = constrain(cloudFade, 0, 1);
 
-    sky.cloudColor = lerpColor(255, 200, cloudFade);
+    sky.cloudColor = lerpColor(color(255), color(200), cloudFade);
 
 }
 
@@ -1215,45 +1212,52 @@ function keyPressed() {
     }
 }
 
-function Rain(x, y) {
-    this.x = x;
-    this.y = y;
-    this.length = 15;
-    this.r = 0;
-    this.opacity = 200;
+function dropRain(raindrop) {
+    noStroke();
+    fill(158, 239, 255);
+    ellipse(raindrop.x, raindrop.y, 2, raindrop.length);
+    raindrop.y = raindrop.y + 4;
 
-    this.dropRain = function () {
-        noStroke();
-        fill(190, 224, 237);
-        ellipse(this.x, this.y, 2, this.length);
-        this.y = this.y + 4;
+    if (raindrop.y > 520) {
+        raindrop.length = raindrop.length - 5;
+    }
+    if (raindrop.length < 0) {
+        raindrop.length = 0;
+    }
+}
 
-        if (this.y > 520) {
-            this.length = this.length - 5;
-        }
-        if (this.length < 0) {
-            this.length = 0;
+function splash(raindrop) {
+    strokeWeight(2);
+    stroke(190, 224, 237, raindrop.opacity);
+    noFill();
+
+    if (raindrop.y > 520) {
+        ellipse(raindrop.x, 530, raindrop.radius * 2, raindrop.radius / 2);
+        raindrop.radius++;
+        raindrop.opacity = raindrop.opacity - 10;
+
+        if (raindrop.opacity < 0) {
+            raindrop.x = random(0, width);
+            raindrop.y = random(0, -100);
+            raindrop.length = 15;
+            raindrop.radius = 0;
+            raindrop.opacity = 200;
         }
     }
+}
 
-    this.splash = function () {
-        strokeWeight(2);
-        stroke(190, 224, 237, this.opacity);
-        noFill();
+function drawDropNumber() {
 
-        if (this.y > 520) {
-            ellipse(this.x, 530, this.r * 2, this.r / 2);
-            this.r++;
-            this.opacity = this.opacity - 10;
+    if (clouds.length + dynamicClouds.length >= 7) {
+        rainingNow = true;
+    } else {
+        rainingNow = false;
+    }
 
-
-            if (this.opacity < 0) {
-                this.x = random(0, width);
-                this.y = random(0, -100);
-                this.length = 15;
-                this.r = 0;
-                this.opacity = 200;
-            }
+    if (rainingNow == true) {
+        for (let i = 0; i < rain.length; i++) {  // ADD 'let' here!
+            dropRain(rain[i]);
+            splash(rain[i]);
         }
     }
 }
