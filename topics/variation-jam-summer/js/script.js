@@ -69,7 +69,8 @@ const frog = {
         healthy: "#85fc35",
         damaged: "#98b81a",
         dying: "#a36e2e",
-        dead: "#753c19"
+        dead: "#753c19",
+        green: "#2abf8e"
     },
     currentColor: "#85fc35"
 };
@@ -99,6 +100,14 @@ const birds = [
         active: true,
     }
 ];
+
+const greenBird = {
+    x: 0,
+    y: 200,
+    size: 40,
+    speed: 6,
+    active: true
+};
 
 // flashlight parameters
 const flashlight = {
@@ -314,6 +323,8 @@ function setup() {
     flashlight.x = width / 2;
     flashlight.y = height / 2;
 
+    resetGreenBird(greenBird);
+
 
     for (let i = 0; i < 5; i++) {
         const newRainFly = { ...rainFly };
@@ -372,6 +383,9 @@ function menu() {
             drawFly(fly);
         }
     });
+
+    drawGreenBird(greenBird);
+    moveGreenBird(greenBird);
 
     drawFrog();
     drawWater();
@@ -668,6 +682,10 @@ function game() {
         });
     }
 
+    drawGreenBird(greenBird);
+    moveGreenBird(greenBird);
+    checkTongueCollision(greenBird, 'greenbird');
+
     drawProgressRing();
     drawDayCounter();
 
@@ -814,6 +832,14 @@ function checkTongueCollision(entity, type) {
             resetRainFly(entity);
             frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
             lastEatenTime = millis();
+        }
+        else if (type === 'greenbird') {
+            resetGreenBird(entity);
+            lastEatenTime = millis();
+            frog.currentColor = frog.colors.green;
+            setTimeout(() => {
+                frog.currentColor = frog.colors.healthy;
+            }, 5000);
         }
         frog.tongue.state = "inbound";
     }
@@ -1281,4 +1307,48 @@ function drawLilyPad() {
     arc(200, 540 + wave5, 60, 10, 90, 360);
     arc(300, 530 + wave6, 40, 7, 270, 180);
     pop();
+}
+
+function drawGreenBird(greenBird) {
+    push();
+    noStroke();
+    fill("#941212");
+    triangle(
+        greenBird.x - greenBird.size / 2.5 - 7, greenBird.y,
+        greenBird.x - greenBird.size / 2 - 27, greenBird.y - 5,
+        greenBird.x - greenBird.size / 2 - 20, greenBird.y + 5
+    );
+
+    fill("#1a8f14"); // body color
+    ellipse(greenBird.x - 3, greenBird.y, 50, 30);
+
+    fill("#bd660f");
+    triangle(
+        greenBird.x + greenBird.size * 0.8, greenBird.y,
+        greenBird.x + greenBird.size * 0.4, greenBird.y - greenBird.size * 0.17,
+        greenBird.x + greenBird.size * 0.4, greenBird.y + greenBird.size * 0.17
+    );
+
+    fill("#941212");
+    triangle(
+        greenBird.x - greenBird.size / 6 - 3 + 8, greenBird.y,
+        greenBird.x - greenBird.size / 5.5 - 17 + 8, greenBird.y - 5,
+        greenBird.x - greenBird.size / 5.5 - 10 + 8, greenBird.y + 5
+    );
+
+    fill(0);
+    ellipse(greenBird.x + greenBird.size / 5, greenBird.y - greenBird.size / 10 + 2, greenBird.size / 10);
+    pop();
+}
+
+function moveGreenBird(greenBird) {
+    greenBird.x += greenBird.speed;
+    if (greenBird.x > width) {
+        resetGreenBird(greenBird);
+    }
+}
+
+function resetGreenBird(greenBird) {
+    greenBird.x = 0;
+    greenBird.y = random(100, 300);
 }
