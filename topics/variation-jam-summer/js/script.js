@@ -541,7 +541,7 @@ function game() {
     drawDayCounter();
 
     // Check win/lose conditions
-    //GameEnd();
+    GameEnd();
 }
 
 /**
