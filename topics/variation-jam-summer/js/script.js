@@ -35,6 +35,7 @@ let endTimerStarted = false;
 let rainingNow = false;
 let cloudFade = 0;
 let fadeDirection = 1;
+let showGreenBird = true;
 
 
 // sky parameters
@@ -402,6 +403,12 @@ function menu() {
 }
 
 // ====== new functions start here ========
+function spawnGreenBird() {
+    drawGreenBird(greenBird);
+    moveGreenBird(greenBird);
+    checkTongueCollision(greenBird, "greenbird");
+}
+
 function drawRainFly(fly) {
     push();
     noStroke();
@@ -682,9 +689,17 @@ function game() {
         });
     }
 
-    drawGreenBird(greenBird);
-    moveGreenBird(greenBird);
-    checkTongueCollision(greenBird, 'greenbird');
+    if (showGreenBird === true) {
+        spawnGreenBird();
+    }
+
+    if (frog.currentColor === frog.colors.green) {
+        showGreenBird = false;
+    }
+    else {
+        showGreenBird = true;
+    }
+
 
     drawProgressRing();
     drawDayCounter();
@@ -839,7 +854,7 @@ function checkTongueCollision(entity, type) {
             frog.currentColor = frog.colors.green;
             setTimeout(() => {
                 frog.currentColor = frog.colors.healthy;
-            }, 5000);
+            }, 10000);
         }
         frog.tongue.state = "inbound";
     }
@@ -921,7 +936,10 @@ function drawFlashlight() {
  */
 function checkFlashlightCollision() {
     const d = dist(flashlight.x, flashlight.y, frog.body.x, frog.body.y);
-    if (d < flashlight.size / 2 + frog.body.size / 2) {
+    if (d < flashlight.size / 2 + frog.body.size / 2 && frog.currentColor === frog.colors.green) {
+        frog.currentColor = frog.colors.green;
+    }
+    else if (d < flashlight.size / 2 + frog.body.size / 2) {
         frog.currentColor = frog.colors.dead;
     }
 }
