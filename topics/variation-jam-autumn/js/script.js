@@ -21,8 +21,6 @@ const flies = [];
 const clouds = [];
 let leaves = [];
 let numLeaves = 15;
-
-// variables
 let state = 'MENU'; // MENU, GAME, WIN, END
 let showInstructions = false;
 let dayCount = 0;
@@ -188,11 +186,6 @@ const menuButton = {
     size: 40
 };
 
-// key codes
-const keyCode = {
-    space: 32
-};
-
 // Create the canvas, set an angle mode and initialize entities (birds, flies and flashlight)
 function setup() {
     createCanvas(700, 550);
@@ -238,16 +231,37 @@ function draw() {
 /**
  * Handles keyboard input
  */
-function keyPressed() {
-    if (key === ' ') {
-        if (state === 'MENU' && frog.tongue.state === "idle") {
+function keyPressed(event) {
+    if (event.keyCode === 32) {
+        if (state === "MENU" && frog.tongue.state === "idle") {
             frog.tongue.state = "outbound";
-            state = 'GAME';
+            state = "GAME";
             startTime = millis();
             lastEatenTime = millis();
-        } else if (state === 'GAME' && frog.tongue.state === "idle") {
+        } else if (state === "GAME" && frog.tongue.state === "idle") {
             frog.tongue.state = "outbound";
         }
+    }
+
+
+    if (event.keyCode === 37) {
+        showInstructions = true;
+    }
+    if (event.keyCode === 39) {
+        if (showInstructions) {
+            showInstructions = false;
+        }
+    }
+    if (event.keyCode === 40) {
+        frog.body.y = 560;
+        setTimeout(() => {
+            if (frog.body.y === 560) {
+                frog.body.y = 520;
+            }
+        }, 5000);
+    }
+    if (frog.body.y === 560 && frog.currentColor === frog.colors.dying) {
+        frog.currentColor = frog.colors.healthy;
     }
 }
 
@@ -269,13 +283,12 @@ function mousePressed() {
     }
 }
 
-
 // drawing all the elements that will appear in the menu state
 
 function menu() {
     background(sky.fill.r, sky.fill.g, sky.fill.b);
 
-    FrogMenuMovement();
+    moveFrog();
 
 
     drawClouds();
@@ -327,6 +340,9 @@ function game() {
 
     const timePassed = millis() - startTime;
 
+    moveFrog();
+
+    // Draw environment
     drawClouds();
     drawBehindWater();
 
@@ -379,6 +395,7 @@ function GameEnd() {
     }
 }
 
+
 // ====== new functions start here ========
 
 //create the flies
@@ -397,7 +414,7 @@ function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude
     };
 }
 
-function FrogMenuMovement() {
+function moveFrog() {
     frog.x = mouseX;
 }
 
@@ -430,6 +447,9 @@ function updateBirds(timePassed) {
         }
     });
 }
+
+
+
 
 /**
  * Draws the menu text and title
@@ -715,7 +735,10 @@ function drawFlashlight() {
  */
 function checkFlashlightCollision() {
     const d = dist(flashlight.x, flashlight.y, frog.body.x, frog.body.y);
-    if (d < flashlight.size / 2 + frog.body.size / 2) {
+    if (frog.body.y === 560 && d < flashlight.size / 2 + frog.body.size / 2) {
+        frog.currentColor = frog.currentColor;
+    }
+    else if (d < flashlight.size / 2 + frog.body.size / 2) {
         frog.currentColor = frog.colors.dead;
     }
 }
@@ -983,6 +1006,7 @@ function drawDeadFrogIcon() {
     fill("#00ff00");
     rect(width / 2.1, height / 1.49, 32, 5);
 }
+
 
 function createLeaf() {
     let fallSpeed = random(0.1, 0.3);
