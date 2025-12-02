@@ -23,6 +23,8 @@ let leaves = [];
 let numLeaves = 15;
 let state = 'MENU'; // MENU, GAME, WIN, END
 let showInstructions = false;
+let showSecondPage = false;
+let showThirdPage = false;
 let dayCount = 0;
 let finalDayCount = 0;
 let progress = 0;
@@ -255,17 +257,27 @@ function keyPressed(event) {
             frog.tongue.state = "outbound";
         }
     }
-
     if (event.keyCode === 37) {
-        if (showSecondPage) {
+        if (showThirdPage) {
+            showThirdPage = false;
+            showSecondPage = true;
+            showInstructions = false;
+        } else if (showSecondPage) {
             showSecondPage = false;
             showInstructions = true;
+            showThirdPage = false;
         }
     }
+
     if (event.keyCode === 39) {
         if (showInstructions) {
             showInstructions = false;
             showSecondPage = true;
+            showThirdPage = false;
+        } else if (showSecondPage) {
+            showInstructions = false;
+            showSecondPage = false;
+            showThirdPage = true;
         }
     }
     if (event.keyCode === 40) {
@@ -295,6 +307,8 @@ function mousePressed() {
             mouseY > instructions.closeButton.y &&
             mouseY < instructions.closeButton.y + instructions.closeButton.size) {
             showInstructions = false;
+            showSecondPage = false;
+            showThirdPage = false;
         }
     }
 }
@@ -349,6 +363,12 @@ function menu() {
 
     if (showInstructions === true) {
         drawInstructions();
+    }
+    if (showSecondPage === true) {
+        drawSecondPage();
+    }
+    if (showThirdPage === true) {
+        drawThirdPage();
     }
 }
 
@@ -438,7 +458,7 @@ function drawBlueBird(blueBird) {
     triangle(
         blueBird.x - blueBird.size / 2.5,
         blueBird.y,
-        blueBird.x - blueBird.size / 2 - 20,
+        blueBird.x - blueBird.size / 2 - 23,
         blueBird.y - 5,
         blueBird.x - blueBird.size / 2 - 10,
         blueBird.y + 5
@@ -450,7 +470,8 @@ function drawBlueBird(blueBird) {
 
     fill("#063ad4");
     triangle(
-        blueBird.x + blueBird.size * 0.9, blueBird.y,
+        blueBird.x + blueBird.size * 0.9,
+        blueBird.y,
         blueBird.x + blueBird.size * 0.35,
         blueBird.y - blueBird.size * 0.15,
         blueBird.x + blueBird.size * 0.35,
@@ -572,18 +593,18 @@ function drawInstructions() {
     textAlign(CENTER, CENTER);
     text('Instructions 🍁:', 375, 160);
 
-    textAlign(LEFT, CENTER);
-    text('- Control the frog with the mouse and click', 210, 200);
-    text('space to eat', 224, 220);
-    text('- Eat the flies every 3 seconds to not starve', 210, 250);
-    text('- WATCH OUT for birds and the', 210, 290);
-    text('flashlight', 224, 310);
-    text('- Birds can heal the frog, but it also', 210, 340);
-    text('damages the frog at the same time', 220, 360);
-    text('frog is hurt', 270, 390);
-    text('frog is dying', 270, 410);
-    text('frog is dead -> GAME OVER ', 270, 430);
-    text('- Survive 3 days to WIN', 210, 460);
+    textAlign(LEFT);
+    text("- Control the frog with the mouse and click", 210, 200);
+    text("space to eat", 224, 220);
+    text("- Eat flies every 3 seconds", 210, 250);
+    text("- WATCH OUT for birds and the", 210, 290);
+    text("flashlights (only appears at night)", 224, 310);
+    text("- The frog gets hurt if it eats the bird, but", 210, 340);
+    text("the frog will start healing itself in 5 seconds", 220, 360);
+    text("frog is hurt", 270, 390);
+    text("frog is dying", 270, 410);
+    text("frog is dead -> GAME OVER ", 270, 430);
+    text("- Survive 3 days to WIN", 210, 460);
 
     fill(frog.colors.damaged);
     rect(250, 385, 10, 10);
@@ -601,6 +622,299 @@ function drawInstructions() {
     fill(0);
     noStroke();
     text('X', 535, 148);
+    textSize(12);
+    text("Click on the right arrow  -->", 400, 485);
+    pop();
+}
+
+function drawSecondPage() {
+    push();
+    noStroke();
+    fill(255);
+    rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
+
+    fill(0);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text('Instructions 🍁:', 375, 160);
+
+    textAlign(LEFT);
+    text('- If the frog eats the bird with the blue beak,', 210, 200);
+    text('it will die', 224, 220);
+
+    text("- If the frog is dying, it will be healed if it", 210, 290);
+    text("hides underwater (click on down arrow ⬇️)", 224, 315);
+    text("- If the frog is underwater, it will also be", 210, 355);
+    text("hidden from the flashlights", 224, 375);
+
+    strokeWeight(2.5);
+    stroke(200);
+    noFill();
+    rect(instructions.closeButton.x, instructions.closeButton.y,
+        instructions.closeButton.size, instructions.closeButton.size,
+        instructions.closeButton.corner);
+    fill(0);
+    noStroke();
+    textSize(17);
+    text('X', 535, 148);
+    text("⬇️", 320, 420);
+
+    textSize(12);
+    text('<--  Click on the right arrow', 195, 485);
+    text("Click on the right arrow  -->", 400, 485);
+    textSize(20);
+    //text("Enjoy The Game!!", 290, 440);
+
+    instructionDrawings();
+
+    pop();
+}
+
+function instructionDrawings() {
+
+    noStroke();
+
+    fill(frog.colors.healthy);
+    arc(260, 270, 50, 50, 180, 0);
+    circle(247, 247, 15);
+    circle(273, 247, 15);
+    fill(255);
+    circle(247, 247, 10);
+    circle(273, 247, 10);
+    fill(0);
+    circle(247, 247, 3);
+    circle(273, 247, 3);
+
+    fill(frog.colors.dying);
+    arc(260, 430, 50, 50, 180, 0);
+    circle(247, 407, 15);
+    circle(273, 407, 15);
+    fill(255);
+    circle(247, 407, 10);
+    circle(273, 407, 10);
+    fill(0);
+    circle(247, 407, 3);
+    circle(273, 407, 3);
+
+    fill(frog.colors.healthy);
+    arc(400, 440, 50, 50, 180, 0);
+    circle(387, 417, 15);
+    circle(413, 417, 15);
+    fill(255);
+    circle(387, 417, 10);
+    circle(413, 417, 10);
+    fill(0);
+    circle(387, 417, 3);
+    circle(413, 417, 3);
+
+
+    fill(frog.colors.dead);
+    arc(450, 270, 50, 50, 180, 0);
+    circle(437, 247, 15);
+    circle(463, 247, 15);
+    fill(255);
+    circle(437, 247, 10);
+    circle(463, 247, 10);
+    fill(0);
+    circle(437, 247, 3);
+    circle(463, 247, 3);
+
+    textSize(10);
+    text('+', 300, 255);
+    text('-->', 390, 255);
+
+    fill("#fcb932");
+    circle(350, 255, 25);
+    triangle(340, 255, 317, 250, 330, 260);
+    fill("#063ad4");
+    triangle(358, 251, 358, 259, 373, 255);
+    fill(0);
+    circle(353, 252, 3);
+
+    drawWave();
+}
+
+function drawWave() {
+    push();
+    fill("#085abf");
+    noStroke();
+
+    beginShape();
+    vertex(220, 440);
+
+    for (let x = 220; x <= 300; x += 5) {
+        let y = 420 + sin((x - 230) * 15) * 3; // wave height 3px
+        vertex(x, y);
+    }
+
+    vertex(300, 440);
+
+    endShape(CLOSE);
+
+    beginShape();
+    vertex(360, 440);
+
+    for (let x = 360; x <= 440; x += 5) {
+        let y = 420 + sin((x - 370) * 15) * 3;
+        vertex(x, y);
+    }
+
+    vertex(440, 440);
+
+    endShape(CLOSE);
+    pop();
+}
+
+function drawThirdPage() {
+    push();
+    noStroke();
+    fill(255);
+    rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
+
+    fill(0);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text('Instructions 🍁:', 375, 160);
+
+    textAlign(LEFT);
+    text('- There are 2 flashlights instead of one', 210, 200);
+    text('- If the flashlight hits the frog, it does not die,', 210, 240);
+    text('but if it gets hit twice in one night, it dies', 224, 260);
+
+    textSize(10);
+    text("-->", 325, 325);
+    text("(hit once = cannot die)", 450, 325);
+    text("-->", 325, 395);
+    text("(hit twice = game over)", 450, 395);
+
+    strokeWeight(2.5);
+    stroke(200);
+    noFill();
+    rect(instructions.closeButton.x, instructions.closeButton.y,
+        instructions.closeButton.size, instructions.closeButton.size,
+        instructions.closeButton.corner);
+    fill(0);
+    noStroke();
+    textSize(17);
+    text('X', 535, 148);
+
+    textSize(12);
+    text('<--  Click on the right arrow', 195, 485);
+    textSize(20);
+    text("Enjoy The Game!!", 290, 440);
+
+    thirdPageDrawings();
+
+    pop();
+}
+
+function thirdPageDrawings() {
+    push();
+    noStroke();
+
+    fill(frog.colors.healthy);
+    arc(260, 330, 50, 50, 180, 0);
+    circle(247, 307, 15);
+    circle(273, 307, 15);
+    fill(255);
+    circle(247, 307, 10);
+    circle(273, 307, 10);
+    fill(0);
+    circle(247, 307, 3);
+    circle(273, 307, 3);
+
+    fill(frog.colors.damaged);
+    arc(400, 330, 50, 50, 180, 0);
+    circle(387, 307, 15);
+    circle(413, 307, 15);
+    fill(255);
+    circle(387, 307, 10);
+    circle(413, 307, 10);
+    fill(0);
+    circle(387, 307, 3);
+    circle(413, 307, 3);
+
+
+    noStroke();
+
+    fill(frog.colors.healthy);
+    arc(260, 400, 50, 50, 180, 0);
+    circle(247, 377, 15);
+    circle(273, 377, 15);
+    fill(255);
+    circle(247, 377, 10);
+    circle(273, 377, 10);
+    fill(0);
+    circle(247, 377, 3);
+    circle(273, 377, 3);
+
+    fill(frog.colors.dead);
+    arc(400, 400, 50, 50, 180, 0);
+    circle(387, 377, 15);
+    circle(413, 377, 15);
+    fill(255);
+    circle(387, 377, 10);
+    circle(413, 377, 10);
+    fill(0);
+    circle(387, 377, 3);
+    circle(413, 377, 3);
+
+    fill("#085abf");
+    noStroke();
+
+    beginShape();
+    vertex(220, 340);
+
+    for (let x = 220; x <= 300; x += 5) {
+        let y = 320 + sin((x - 230) * 15) * 3; // wave height 3px
+        vertex(x, y);
+    }
+    vertex(300, 340);
+
+    endShape(CLOSE);
+
+    beginShape();
+    vertex(360, 340);
+
+    for (let x = 360; x <= 440; x += 5) {
+        let y = 320 + sin((x - 370) * 15) * 3;
+        vertex(x, y);
+    }
+
+    vertex(440, 340);
+
+    endShape(CLOSE);
+
+    //bottom waves
+    beginShape();
+    vertex(220, 410);
+
+    for (let x = 220; x <= 300; x += 5) {
+        let y = 390 + sin((x - 230) * 15) * 3; // wave height 3px
+        vertex(x, y);
+    }
+
+    vertex(300, 410);
+
+    endShape(CLOSE);
+
+
+    beginShape();
+    vertex(360, 410);
+
+    for (let x = 360; x <= 440; x += 5) {
+        let y = 390 + sin((x - 370) * 15) * 3;
+        vertex(x, y);
+    }
+
+    vertex(440, 410);
+
+    endShape(CLOSE);
+
+    fill(245, 218, 42, 200);
+    circle(290, 310, 50);
+    circle(290, 380, 50);
+    circle(270, 400, 50);
     pop();
 }
 
