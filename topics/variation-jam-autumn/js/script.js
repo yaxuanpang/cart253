@@ -268,7 +268,6 @@ function keyPressed(event) {
             showThirdPage = false;
         }
     }
-
     if (event.keyCode === 39) {
         if (showInstructions) {
             showInstructions = false;
@@ -280,6 +279,7 @@ function keyPressed(event) {
             showThirdPage = true;
         }
     }
+
     if (event.keyCode === 40) {
         frog.body.y = 560;
         setTimeout(() => {
@@ -417,7 +417,7 @@ function game() {
     drawDayCounter();
 
     // Check win/lose conditions
-    //GameEnd();
+    GameEnd();
 }
 
 /**
@@ -557,6 +557,13 @@ function drawMenuText() {
     }
     stroke(titleEffect.strokeColor);
     text('**Click space to play!**', width / 2, height / 6);
+
+    textSize(20);
+    fill(255);
+    strokeWeight(5);
+    stroke(212, 98, 28);
+    text("(Fall Edition!! 🍁)", 350, 250);
+
 
     textSize(70);
     textStyle(BOLD);
@@ -1405,7 +1412,14 @@ function end() {
  * Draws the dead frog icon on the game over screen
  */
 function drawDeadFrogIcon() {
+    textSize(20);
+    fill(255);
+    strokeWeight(5);
+    stroke(212, 98, 28);
+    text("(Fall Edition!! 🍁)", 350, 130);
+
     noStroke();
+
     fill(255);
     circle(width / 2, height / 1.5, 80);
     fill("#00ff00");
