@@ -17,7 +17,9 @@
 "use strict";
 
 // defining arrays
+const flies = [];
 const clouds = [];
+let snowflakes = [];
 let state = 'MENU'; // MENU, GAME, WIN, END
 let showInstructions = false;
 let dayCount = 0;
@@ -65,31 +67,15 @@ const frog = {
 };
 
 // fly array
-const flies = [ //(x, y, size, speed, isActive, isDayOnly, vx, vy, canRespawn)
-    createFly(0, 200, 10, 3, true, false),
-    createFly(0, 300, 12, 5, true, true, 1.5, 50),
-    createFly(0, 300, 10, 4, false, false, 0, 0, true),
-    createFly(0, 100, 12, 3.5, true, true, 4, 10)
-];
+
 
 // bird array and parameters
-const birds = [
-    {
-        x: 0,
-        y: 200,
-        size: 40,
-        speed: 2,
-        active: true
-    },
-    {
-        x: 0,
-        y: 400,
-        size: 40,
-        speed: 2.5,
-        active: false,
-        spawnsInDay: true
-    }
-];
+const bird = {
+    x: 0,
+    y: 200,
+    size: 40,
+    speed: 2,
+}
 
 // flashlight parameters
 const flashlight = {
@@ -191,15 +177,13 @@ const menuButton = {
     size: 40
 };
 
-// key codes
-const keyCode = {
-    space: 32
-};
-
 // Create the canvas, set an angle mode and initialize entities (birds, flies and flashlight)
 function setup() {
     createCanvas(700, 550);
     angleMode(DEGREES);
+
+    flies.push(createFly(0, 200, 10, 3, true, false));
+    flies.push(createFly(0, 300, 10, 4, false, false, 0, 0, true));
 
     titleEffect.strokeColor = color(random(255));
     titleEffect.strokeFill = color(5, random(255), random(255));
@@ -207,7 +191,7 @@ function setup() {
 
     // Initialize all entities
     flies.forEach(fly => resetFly(fly));
-    birds.forEach(bird => resetBird(bird));
+    resetBird(bird);
     flashlight.x = width / 2;
     flashlight.y = height / 2;
 }
@@ -273,9 +257,10 @@ function menu() {
 
     drawClouds();
     drawBehindWater();
-    drawMenuBird();
 
-    updateBirds(0); // or moveBird(bird)
+    drawBird(bird);
+    moveBird(bird);
+
     updateFlies(0);// move flies
 
 
@@ -303,6 +288,17 @@ function menu() {
     drawProgressRing();
     drawDayCounter();
 
+    let t = frameCount / 60; // time in seconds
+
+    if (snowflakes.length < 200) {
+        snowflakes.push(createSnowflake());
+    }
+
+    for (let flake of snowflakes) {
+        updateSnowflake(flake, t);
+        displaySnowflake(flake);
+    }
+
     if (showInstructions === true) {
         drawInstructions();
     }
@@ -320,12 +316,13 @@ function game() {
 
     // Update and draw game entities
     updateFlies(timePassed);
-    updateBirds(timePassed);
     showFlashlight();
 
     // Draw entities
     flies.forEach(fly => { if (fly.active) drawFly(fly); });
-    birds.forEach(bird => { if (bird.active) drawBird(bird); });
+    drawBird(bird);
+    moveBird(bird);
+    checkTongueCollision(bird, 'bird');
     drawFrog();
     drawWater();
 
@@ -334,18 +331,29 @@ function game() {
     updateProgress();
     if (timePassed > 3000) checkStarvation();
 
-    // Draw flashlight in front of everything
+
     if (flashlight.active) {
         drawFlashlight();
         checkFlashlightCollision();
     }
 
-    // Draw UI
+
     drawProgressRing();
     drawDayCounter();
 
+    let t = frameCount / 60; // time in seconds
+
+    if (snowflakes.length < 200) {
+        snowflakes.push(createSnowflake());
+    }
+
+    for (let flake of snowflakes) {
+        updateSnowflake(flake, t);
+        displaySnowflake(flake);
+    }
+
     // Check win/lose conditions
-    GameEnd();
+    //GameEnd();
 }
 
 /**
@@ -364,6 +372,37 @@ function GameEnd() {
 }
 
 // ====== new functions start here ========
+function createSnowflake() {
+    return {
+        posX: 0,
+        posY: random(-50, 0),
+        initialangle: random(0, 360),
+        size: random(2, 5),
+        radius: sqrt(random(pow(width / 2, 2)))
+    };
+}
+
+function updateSnowflake(flake, time) {
+    let angularSpeed = 0.6 * 57.2958;
+
+
+    let angle = angularSpeed * time + flake.initialangle;
+
+    flake.posX = width / 2 + flake.radius * sin(angle);
+
+    flake.posY += sqrt(flake.size);
+
+
+    if (flake.posY > height) {
+        let index = snowflakes.indexOf(flake);
+        snowflakes.splice(index, 1);
+    }
+}
+
+function displaySnowflake(flake) {
+    ellipse(flake.posX, flake.posY, flake.size);
+}
+
 
 //create the flies
 function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude = 0, spawnsAtNight = false) {
@@ -384,39 +423,6 @@ function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude
 function FrogMenuMovement() {
     frog.x = mouseX;
 }
-
-function drawMenuBird() {
-    let b = birds[0];   // use the first bird only for menu
-    b.active = true;
-    moveBird(b);
-    drawBird(b);
-    birds.speed += 2;
-}
-
-
-function updateBirds(timePassed) {
-
-    birds.forEach((bird, index) => {
-
-        // --- BIRD 0 = ALWAYS ACTIVE IN GAME ---
-        if (index === 0) {
-            bird.active = sky.fill.transparency < 100;
-        }
-
-        // --- BIRD 1 = SPAWN AFTER 0.5 SECONDS ---
-        if (index === 1) {
-            bird.active = timePassed > 500;  // 500 ms = 0.5 seconds
-        }
-
-        if (bird.active) {
-            moveBird(bird);
-            checkTongueCollision(bird, 'bird');
-        }
-    });
-}
-
-
-
 
 /**
  * Draws the menu text and title
@@ -547,23 +553,19 @@ function resetFly(fly) {
 function drawFly(fly) {
     push();
     noStroke();
-    fill("#000000");
+    fill("#30fff5");
     ellipse(fly.x, fly.y, fly.size);
 
-    fill(200);
+    fill("#b6fcf9");
     ellipse(fly.x - fly.size * 0.5, fly.y - fly.size * 0.5, fly.size * 0.8, fly.size * 0.4);
     ellipse(fly.x + fly.size * 0.5, fly.y - fly.size * 0.5, fly.size * 0.8, fly.size * 0.4);
     pop();
 }
 
-// bird systems
-/**
- * Updates all birds
- */
 /**
  * Moves a bird horizontally
  */
-function moveBird(bird) {
+function moveBird(birds) {
     bird.x += bird.speed;
     if (bird.x > width) resetBird(bird);
 }
