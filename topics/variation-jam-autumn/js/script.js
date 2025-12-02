@@ -86,14 +86,20 @@ const birds = [
     }
 ];
 
-// flashlight parameters
-const flashlight = {
-    x: 350,
-    y: 275,
-    size: 150,
-    color: null,
-    active: false
+const blueBird = {
+    x: 0,
+    y: 200,
+    size: 30,
+    speed: 2,
+    active: true
 };
+
+// flashlight parameters
+const flashlights = [
+    { x: 350, y: 275, size: 150, color: null, active: false },
+    { x: 200, y: 350, size: 150, color: null, active: false }
+];
+
 
 // cloud positions
 
@@ -198,12 +204,19 @@ function setup() {
 
     titleEffect.strokeColor = color(random(255));
     titleEffect.strokeFill = color(5, random(255), random(255));
-    flashlight.color = color(245, 218, 42, 200);
 
+    flashlights.forEach(flash => {
+        flash.color = color(245, 218, 42, 200);
+    });
+
+
+    // Initialize all entities
     flies.forEach(fly => resetFly(fly));
     birds.forEach(bird => resetBird(bird));
-    flashlight.x = width / 2;
-    flashlight.y = height / 2;
+    resetBlueBird(blueBird);
+
+    flashlights.x = width / 2;
+    flashlights.y = height / 2;
 
     for (let i = 0; i < numLeaves; i++) {
         let leaf = createLeaf();
@@ -243,13 +256,16 @@ function keyPressed(event) {
         }
     }
 
-
     if (event.keyCode === 37) {
-        showInstructions = true;
+        if (showSecondPage) {
+            showSecondPage = false;
+            showInstructions = true;
+        }
     }
     if (event.keyCode === 39) {
         if (showInstructions) {
             showInstructions = false;
+            showSecondPage = true;
         }
     }
     if (event.keyCode === 40) {
@@ -294,6 +310,8 @@ function menu() {
     drawClouds();
     drawBehindWater();
     drawMenuBird();
+    drawBlueBird(blueBird);
+    moveBlueBird(blueBird);
 
     updateBirds(0); // or moveBird(bird)
     updateFlies(0);// move flies
@@ -349,11 +367,14 @@ function game() {
     // Update and draw game entities
     updateFlies(timePassed);
     updateBirds(timePassed);
-    showFlashlight();
 
     // Draw entities
     flies.forEach(fly => { if (fly.active) drawFly(fly); });
     birds.forEach(bird => { if (bird.active) drawBird(bird); });
+    drawBlueBird(blueBird);
+    moveBlueBird(blueBird);
+    checkTongueCollision(blueBird, "blueBird");
+
     drawFrog();
 
     for (let leaf of leaves) {
@@ -368,10 +389,9 @@ function game() {
     updateProgress();
     if (timePassed > 3000) checkStarvation();
 
-    if (flashlight.active) {
-        drawFlashlight();
-        checkFlashlightCollision();
-    }
+    showFlashlight();
+    drawFlashlight();
+    checkFlashlightCollision();
 
     drawProgressRing();
     drawDayCounter();
@@ -397,6 +417,56 @@ function GameEnd() {
 
 
 // ====== new functions start here ========
+function moveBlueBird(blueBird) {
+    blueBird.x += blueBird.speed;
+    if (blueBird.x > width) {
+        resetBlueBird(blueBird);
+    }
+}
+
+function resetBlueBird(blueBird) {
+    blueBird.x = 0;
+    blueBird.y = random(100, 300);
+}
+
+function drawBlueBird(blueBird) {
+    push();
+    noStroke();
+
+    // Left wing
+    fill("#fcb932");
+    triangle(
+        blueBird.x - blueBird.size / 2.5,
+        blueBird.y,
+        blueBird.x - blueBird.size / 2 - 20,
+        blueBird.y - 5,
+        blueBird.x - blueBird.size / 2 - 10,
+        blueBird.y + 5
+    );
+
+    // Body
+    ellipse(blueBird.x, blueBird.y, blueBird.size);
+
+
+    fill("#063ad4");
+    triangle(
+        blueBird.x + blueBird.size * 0.9, blueBird.y,
+        blueBird.x + blueBird.size * 0.35,
+        blueBird.y - blueBird.size * 0.15,
+        blueBird.x + blueBird.size * 0.35,
+        blueBird.y + blueBird.size * 0.15
+    );
+
+    // Eye
+    fill(0);
+    ellipse(
+        blueBird.x + blueBird.size / 6,
+        blueBird.y - blueBird.size / 8,
+        blueBird.size / 10
+    );
+
+    pop();
+}
 
 //create the flies
 function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude = 0, spawnsAtNight = false) {
@@ -655,6 +725,10 @@ function checkTongueCollision(entity, type) {
             frog.tongue.speed = 10;
             damageFrog();
         }
+        else if (type === 'blueBird') {
+            resetBlueBird(entity);
+            frog.currentColor = frog.colors.dead;
+        }
         frog.tongue.state = "inbound";
     }
 }
@@ -711,37 +785,69 @@ function checkStarvation() {
  * Updates the flashlight position and visibility
  */
 function showFlashlight() {
-    flashlight.active = sky.fill.transparency > 110;
+    const active = sky.fill.transparency > 110;
 
-    if (flashlight.active && frameCount % 60 === 0) {
-        flashlight.x = random(width);
-        flashlight.y = random(300, 550);
-    }
+    flashlights.forEach(flash => {
+        flash.active = active;
+
+        if (flash.active && frameCount % 60 === 0) {
+            flash.x = random(width);
+            flash.y = random(300, 550);
+        }
+    });
 }
+
 
 /**
  * Draws the flashlight
  */
 function drawFlashlight() {
-    push();
-    noStroke();
-    fill(flashlight.color);
-    circle(flashlight.x, flashlight.y, flashlight.size);
-    pop();
+    flashlights.forEach(flash => {
+        if (flash.active) {
+            push();
+            noStroke();
+            fill(flash.color);
+            circle(flash.x, flash.y, flash.size);
+            pop();
+        }
+    });
 }
+
 
 /**
  * Checks if the flashlight hits the frog
  */
 function checkFlashlightCollision() {
-    const d = dist(flashlight.x, flashlight.y, frog.body.x, frog.body.y);
-    if (frog.body.y === 560 && d < flashlight.size / 2 + frog.body.size / 2) {
-        frog.currentColor = frog.currentColor;
-    }
-    else if (d < flashlight.size / 2 + frog.body.size / 2) {
+    let collisions = 0;
+
+    flashlights.forEach(flash => {
+        if (!flash.active) return;
+
+        const d = dist(flash.x, flash.y, frog.body.x, frog.body.y);
+
+        if (frog.body.y === 560 && d < flash.size / 2 + frog.body.size / 2) {
+            return;
+        }
+
+        if (d < flash.size / 2 + frog.body.size / 2) {
+            collisions++;
+        }
+    });
+
+    if (collisions >= 2) {
         frog.currentColor = frog.colors.dead;
     }
+    else if (collisions === 1) {
+        if (frog.currentColor === frog.colors.healthy) {
+            frog.currentColor = frog.colors.damaged;
+        }
+        if (frog.currentColor === frog.colors.damaged) {
+            frog.currentColor = frog.currentColor;
+        }
+    }
 }
+
+
 
 // frog system
 /**
