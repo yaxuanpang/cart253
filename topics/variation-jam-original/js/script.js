@@ -16,41 +16,41 @@
 
 "use strict";
 
-// defining arrays
-const flies = [];
-const clouds = [];
+// defining arrays and variables
+const flies = []; //flies array
+const clouds = []; //clouds array
 let state = 'MENU'; // MENU, GAME, WIN, END
-let showInstructions = false;
-let dayCount = 0;
-let finalDayCount = 0;
-let progress = 0;
-let startTime = 0;
-let lastEatenTime = 0;
-let lastBrownFlyReset = 0;
-let endTimerStarted = false;
+let showInstructions = false; // instructions start off false
+let dayCount = 0; // day count starts at 0 (goes to 1 when the game starts)
+let finalDayCount = 0; // final day count starts at 0
+let progress = 0; // progress starts at 0
+let startTime = 0; // time passed since the start
+let lastEatenTime = 0; // time since the frog last ate
+let lastBrownFlyReset = 0; // time since the brown fly reset positioms
+let endTimerStarted = false; // end timer starts off false
 
 // sky parameters
 const sky = {
-    fill: {
+    fill: { // color
         r: 135,
         g: 207,
         b: 235,
         transparency: 0
     },
-    change: 0.055,
-    isNight: false,
-    direction: -1,
-    cloudColor: 255
+    change: 0.055, // amount added or subtracted to the value of sky color every frame
+    isNight: false, // game starts during the day (not nighttime)
+    direction: -1, // direction of color change
+    cloudColor: 255 // color of the clouds
 };
 
 // frog parameters
-const frog = {
+const frog = { //position and size
     body: {
         x: 320,
         y: 520,
         size: 150
     },
-    tongue: {
+    tongue: { // tongue parameters
         x: undefined,
         y: 480,
         size: 20,
@@ -66,26 +66,26 @@ const frog = {
     currentColor: "#00ff00"
 };
 
-// bird array and parameters
+// bird array and parameters (x, y, size, speed if the bird is visible)
 const birds = [
     {
         x: 0,
         y: 200,
         size: 40,
         speed: 2,
-        active: true
+        active: true // bird is always visible
     },
     {
         x: 0,
         y: 400,
         size: 40,
         speed: 2.5,
-        active: false,
-        spawnsInDay: true
+        active: false, // birds appears later
+        spawnsInDay: true // bird is visible
     }
 ];
 
-// flashlight parameters
+// flashlight parameters (x, y, size, color, visible)
 const flashlight = {
     x: 350,
     y: 275,
@@ -94,6 +94,7 @@ const flashlight = {
     active: false
 };
 
+// brown fly parameter (x, y, size, speed)
 const brownFly = {
     x: 350,
     y: 200,
@@ -102,21 +103,6 @@ const brownFly = {
 };
 
 // cloud positions
-
-//create a cloud with position and size
-function createCloud(newcloud, size = 1) {
-    const cloud = [];
-    newcloud.forEach(newcloud => {
-        cloud.push([
-            newcloud[0] * size,
-            newcloud[1] * size,
-            newcloud[2] * size,
-            newcloud[3] * size
-        ]);
-    });
-    return cloud;
-}
-
 // Cloud 1 - left side
 clouds.push(createCloud([
     [130, 300, 60, 40],
@@ -147,7 +133,7 @@ clouds.push(createCloud([
     [600, 370, 40, 40]
 ], 1));
 
-// progress ring parameters
+// progress ring parameters (position, radius, fill)
 const progressRing = {
     x: 90,
     y: 90,
@@ -176,16 +162,16 @@ const instructions = {
     y: 130,
     w: 380,
     h: 370,
-    corner: 15,
-    closeButton: {
+    corner: 15, // round the corners
+    closeButton: { // close button paramters
         x: 523.5,
         y: 130,
         size: 35,
-        corner: 10
+        corner: 10 // round the corners
     }
 };
 
-// menu button parameters
+// menu button parameters (position, size)
 const menuButton = {
     x: 340,
     y: 275,
@@ -194,14 +180,16 @@ const menuButton = {
 
 // Create the canvas, set an angle mode and initialize entities (birds, flies and flashlight)
 function setup() {
-    createCanvas(700, 550);
-    angleMode(DEGREES);
+    createCanvas(700, 550); // canvas size
+    angleMode(DEGREES); // angle mode is in degrees
 
+    // draw the flies (fly position, size, if they appear during the day or at night)
     flies.push(createFly(0, 200, 10, 3, true, false));
     flies.push(createFly(0, 300, 12, 5, true, true, 1.5, 50));
     flies.push(createFly(0, 300, 10, 4, false, false, 0, 0, true));
     flies.push(createFly(0, 100, 12, 3.5, true, true, 4, 10));
 
+    // colors for the title
     titleEffect.strokeColor = color(random(255));
     titleEffect.strokeFill = color(5, random(255), random(255));
     flashlight.color = color(245, 218, 42, 200);
@@ -212,10 +200,11 @@ function setup() {
     flashlight.x = width / 2;
     flashlight.y = height / 2;
 
+    // reset the brown fly
     resetBrownFly();
 }
 
-// drawing the canvas and the game states
+// drawing the canvas and the game states (menu, game, win, end)
 
 function draw() {
     if (state === 'MENU') {
@@ -236,14 +225,14 @@ function draw() {
  * Handles keyboard input
  */
 function keyPressed(event) {
-    if (event.keyCode === 32) {
+    if (event.keyCode === 32) { // space bar
         if (state === "MENU" && frog.tongue.state === "idle") {
-            frog.tongue.state = "outbound";
+            frog.tongue.state = "outbound"; //frog tongue shoot out
             state = "GAME";
-            startTime = millis();
-            lastEatenTime = millis();
+            startTime = millis(); // timer for start time starts
+            lastEatenTime = millis(); // timer for when the frog eats last starts
         } else if (state === "GAME" && frog.tongue.state === "idle") {
-            frog.tongue.state = "outbound";
+            frog.tongue.state = "outbound"; //frog tongue shoot out
         }
     }
 }
@@ -251,6 +240,7 @@ function keyPressed(event) {
 /**
  * Handles mouse clicks
  */
+// click within the menu button with the mouse to close the instructions
 function mousePressed() {
     if (state === 'MENU') {
         if (mouseX > menuButton.x && mouseX < menuButton.x + menuButton.size &&
@@ -267,12 +257,10 @@ function mousePressed() {
 }
 
 // drawing all the elements that will appear in the menu state
-
 function menu() {
-    background(sky.fill.r, sky.fill.g, sky.fill.b);
+    background(sky.fill.r, sky.fill.g, sky.fill.b); // background is sky color
 
-    FrogMenuMovement();
-
+    moveFrog();
 
     drawClouds();
     drawBehindWater();
@@ -304,7 +292,7 @@ function menu() {
     drawProgressRing();
     drawDayCounter();
 
-    if (showInstructions === true) {
+    if (showInstructions === true) { // if show instructions is true, draw instructions
         drawInstructions();
     }
 }
@@ -323,10 +311,11 @@ function game() {
     updateBirds(timePassed);
     showFlashlight();
 
-    // Draw entities
+    // Draw entities and the frog
     flies.forEach(fly => { if (fly.active) drawFly(fly); });
     birds.forEach(bird => { if (bird.active) drawBird(bird); });
     drawFrog();
+
     drawWater();
 
     // Update game mechanics
@@ -365,7 +354,21 @@ function gameEnd() {
     }
 }
 
-//create the flies
+//create a cloud with position and size
+function createCloud(newcloud, size = 1) {
+    const cloud = [];
+    newcloud.forEach(newcloud => {
+        cloud.push([
+            newcloud[0] * size,
+            newcloud[1] * size,
+            newcloud[2] * size,
+            newcloud[3] * size
+        ]);
+    });
+    return cloud;
+}
+
+//create the flies (position, size, speed, if its visible during the day or at night, wave speed, height of the wave)
 function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude = 0, spawnsAtNight = false) {
     return {
         x: x,
@@ -381,16 +384,18 @@ function createFly(x, y, size, speed, active, wave, waveSpeed = 0, waveAmplitude
     };
 }
 
-function FrogMenuMovement() {
+//moves the frog
+function moveFrog() {
     frog.x = mouseX;
 }
 
+//draws and moves the bird in menu (also makes sure it is visible)
 function drawMenuBird() {
     let b = birds[0];   // use the first bird only for menu
     b.active = true;
     moveBird(b);
     drawBird(b);
-    birds.speed += 2;
+    birds.speed += 2; // speed of the bird
 }
 
 
@@ -398,16 +403,16 @@ function updateBirds(timePassed) {
 
     birds.forEach((bird, index) => {
 
-        // --- BIRD 0 = ALWAYS ACTIVE IN GAME ---
+        // first bird is always visible 
         if (index === 0) {
             bird.active = sky.fill.transparency < 100;
         }
 
-        // --- BIRD 1 = SPAWN AFTER 0.5 SECONDS ---
+        // second bird appears half a second later
         if (index === 1) {
             bird.active = timePassed > 500;  // 500 ms = 0.5 seconds
         }
-
+        // if the birds are visible, move them and make sure the frog can eat the birds
         if (bird.active) {
             moveBird(bird);
             checkTongueCollision(bird, 'bird');
@@ -419,12 +424,13 @@ function updateBirds(timePassed) {
 /**
  * Updates all flies
  */
-function updateFlies() {
+function updateFlies() { // update fly position
     flies.forEach((fly) => {
+        // this fly only appears at night (after the transparency of the sky is more than 70)
         if (fly.spawnsAtNight) {
             fly.active = sky.fill.transparency > 70;
         }
-
+        // if the flies are visible move them and make sure the frog can eat flies
         if (fly.active) {
             moveFly(fly);
             checkTongueCollision(fly, 'fly');
@@ -433,26 +439,34 @@ function updateFlies() {
 }
 
 /**
- * Draws the menu text and title
+ * Draws the menu text, title and subtitles
  */
 function drawMenuText() {
     push();
-    textAlign(CENTER, CENTER);
+    textAlign(CENTER, CENTER); // aligns the text at the center
     textSize(30);
     fill(0);
     strokeWeight(5);
 
+    // changes to a random color every 15 frames
     if (frameCount % 15 === 0) {
         titleEffect.strokeColor = color(random(255), random(255), random(255));
     }
+    // title and subtitle (stroke color, fill color, stroke weight and size)
     stroke(titleEffect.strokeColor);
     text('**Click space to play!**', width / 2, height / 6);
+    textSize(20);
+    fill(0);
+    strokeWeight(5);
+    stroke(255);
+    text("(Original Edition!!)", 350, 250);
 
     textSize(70);
     textStyle(BOLD);
     fill(255);
     strokeWeight(15);
 
+    // changes to a random color every 10 frames
     if (frameCount % 10 === 0) {
         titleEffect.strokeFill = color(5, random(255), random(255));
     }
@@ -463,6 +477,7 @@ function drawMenuText() {
     fill(255);
     rect(menuButton.x, menuButton.y, menuButton.size, menuButton.size);
 
+    // instruction to click on the instruction box
     fill(0);
     textSize(13);
     text('Click here for instructions', 360, 330);
@@ -470,11 +485,12 @@ function drawMenuText() {
 }
 
 /**
- * Draws the instructions overlay
+ * Draws the instructions
  */
 function drawInstructions() {
     push();
     noStroke();
+    // box for instructions
     fill(255);
     rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
 
@@ -497,6 +513,7 @@ function drawInstructions() {
     text("- Survive 3 days or eat the brown fly to WIN", 210, 450);
     text("(can only be eaten if frog is healthy)", 224, 470);
 
+    // squares to show each color
     fill(frog.colors.damaged);
     rect(250, 375, 10, 10);
     fill(frog.colors.dying);
@@ -507,11 +524,13 @@ function drawInstructions() {
     strokeWeight(2.5);
     stroke(200);
     noFill();
+    // close button 
     rect(instructions.closeButton.x, instructions.closeButton.y,
         instructions.closeButton.size, instructions.closeButton.size,
         instructions.closeButton.corner);
     fill(0);
     noStroke();
+    // x on the close button
     text('X', 535, 148);
     pop();
 }
@@ -522,10 +541,12 @@ function drawInstructions() {
 function moveFly(fly) {
     fly.x += fly.speed;
 
+    //wave patterm
     if (fly.wave) {
         fly.y = fly.startY + sin(fly.x * fly.waveSpeed) * fly.waveAmplitude;
     }
 
+    // if the fly goes off the canvas reset it
     if (fly.x > width) resetFly(fly);
 }
 
@@ -563,7 +584,7 @@ function moveBird(bird) {
 }
 
 /**
- * Resets a bird to the left
+ * Resets a bird if it goes off the canvas
  */
 function resetBird(bird) {
     bird.x = 0;
@@ -598,7 +619,6 @@ function drawBird(bird) {
     pop();
 }
 
-// collision system
 /**
  * Checks if the tongue collides with an entity
  */
@@ -606,15 +626,25 @@ function checkTongueCollision(entity, type) {
     const d = dist(frog.tongue.x, frog.tongue.y, entity.x, entity.y);
     const hit = d < frog.tongue.size / 2 + entity.size / 2;
 
+    // effects when the frog collides with (eats) each entity (flies, birds, brown fly)
     if (hit) {
+        // tongue speed goes up every time the frog eats a fly (min: 10, max: 25)
+        // resets the fly
+        // timer for when the fly last ate resets
         if (type === 'fly') {
             resetFly(entity);
             frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
             lastEatenTime = millis();
+
+            // tongue speed slows down to 10 if the frog eats a bird
+            // resets the bird
+            // if the bird eats a bird it gets hurt
         } else if (type === 'bird') {
             resetBird(entity);
             frog.tongue.speed = 10;
             damageFrog();
+
+            // if the frog eats the brown fly and it's healthy, the player wins
         } else if (type === 'brownFly' && frog.currentColor === frog.colors.healthy) {
             state = 'WIN';
         }
@@ -625,6 +655,8 @@ function checkTongueCollision(entity, type) {
 /**
  * Damages the frog when it eats a bird
  */
+// the frog changes colors when it gets hurts (darker = closer to death)
+// the frog starts healing after 5 seconds
 function damageFrog() {
     if (frog.currentColor === frog.colors.healthy) {
         frog.currentColor = frog.colors.damaged;
@@ -654,8 +686,10 @@ function damageFrog() {
  * Checks if the frog is starving
  */
 function checkStarvation() {
-    const timeSinceEaten = millis() - lastEatenTime;
+    const timeSinceEaten = millis() - lastEatenTime; // timer for when the forg last ate
 
+    // if the frog did not eat for 3 seconds, it gets hurt (changes colors)
+    // if the frog gets hurt this way, it cannot heal on its own
     if (timeSinceEaten > 3000) {
         if (frog.currentColor === frog.colors.healthy) {
             frog.currentColor = frog.colors.damaged;
@@ -669,13 +703,14 @@ function checkStarvation() {
     }
 }
 
-// flashlight system
 /**
  * Updates the flashlight position and visibility
  */
 function showFlashlight() {
+    // flashlight only appears when the transparency of the sky is more than 110
     flashlight.active = sky.fill.transparency > 110;
 
+    // changes every 60 frames to a random position between the height of 300 and 500
     if (flashlight.active && frameCount % 60 === 0) {
         flashlight.x = random(width);
         flashlight.y = random(300, 550);
@@ -696,6 +731,7 @@ function drawFlashlight() {
 /**
  * Checks if the flashlight hits the frog
  */
+// if the flashlight hits the frog, it dies
 function checkFlashlightCollision() {
     const d = dist(flashlight.x, flashlight.y, frog.body.x, frog.body.y);
     if (d < flashlight.size / 2 + frog.body.size / 2) {
@@ -703,11 +739,11 @@ function checkFlashlightCollision() {
     }
 }
 
-// frog system
 /**
  * Draws the frog (tongue and body)
  */
 function drawFrog() {
+    // draws tongue
     push();
     fill("#ff0000");
     noStroke();
@@ -717,11 +753,13 @@ function drawFrog() {
     line(frog.tongue.x, frog.tongue.y, frog.body.x, frog.body.y);
     pop();
 
+    // draws body
     push();
     fill(frog.currentColor);
     noStroke();
     ellipse(frog.body.x, frog.body.y, frog.body.size);
 
+    // draws eyes
     let eyeOffsetX = frog.body.size * 0.3;
     let eyeOffsetY = frog.body.size * 0.4;
     let eyeSize = frog.body.size * 0.25;
@@ -736,6 +774,7 @@ function drawFrog() {
     ellipse(frog.body.x + eyeOffsetX, frog.body.y - eyeOffsetY, pupilSize);
     pop();
 
+    // makes sure the frog cannot go off the canvas and updates the tongue position
     if (state === 'GAME' || state === 'MENU') {
         frog.body.x = constrain(mouseX, frog.body.size / 16, width - frog.body.size / 16);
         updateTongue();
@@ -748,21 +787,22 @@ function drawFrog() {
 function updateTongue() {
     frog.tongue.x = frog.body.x;
 
+    // Checks if the tongue is currently shooting upward
     if (frog.tongue.state === "outbound") {
-        frog.tongue.y -= frog.tongue.speed;
+        frog.tongue.y -= frog.tongue.speed; //Moves the tongue upward by subtracting from its y position
+        // If the tongue reaches the top of the screen, it comes back down
         if (frog.tongue.y <= 0) frog.tongue.state = "inbound";
     } else if (frog.tongue.state === "inbound") {
-        frog.tongue.y += frog.tongue.speed;
+        frog.tongue.y += frog.tongue.speed; //Move the tongue downward by adding to its y position
         if (frog.tongue.y >= height) frog.tongue.state = "idle";
-    }
+    } // If the tongue reaches the bottom again, stop it and reset to idle
 }
 
-// drawing the sky and the environment
 /**
  * Updates the sky color and darkness
  */
 function updateSky() {
-    if (sky.isNight) {
+    if (sky.isNight) { // if the value of g is smaller or equal to 85, it is daytime
         sky.fill.r -= sky.change;
         sky.fill.g -= sky.change;
         sky.fill.b += sky.change;
@@ -770,7 +810,7 @@ function updateSky() {
             sky.fill.g = 85;
             sky.isNight = false;
         }
-    } else {
+    } else { // if the value of g is bigger or equal to 207, it is nighttime
         sky.fill.r += sky.change;
         sky.fill.g += sky.change;
         sky.fill.b -= sky.change;
@@ -781,11 +821,13 @@ function updateSky() {
     }
 
     push();
+    // black rectangle on top of everything to give the illusion of darkness at night
     noStroke();
     fill(0, sky.fill.transparency);
     rect(0, 0, 700, 550);
     pop();
 
+    // if the transparency of the sky is greater or equal to 220, it shifts to nighttime
     if (sky.isNight) {
         sky.fill.transparency += sky.change;
         if (sky.fill.transparency >= 220) {
@@ -793,6 +835,7 @@ function updateSky() {
             sky.isNight = false;
         }
     } else {
+        // if the transparency of the sky is lower or equal to 0, it shifts to daytime
         sky.fill.transparency -= sky.change;
         if (sky.fill.transparency <= 0) {
             sky.fill.transparency = 0;
@@ -805,15 +848,20 @@ function updateSky() {
  * Updates the progress through the day/night cycle
  */
 function updateProgress() {
+    // If the value of g is lower or equal to 85, the sky gets brighter
     if (sky.fill.g <= 85) {
         sky.direction = 1;
     } else if (startTime > 0 && sky.fill.g >= 207) {
+        // If the value of g is greater or equal to 207, the sky gets darker
         sky.direction = -1;
-        dayCount++;
+        dayCount++; // increase the number of days
     }
 
+    // define g as green is the sky color
     let g = sky.fill.g;
 
+    // When the sky gets darker, progress moves from 0 to 0.5
+    // When the sky gets brighter, progress moves from 0.5 to 1 (a full rotation)
     if (sky.direction === -1) {
         progress = (207 - g) / 244;
     } else {
@@ -829,6 +877,7 @@ function drawClouds() {
     noStroke();
     fill(sky.cloudColor);
 
+    // draw the array of clouds
     clouds.forEach(cloudGroup => {
         cloudGroup.forEach(cloud => {
             ellipse(cloud[0], cloud[1], cloud[2], cloud[3]);
@@ -843,7 +892,11 @@ function drawBehindWater() {
     push();
     noStroke();
     fill("#1ec7be");
+
+    // custom shape
     beginShape();
+
+    // wave and movement of the water behind the frog
     for (let x = 0; x <= width; x += 10) {
         let y = 485 + sin(x * 3 - frameCount * 3) * 10;
         vertex(x, y);
@@ -861,7 +914,11 @@ function drawWater() {
     push();
     noStroke();
     fill("#3d9cf5");
+
+    // custom shape
     beginShape();
+
+    // wave and movement of the water in front of the frog
     for (let x = 0; x <= width; x += 10) {
         let y = 495 + sin(x * 3 + frameCount * 3) * 10;
         vertex(x, y);
@@ -872,7 +929,6 @@ function drawWater() {
     pop();
 }
 
-// progression system
 /**
  * Draws the progress ring
  */
@@ -881,11 +937,17 @@ function drawProgressRing() {
     stroke(progressRing.fill.background);
     strokeWeight(progressRing.strokeWeight);
     noFill();
+
+    // draws the shpae of the progress ring (white)
     ellipse(progressRing.x, progressRing.y, progressRing.radius * 2, progressRing.radius * 2);
 
     stroke(progressRing.fill.progress.r, progressRing.fill.progress.g, progressRing.fill.progress.b);
-    strokeCap(SQUARE);
+    strokeCap(SQUARE); // Makes the ends of the arc have a flat shape
+
+    // Converts the progress value (0–1) into a full-circle angle starting from the top
     let endAngle = -90 + (progress * 360);
+
+    // draws the fill of the progress ring (green)
     arc(progressRing.x, progressRing.y, progressRing.radius * 2, progressRing.radius * 2, -90, endAngle);
     pop();
 }
@@ -945,28 +1007,43 @@ function end() {
  * Draws the dead frog icon on the game over screen
  */
 function drawDeadFrogIcon() {
+    push();
+
+    // write the text for game end state (subtitle)
+    textSize(20);
+    fill(0);
+    strokeWeight(5);
+    stroke(255);
+    text("(Original Edition!!)", 350, 130);
+
+    // dead frog icon at the end of the game
     noStroke();
+
+    // eyes
     fill(255);
     circle(width / 2, height / 1.5, 80);
     fill("#00ff00");
     circle(width / 2, height / 1.47, 45);
     circle(width / 2.1, height / 1.56, 20);
     circle(width / 1.915, height / 1.56, 20);
-
     fill(0);
     textSize(13);
     text("X", width / 2.1, height / 1.55);
     text("X", width / 1.915, height / 1.55);
 
+    // tongue
     fill("#ff0000");
     ellipse(width / 1.95, height / 1.45, 5, 20);
 
+    // body
     fill(0);
     rect(width / 2.1, height / 1.47, 32, 2);
     fill("#00ff00");
     rect(width / 2.1, height / 1.49, 32, 5);
+    pop();
 }
 
+// draws the brown fly
 function drawBrownFly() {
     push();
     noStroke();
@@ -989,14 +1066,17 @@ function drawBrownFly() {
     pop();
 }
 
+// resets the position of the brown fly to a random position and a random size
 function resetBrownFly() {
     brownFly.x = random(width);
     brownFly.y = random(0, 300);
     brownFly.size = random(8, 12);
 }
 
+// changes the position of the fly every 1 second
+// Reset the timer since brown fly last reset
 function teleportingFly() {
-    if (millis() - lastBrownFlyReset >= 3000) {
+    if (millis() - lastBrownFlyReset >= 1000) {
         resetBrownFly();
         lastBrownFlyReset = millis();
     }
