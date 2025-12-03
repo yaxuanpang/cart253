@@ -58,12 +58,13 @@ const frog = {
         state: "idle" // idle, outbound, inbound
     }, // frog colors
     colors: {
-        healthy: "#00ff00",
-        damaged: "#6e8514",
-        dying: "#855214",
-        dead: "#4f2409"
+        healthy: "#556117",
+        damaged: "#634017",
+        dying: "#431C0E",
+        dead: "#0b1042",
+        frozen: "##02e5fa"
     },
-    currentColor: "#00ff00"
+    currentColor: "#556117"
 };
 
 // fly array
@@ -290,7 +291,7 @@ function menu() {
 
     let t = frameCount / 60; // time in seconds
 
-    if (snowflakes.length < 200) {
+    if (snowflakes.length < 300) {
         snowflakes.push(createSnowflake());
     }
 
@@ -331,12 +332,10 @@ function game() {
     updateProgress();
     if (timePassed > 3000) checkStarvation();
 
-
     if (flashlight.active) {
         drawFlashlight();
         checkFlashlightCollision();
     }
-
 
     drawProgressRing();
     drawDayCounter();
@@ -385,13 +384,11 @@ function createSnowflake() {
 function updateSnowflake(flake, time) {
     let angularSpeed = 0.6 * 57.2958;
 
-
     let angle = angularSpeed * time + flake.initialangle;
 
     flake.posX = width / 2 + flake.radius * sin(angle);
 
     flake.posY += sqrt(flake.size);
-
 
     if (flake.posY > height) {
         let index = snowflakes.indexOf(flake);
@@ -473,9 +470,9 @@ function drawInstructions() {
     fill(0);
     textSize(17);
     textAlign(CENTER, CENTER);
-    text('Instructions:', 375, 160);
+    text('Instructions ❄️:', 375, 160);
 
-    textAlign(LEFT, CENTER);
+    textAlign(LEFT);
     text('- Control the frog with the mouse and click', 210, 200);
     text('space to eat', 224, 220);
     text('- Eat the flies every 3 seconds to not starve', 210, 250);
@@ -562,6 +559,10 @@ function drawFly(fly) {
     pop();
 }
 
+// bird systems
+/**
+ * Updates all birds
+ */
 /**
  * Moves a bird horizontally
  */
@@ -848,10 +849,10 @@ function drawClouds() {
 function drawBehindWater() {
     push();
     noStroke();
-    fill("#1ec7be");
+    fill("#b0efff");
     beginShape();
     for (let x = 0; x <= width; x += 10) {
-        let y = 485 + sin(x * 3 - frameCount * 3) * 10;
+        let y = 485 + sin(x - frameCount * 3) * 5;
         vertex(x, y);
     }
     vertex(width, height);
@@ -866,10 +867,10 @@ function drawBehindWater() {
 function drawWater() {
     push();
     noStroke();
-    fill("#3d9cf5");
+    fill("#7fb7fa");
     beginShape();
     for (let x = 0; x <= width; x += 10) {
-        let y = 495 + sin(x * 3 + frameCount * 3) * 10;
+        let y = 495 + sin(x + frameCount * 3) * 5;
         vertex(x, y);
     }
     vertex(width, height);
