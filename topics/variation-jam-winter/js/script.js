@@ -22,6 +22,7 @@ const clouds = [];
 let snowflakes = [];
 let state = 'MENU'; // MENU, GAME, WIN, END
 let showInstructions = false;
+let showSecondPage = false;
 let dayCount = 0;
 let finalDayCount = 0;
 let progress = 0;
@@ -209,7 +210,7 @@ function draw() {
     }
 }
 
-function keyPressed() {
+function keyPressed(event) {
     if (event.keyCode === 32) {
         if (state === "MENU" && frog.tongue.state === "idle") {
             frog.tongue.state = "outbound";
@@ -220,9 +221,20 @@ function keyPressed() {
             frog.tongue.state = "outbound";
         }
     }
+    if (event.keyCode === 37) {
+        if (showSecondPage) {
+            showSecondPage = false;
+            showInstructions = true;
+        }
+    }
+    if (event.keyCode === 39) {
+        if (showInstructions) {
+            showInstructions = false;
+            showSecondPage = true;
+        }
+    }
 
     if (keyCode === 40) {
-
         if (!canDive || frog.body.y === 560) {
             return;
         }
@@ -254,8 +266,6 @@ function keyPressed() {
         }, 5000);
     }
 
-
-
 }
 
 function mousePressed() {
@@ -269,6 +279,7 @@ function mousePressed() {
             mouseY > instructions.closeButton.y &&
             mouseY < instructions.closeButton.y + instructions.closeButton.size) {
             showInstructions = false;
+            showSecondPage = false;
         }
     }
 }
@@ -306,20 +317,13 @@ function menu() {
     drawMenuText();
     drawProgressRing();
     drawDayCounter();
-
-    let t = frameCount / 60;
-
-    if (snowflakes.length < 300) {
-        snowflakes.push(createSnowflake());
-    }
-
-    for (let flake of snowflakes) {
-        updateSnowflake(flake, t);
-        displaySnowflake(flake);
-    }
+    showSnow();
 
     if (showInstructions === true) {
         drawInstructions();
+    }
+    if (showSecondPage === true) {
+        drawSecondPage();
     }
 }
 
@@ -358,21 +362,12 @@ function game() {
     drawProgressRing();
     drawDayCounter();
 
-    let time = frameCount / 60;
-
-    if (snowflakes.length < 200) {
-        snowflakes.push(createSnowflake());
-    }
-
-    for (let flake of snowflakes) {
-        updateSnowflake(flake, time);
-        displaySnowflake(flake);
-    }
-
+    showSnow();
     cooldownCounter();
+    gameEnd();
 }
 
-function GameEnd() {
+function gameEnd() {
     if (frog.currentColor === frog.colors.dead && endTimerStarted === false) {
         endTimerStarted = true;
         finalDayCount = dayCount;
@@ -385,7 +380,20 @@ function GameEnd() {
         state = 'WIN';
     }
 }
-// ====== new functions start here ========
+
+function showSnow() {
+    let time = frameCount / 60;
+
+    if (snowflakes.length < 200) {
+        snowflakes.push(createSnowflake());
+    }
+
+    for (let flake of snowflakes) {
+        updateSnowflake(flake, time);
+        displaySnowflake(flake);
+    }
+}
+
 function cooldownCounter() {
     if (!canDive) {
         // Calculate time remaining until can dive again
@@ -506,6 +514,11 @@ function drawMenuText() {
     }
     stroke(titleEffect.strokeColor);
     text('**Click space to play!**', width / 2, height / 6);
+    textSize(20);
+    fill(0);
+    strokeWeight(5);
+    stroke(179, 248, 252);
+    text("(Winter Edition!! ❄️)", 350, 250);
 
     textSize(70);
     textStyle(BOLD);
@@ -537,20 +550,20 @@ function drawInstructions() {
     fill(0);
     textSize(17);
     textAlign(CENTER, CENTER);
-    text('Instructions:', 375, 160);
+    text('Instructions ❄️:', 375, 160);
 
-    textAlign(LEFT, CENTER);
-    text('- Control the frog with the mouse and click', 210, 200);
-    text('space to eat', 224, 220);
-    text('- Eat the flies every 3 seconds to not starve', 210, 250);
-    text('- WATCH OUT for birds and the', 210, 290);
-    text('flashlight', 224, 310);
-    text('- Birds can heal the frog, but it also', 210, 340);
-    text('damages the frog at the same time', 220, 360);
-    text('frog is hurt', 270, 390);
-    text('frog is dying', 270, 410);
-    text('frog is dead -> GAME OVER ', 270, 430);
-    text('- Survive 3 days to WIN', 210, 460);
+    textAlign(LEFT);
+    text("- Control the frog with the mouse and click", 210, 200);
+    text("space to eat", 224, 220);
+    text("- Eat flies every 3 seconds", 210, 250);
+    text("- WATCH OUT for birds and the", 210, 290);
+    text("flashlight (only appears at night)", 224, 310);
+    text("- The frog gets hurt if it eats the bird, but", 210, 340);
+    text("the frog will start healing itself in 5 seconds", 220, 360);
+    text("frog is hurt", 270, 390);
+    text("frog is dying", 270, 410);
+    text("frog is dead -> GAME OVER ", 270, 430);
+    text("- Survive 3 days to WIN", 210, 460);
 
     fill(frog.colors.damaged);
     rect(250, 385, 10, 10);
@@ -568,6 +581,198 @@ function drawInstructions() {
     fill(0);
     noStroke();
     text('X', 535, 148);
+    textSize(12);
+    text("Click on the right arrow  -->", 400, 485);
+    pop();
+}
+
+function drawSecondPage() {
+    push();
+    noStroke();
+    fill(255);
+    rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
+
+    fill(0);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text('Instructions ❄️:', 375, 160);
+
+    textAlign(LEFT);
+    text('- If the frog is above water for 10 seconds,', 210, 200);
+    text('it will turn bright blue (5s after, it will die)', 224, 220);
+    text('- If the frog hides underwater, it completly', 210, 250);
+    text(" heals and it is hidden from the flashlight", 224, 270);
+    text("(press down arrow ⬇️ + 18s cooldown)", 224, 290);
+
+
+
+    strokeWeight(2.5);
+    stroke(200);
+    noFill();
+    rect(instructions.closeButton.x, instructions.closeButton.y,
+        instructions.closeButton.size, instructions.closeButton.size,
+        instructions.closeButton.corner);
+
+    fill(0);
+    noStroke();
+    textSize(17);
+    text('X', 535, 148);
+    text("⬇️", 307, 330);
+
+
+    textSize(12);
+    text('<--  Click on the right arrow', 195, 485);
+    textSize(20);
+    text("Enjoy The Game!!", 290, 440);
+    text("⬇️", 417, 330);
+    fill(255, 0, 0);
+    text("X", 420, 330);
+
+    instructionDrawings();
+
+    pop();
+}
+
+function instructionDrawings() {
+    noStroke();
+
+    fill(frog.colors.healthy);
+    arc(370, 350, 50, 50, 180, 0);
+    circle(357, 327, 15);
+    circle(383, 327, 15);
+    fill(255);
+    circle(357, 327, 10);
+    circle(383, 327, 10);
+    fill(0);
+    circle(357, 327, 3);
+    circle(383, 327, 3);
+
+    fill(frog.colors.healthy);
+    arc(480, 340, 50, 50, 180, 0);
+    circle(467, 317, 15);
+    circle(493, 317, 15);
+    fill(255);
+    circle(467, 317, 10);
+    circle(493, 317, 10);
+    fill(0);
+    circle(467, 317, 3);
+    circle(493, 317, 3);
+
+    fill(frog.colors.frozen);
+    arc(260, 340, 50, 50, 180, 0);
+    circle(247, 317, 15);
+    circle(273, 317, 15);
+    fill(255);
+    circle(247, 317, 10);
+    circle(273, 317, 10);
+    fill(0);
+    circle(247, 317, 3);
+    circle(273, 317, 3);
+
+    fill(frog.colors.frozen);
+    arc(260, 400, 50, 50, 180, 0);
+    circle(247, 377, 15);
+    circle(273, 377, 15);
+    fill(255);
+    circle(247, 377, 10);
+    circle(273, 377, 10);
+    fill(0);
+    circle(247, 377, 3);
+    circle(273, 377, 3);
+
+    fill(frog.colors.dead);
+    arc(400, 400, 50, 50, 180, 0);
+    circle(387, 377, 15);
+    circle(413, 377, 15);
+    fill(255);
+    circle(387, 377, 10);
+    circle(413, 377, 10);
+    fill(0);
+    circle(387, 377, 3);
+    circle(413, 377, 3);
+
+    textSize(10);
+    text('-------->', 315, 400);
+    text('5 seconds', 307, 410);
+    text('(18 second cooldown)', 430, 360);
+
+
+    drawWave();
+}
+
+function drawWave() {
+    push();
+    fill("#7fb7fa");
+    noStroke();
+
+    beginShape();
+    vertex(220, 350);
+
+
+    for (let x = 220; x <= 300; x += 5) {
+        let y = 330 + sin((x - 230) * 3) * 3;
+        vertex(x, y);
+    }
+
+    vertex(300, 350);
+
+    endShape(CLOSE);
+
+
+    beginShape();
+
+    vertex(330, 350);
+
+
+    for (let x = 330; x <= 410; x += 5) {
+        let y = 330 + sin((x - 370) * 3) * 3;
+        vertex(x, y);
+    }
+
+
+    vertex(410, 350);
+
+    endShape(CLOSE);
+
+    beginShape();
+
+    vertex(440, 350);
+
+
+    for (let x = 440; x <= 520; x += 5) {
+        let y = 330 + sin((x - 370) * 5) * 3;
+        vertex(x, y);
+    }
+
+
+    vertex(520, 350);
+
+    endShape(CLOSE);
+    // down waves
+
+    beginShape();
+    vertex(220, 410);
+
+    for (let x = 220; x <= 300; x += 5) {
+        let y = 390 + sin((x - 230) * 3) * 3;
+        vertex(x, y);
+    }
+    vertex(300, 410);
+
+    endShape(CLOSE);
+
+
+    beginShape();
+    vertex(360, 410);
+
+    for (let x = 360; x <= 440; x += 5) {
+        let y = 390 + sin((x - 370) * 3) * 3;
+        vertex(x, y);
+    }
+
+    vertex(440, 410);
+    endShape(CLOSE);
+
     pop();
 }
 
@@ -940,6 +1145,12 @@ function end() {
 }
 
 function drawDeadFrogIcon() {
+    textSize(20);
+    fill(0);
+    strokeWeight(5);
+    stroke(179, 248, 252);
+    text("(Winter Edition!! ❄️)", 350, 130);
+
     noStroke();
     fill(255);
     circle(width / 2, height / 1.5, 80);
