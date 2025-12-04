@@ -1227,11 +1227,9 @@ function updateProgress() {
     // When the sky gets darker, progress moves from 0 to 0.5
     // When the sky gets brighter, progress moves from 0.5 to 1 (a full rotation)
     if (sky.direction === -1) {
-        if (sky.direction === -1) {
-            progress = (207 - g) / 244;
-        } else {
-            progress = (g - 85) / 244 + 0.5;
-        }
+        progress = (207 - g) / 244;
+    } else {
+        progress = (g - 85) / 244 + 0.5;
     }
 }
 

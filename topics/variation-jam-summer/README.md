@@ -1,8 +1,16 @@
-# Mod-Jam: Life as a Frog
+# Variation Jam: Life as a Frog (Summer Edition!)
 
 Yaxuan Pang
 
-[View this project online](https://yaxuanpang.github.io/cart253/topics/mod-jam/)
+[View this project online](https://yaxuanpang.github.io/cart253/topics/variation-jam-summer/)
+
+[View original variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-original/)
+
+[View spring variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-spring/)
+
+[View fall variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-autumn/)
+
+[View winter variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-winter/)
 
 ## Description
 
@@ -10,26 +18,47 @@ Life of a Frog is a game about catching flies with the frog's tongue. It portray
 
 There are 5 different game mode, original, spring, summer fall and winter. Each mode will give a different experience and add different challenges to the game.
 
+This is the summer variation! Click on the mouse to produce more clouds and make rain to eat more flies. Eat flies and the green bird to unlock a special ability. Avoid the yellow birds and the flashlight. 
+
 
 > Move the frog some side to side with the mouse and click space to launch the tongue.
 
-> The frog changes colors when it gets hurt (by birds or starvation). It starts to die if it does not eat for 3 seconds. After 5 seconds of eating the bird, the frog will start healing.
+> The frog changes colors when it gets hurt (by birds or starvation). It starts to die if it does not eat for 3 seconds. After 5 seconds of eating the bird, the frog will start healing. 
+
+> Eat small birds to heal the frog.
 
 >  There is a night and day cycle with a ring in the top left corner that tracks the number of days the frog survives. It makes a full rotation after one full day and updates the number of days the frog has lived. 
 
 > At night, a flashlight will appear. If the flashlight overlaps with the frog, it dies.
 
+## Modifications
+
+> Changed the color to a summer color palette
+
+> Title screen with instructions (2 pages)
+
+> Added more birds (a normal one and a green one with special abilities)
+
+> Added more clouds and rain
+
+> A lot more flies (5 more flies when it is raining)
+
+> Lilipads on the water
+
+
 ## Screenshot(s)
 
+> ![Image of my game](./assets/images/image1.jpg)
 > ![Image of my game](./assets/images/image2.jpg)
 > ![Image of my game](./assets/images/image3.jpg)
-> ![Image of my game](./assets/images/image1.jpg)
+> ![Image of my game](./assets/images/image4.jpg)
 
 ## Attribution
 
 > - This project uses [p5.js](https://p5js.org).
 > - This projects uses the code from the variables challenge (https://concordia.yuja.com/V/Video?v=1071104&node=5700521&a=117175823)
 > - This projects uses the code from the conditionals challenge (https://yaxuanpang.github.io/cart253/topics/conditionals-challenge/).
+> - This projects uses the code from (https://editor.p5js.org/monicawen/sketches/HkU-BCJqm) for the rain
 
 ## License
 
