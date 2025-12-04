@@ -1,14 +1,15 @@
 /**
- * Variation Jam : Life as a Frog
+ * Variation-Jam: Life as a Frog (Original Edition!)
  * Yaxuan Pang
  * 
  * A game of catching flies with the frog's tongue. 
  * It portrays a semi-realistic life of a frog.
  * 
  * Instructions:
- * - Click on the white square for instructions and game modes
+ * - Click on the white square for instructions
  * - Move the frog with your mouse
  * - Click space to launch the tongue to catch flies
+ * - Eat flies and avoid birds and the flashlight
  * 
  * Made with p5
  * https://p5js.org/

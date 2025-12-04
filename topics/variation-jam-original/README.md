@@ -3,7 +3,15 @@
 Yaxuan Pang
 
 [View this project online](https://yaxuanpang.github.io/cart253/topics/variation-jam-original/)
-[View other variations](https://yaxuanpang.github.io/cart253/topics/variation-jam-spring/)(https://yaxuanpang.github.io/cart253/topics/variation-jam-summer/)(https://yaxuanpang.github.io/cart253/topics/variation-jam-autumn/)(https://yaxuanpang.github.io/cart253/topics/variation-jam-winter/)
+
+[View spring variations](https://yaxuanpang.github.io/cart253/topics/variation-jam-spring/)
+
+[View summer variations](https://yaxuanpang.github.io/cart253/topics/variation-jam-summer/)
+
+[View fall variations](https://yaxuanpang.github.io/cart253/topics/variation-jam-autumn/)
+
+[View winter variations](https://yaxuanpang.github.io/cart253/topics/variation-jam-winter/)
+
 
 ## Description
 
@@ -23,8 +31,11 @@ There are 5 different game mode, original, spring, summer fall and winter. Each 
 ## Modifications
 
 > Menu screen with instructions and moving elements
+
 > Added special fly that can teleport
+
 > Added another way to win the game (the special fly while the frog is healthy)
+
 
 ## Screenshot(s)
 
