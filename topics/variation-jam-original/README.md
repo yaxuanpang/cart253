@@ -28,9 +28,11 @@ There are 5 different game mode, original, spring, summer fall and winter. Each 
 
 ## Screenshot(s)
 
+> ![Image of my game](./assets/images/image1.jpg)
 > ![Image of my game](./assets/images/image2.jpg)
 > ![Image of my game](./assets/images/image3.jpg)
-> ![Image of my game](./assets/images/image1.jpg)
+> ![Image of my game](./assets/images/image4.jpg)
+> ![Image of my game](./assets/images/image5.jpg)
 
 ## Attribution
 
