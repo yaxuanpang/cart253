@@ -2,7 +2,15 @@
 
 Yaxuan Pang
 
-[View this project online](https://yaxuanpang.github.io/cart253/topics/mod-jam/)
+[View this project online](https://yaxuanpang.github.io/cart253/topics/variation-jam-autumn/)
+
+[View original variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-original/)
+
+[View spring variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-spring/)
+
+[View summer variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-summer/)
+
+[View winter variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-winter/)
 
 ## Description
 
@@ -20,6 +28,20 @@ This is the fall variation! Eat flies and avoid the birds. Hide underwater to he
 >  There is a night and day cycle with a ring in the top left corner that tracks the number of days the frog survives. It makes a full rotation after one full day and updates the number of days the frog has lived. 
 
 > At night, flashlights will appear. If the flashlight overlaps with the frog twice in one night, it dies.
+
+## Modifications
+
+> Changed the colors to a fall color palette
+
+> Added a title screen with instructions(3 pages)
+
+> Added a new movement for the frog
+
+> Added a new bird (blue bird)
+
+> Removed flies and removed a bird
+
+> Added leaves that fall from the sky
 
 ## Screenshot(s)
 

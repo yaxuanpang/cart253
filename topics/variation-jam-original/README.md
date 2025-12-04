@@ -20,6 +20,8 @@ Life of a Frog is a game about catching flies with the frog's tongue. It portray
 
 There are 5 different game mode, original, spring, summer fall and winter. Each mode will give a different experience and add different challenges to the game.
 
+This is the original variation! Eat flies while avoiding the birds and the flashlight. 
+
 
 > Move the frog some side to side with the mouse and click space to launch the tongue.
 
