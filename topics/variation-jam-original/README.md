@@ -4,13 +4,14 @@ Yaxuan Pang
 
 [View this project online](https://yaxuanpang.github.io/cart253/topics/variation-jam-original/)
 
-[View spring variations](https://yaxuanpang.github.io/cart253/topics/variation-jam-spring/)
 
-[View summer variations](https://yaxuanpang.github.io/cart253/topics/variation-jam-summer/)
+[View spring variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-spring/)
 
-[View fall variations](https://yaxuanpang.github.io/cart253/topics/variation-jam-autumn/)
+[View summer variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-summer/)
 
-[View winter variations](https://yaxuanpang.github.io/cart253/topics/variation-jam-winter/)
+[View fall variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-autumn/)
+
+[View winter variation](https://yaxuanpang.github.io/cart253/topics/variation-jam-winter/)
 
 
 ## Description
