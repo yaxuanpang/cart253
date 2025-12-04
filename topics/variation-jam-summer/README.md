@@ -52,6 +52,7 @@ This is the summer variation! Click on the mouse to produce more clouds and make
 > ![Image of my game](./assets/images/image2.jpg)
 > ![Image of my game](./assets/images/image3.jpg)
 > ![Image of my game](./assets/images/image4.jpg)
+> ![Image of my game](./assets/images/image5.jpg)
 
 ## Attribution
 
