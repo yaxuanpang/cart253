@@ -1,5 +1,5 @@
 /**
- * Variation Jam : Life as a Frog
+ * Variation Jam : Life as a Frog (Spring Edition!)
  * Yaxuan Pang
  * 
  * A game of catching flies with the frog's tongue. 
@@ -8,7 +8,8 @@
  * Instructions:
  * - Click on the white square for instructions and game modes
  * - Move the frog with your mouse
- * - Click space to launch the tongue to catch flies
+ * - Click space to launch the tongue to catch flies and flowers
+ * - Eat the special fly to unlock special abilities
  * 
  * Made with p5
  * https://p5js.org/
@@ -16,24 +17,26 @@
 
 "use strict";
 
-// defining arrays
-const clouds = [];
-let flowers = [];
-
-// variables
+// defining arrays and variables
+const clouds = []; // cloud array
+const flies = []; //flies array
+let flowers = []; // flower array
 let state = "MENU"; // MENU, GAME, WIN, END
+
+// the instructions pages are not visible at first
 let showInstructions = false;
 let showSecondPage = false;
 let showThirdPage = false;
-let dayCount = 0;
-let finalDayCount = 0;
-let progress = 0;
-let startTime = 0;
-let lastEatenTime = 0;
-let endTimerStarted = false;
-let showPinkFly = true;
 
-// sky parameters
+let dayCount = 0; // day count starts at 0 (goes to 1 when the game starts)
+let finalDayCount = 0; // final day count starts at 0
+let progress = 0; // progress starts at 0
+let startTime = 0; // timer since the start of the game starts at 0
+let lastEatenTime = 0; // timer for when the frog last ate starts at 0
+let endTimerStarted = false; // timer for the end starts off as false
+let showPinkFly = true; // pink fly is visible at the beggining
+
+// sky parameters (color, transparency)
 const sky = {
     fill: {
         r: 135,
@@ -41,20 +44,20 @@ const sky = {
         b: 235,
         transparency: 0,
     },
-    change: 0.055,
-    isNight: false,
-    direction: -1,
-    cloudColor: 255,
+    change: 0.055, // amount added or subtracted to the value of sky color every frame
+    isNight: false,  // game starts during the day (not nighttime)(shifting to nighttime)
+    direction: -1, // direction of color change
+    cloudColor: 255, // color of the clouds
 };
 
 // frog parameters
 const frog = {
-    body: {
+    body: { //position and size
         x: 320,
         y: 520,
         size: 150,
     },
-    tongue: {
+    tongue: { // tongue parameters
         x: undefined,
         y: 480,
         size: 20,
@@ -71,38 +74,29 @@ const frog = {
     currentColor: "#5bff45",
 };
 
-// fly array
-const flies = [
-    //(x, y, size, speed, isActive, isDayOnly, vx, vy, canRespawn)
-    //createFly(0, 200, 10, 3, true, false),
-    createFly(0, 300, 12, 5, true, true, 1.5, 50),
-    createFly(0, 300, 10, 4, false, false, 0, 0, true),
-    createFly(0, 100, 12, 3.5, true, true, 4, 10),
-];
-
-// array and parameters
+// bird array and parameters (x, y, size, speed if the bird is visible)
 const birds = [
     {
         x: 0,
         y: 200,
         size: 40,
         speed: 2,
-        active: true,
+        active: true,// bird is always visible
     },
     {
         x: 0,
         y: 400,
         size: 40,
         speed: 2.5,
-        active: false,
-        spawnsInDay: true,
+        active: false,// birds appears later
+        spawnsInDay: true, // bird is visible
     },
     {
         x: 0,
         y: 400,
         size: 40,
         speed: 3,
-        active: false,
+        active: false, // bird is not visible
     },
 ];
 
@@ -112,19 +106,19 @@ const smallBirds = [
         y: 200,
         size: 30,
         speed: 2,
-        active: true,
+        active: true, // small birds appears later
     },
     {
         x: 0,
         y: 400,
         size: 30,
         speed: 2.5,
-        active: false,
-        spawnsInDay: true,
+        active: false, // small bird appears later
+        spawnsInDay: true, // small bird is visible
     },
 ];
 
-// flashlight parameters
+// flashlight parameters (x, y, size, speed, visible and color)
 const flashlight = {
     x: 350,
     y: 275,
@@ -134,21 +128,6 @@ const flashlight = {
 };
 
 // cloud positions
-
-//create a cloud with position and size
-function createCloud(newcloud, size = 1) {
-    const cloud = [];
-    newcloud.forEach((newcloud) => {
-        cloud.push([
-            newcloud[0] * size,
-            newcloud[1] * size,
-            newcloud[2] * size,
-            newcloud[3] * size,
-        ]);
-    });
-    return cloud;
-}
-
 // Cloud 1 - left side
 clouds.push(
     createCloud(
@@ -194,7 +173,7 @@ clouds.push(
     )
 );
 
-// progress ring parameters
+// progress ring parameters (position, radius, fill)
 const progressRing = {
     x: 90,
     y: 90,
@@ -222,22 +201,23 @@ const instructions = {
     y: 130,
     w: 380,
     h: 370,
-    corner: 15,
-    closeButton: {
+    corner: 15, // round the corners
+    closeButton: { // close button paramters
         x: 523.5,
         y: 130,
         size: 35,
-        corner: 10,
+        corner: 10, // round the corners
     },
 };
 
-// menu button parameters
+// menu button parameters (position, size)
 const menuButton = {
     x: 340,
     y: 275,
     size: 40,
 };
 
+// array for water flowers (flowers on the water) (position, size, movement speed, wave height)
 const waterFlowerArray = [
     { x: 550, size: 0.5, baseY: 530, flowSpeed: 0.9, flowAmount: 6 },
     { x: 300, size: 0.7, baseY: 535, flowSpeed: 1.2, flowAmount: 7 },
@@ -251,6 +231,7 @@ const waterFlowerArray = [
     { x: 40, size: 0.2, baseY: 520, flowSpeed: 0.5, flowAmount: 8 },
 ];
 
+// array of petals for the flowers
 const petals = [
     [0, 10],
     [13, -8],
@@ -259,6 +240,7 @@ const petals = [
     [-22, 3],
 ];
 
+// pink fly parameter (position, size, speed)
 const pinkFly = {
     x: 0,
     y: 200,
@@ -270,9 +252,15 @@ const pinkFly = {
 
 // Create the canvas, set an angle mode and initialize entities (birds, flies and flashlight)
 function setup() {
-    createCanvas(700, 550);
-    angleMode(DEGREES);
+    createCanvas(700, 550); // canvas size
+    angleMode(DEGREES); // angle mode is in degrees
 
+    // draw the flies (fly position, size, if they appear during the day or at night)
+    flies.push(createFly(0, 300, 12, 5, true, true, 1.5, 50));
+    flies.push(createFly(0, 300, 10, 4, false, false, 0, 0, true));
+    flies.push(createFly(0, 100, 12, 3.5, true, true, 4, 10));
+
+    // colors for the title
     titleEffect.strokeColor = color(random(255));
     titleEffect.strokeFill = color(5, random(255), random(255));
     flashlight.color = color(245, 218, 42, 200);
@@ -282,14 +270,16 @@ function setup() {
     birds.forEach((bird) => resetBird(bird));
     smallBirds.forEach((sb) => resetSmallBird(sb));
 
+    // initialize the flowers and reset the pink fly
     createFlowers();
     resetPinkFly();
 
+    // position of the flashlight
     flashlight.x = width / 2;
     flashlight.y = height / 2;
 }
 
-// drawing the canvas and the game states
+// drawing the canvas and the game states (menu, game, win, end)
 
 function draw() {
     if (state === "MENU") {
@@ -307,23 +297,23 @@ function draw() {
  * Handles keyboard input
  */
 function keyPressed(event) {
-    if (event.keyCode === 32) {
-        if (state === "MENU" && frog.tongue.state === "idle") {
+    if (event.keyCode === 32) { // space bar
+        if (state === "MENU" && frog.tongue.state === "idle") { //frog tongue shoot out
             frog.tongue.state = "outbound";
             state = "GAME";
-            startTime = millis();
-            lastEatenTime = millis();
+            startTime = millis(); // timer for start time starts
+            lastEatenTime = millis(); // timer for when the frog eats last starts
         } else if (state === "GAME" && frog.tongue.state === "idle") {
-            frog.tongue.state = "outbound";
+            frog.tongue.state = "outbound"; //frog tongue shoot out
         }
     }
-    if (event.keyCode === 39) {
+    if (event.keyCode === 39) { // right arrow (shows second page)
         if (showInstructions) {
             showInstructions = false;
             showSecondPage = true;
             showThirdPage = false;
         }
-        else if (showSecondPage) {
+        else if (showSecondPage) { //(shows third page)
             showInstructions = false;
             showSecondPage = false;
             showThirdPage = true;
@@ -331,13 +321,13 @@ function keyPressed(event) {
     }
 
 
-    if (event.keyCode === 37) {
+    if (event.keyCode === 37) { // left arrow (shows second page)
         if (showThirdPage) {
             showThirdPage = false;
             showSecondPage = true;
             showInstructions = false;
         }
-        else if (showSecondPage) {
+        else if (showSecondPage) { //(shows first page)
             showSecondPage = false;
             showInstructions = true;
             showThirdPage = false;
@@ -348,6 +338,7 @@ function keyPressed(event) {
 /**
  * Handles mouse clicks
  */
+// click within the menu button with the mouse to close the instructions
 function mousePressed() {
     if (state === "MENU") {
         if (
@@ -382,8 +373,8 @@ function menu() {
     drawBehindWater();
     drawMenuBird();
 
-    updateBirds(0); // or moveBird(bird)
-    updateSmallBirds(0);
+    updateBirds(0); // move birds
+    updateSmallBirds(0); // moves small birds
     updateFlies(0); // move flies
 
     flies.forEach((fly) => {
@@ -403,6 +394,7 @@ function menu() {
         }
     });
 
+    // if show pink fly is true, draw and move pink fly
     if (showPinkFly === true) {
         drawPinkFly();
         movePinkFly();
@@ -415,6 +407,7 @@ function menu() {
     drawDayCounter();
     waterFlowers();
 
+    // if show instructions is true, draw each instruction page
     if (showInstructions === true) {
         drawInstructions();
     }
@@ -430,6 +423,7 @@ function menu() {
 function game() {
     background(sky.fill.r, sky.fill.g, sky.fill.b);
 
+    // start time starts in game state
     const timePassed = millis() - startTime;
 
     // Draw environment
@@ -437,12 +431,12 @@ function game() {
     drawBehindWater();
 
     // Update and draw game entities
-    updateFlies(timePassed);
+    updateFlies();
     updateBirds(timePassed);
     updateSmallBirds(timePassed);
     showFlashlight();
 
-    // Draw entities
+    // Draw entities and the frog
     flies.forEach((fly) => {
         if (fly.active) drawFly(fly);
     });
@@ -450,6 +444,7 @@ function game() {
         if (bird.active) drawBird(bird);
     });
 
+    // make sure the pink fly can be eaten by the frog, move and draw pink fly is show pink fly is true
     if (showPinkFly === true) {
         drawPinkFly();
         movePinkFly();
@@ -466,38 +461,47 @@ function game() {
     updateProgress();
     if (timePassed > 3000) checkStarvation();
 
-    // Draw flashlight in front of everything
     if (flashlight.active) {
         drawFlashlight();
         checkFlashlightCollision();
     }
-
-    // Draw UI
     drawProgressRing();
     drawDayCounter();
 
     // Check win/lose conditions
-    GameEnd();
+    gameEnd();
 }
 
 /**
  * Checks if the game should end (win or lose)
  */
-function GameEnd() {
+function gameEnd() {
     if (frog.currentColor === frog.colors.dead && endTimerStarted === false) {
         endTimerStarted = true;
         finalDayCount = dayCount;
         setTimeout(() => {
-            state = "END";
+            state = "END"; // if the forg is dead, it goes to game over page in half a second
         }, 500);
     }
 
     if (dayCount === 3) {
-        state = "WIN";
+        state = "WIN"; // if the frog survived 3 days, the player wins the game
     }
 }
 
-// ====== new functions start here ========
+//create a cloud with position and size
+function createCloud(newcloud, size = 1) {
+    const cloud = [];
+    newcloud.forEach((newcloud) => {
+        cloud.push([
+            newcloud[0] * size,
+            newcloud[1] * size,
+            newcloud[2] * size,
+            newcloud[3] * size,
+        ]);
+    });
+    return cloud;
+}
 
 function resetSmallBird(smallBird) {
     smallBird.x = 0;
@@ -646,7 +650,7 @@ function resetFlowers() {
     });
 }
 
-//create the flies
+//create the flies (position, size, speed, if its visible during the day or at night, wave speed, height of the wave)
 function createFly(
     x,
     y,
@@ -672,10 +676,12 @@ function createFly(
     };
 }
 
+// moves the frog
 function moveMenuFrog() {
     frog.x = mouseX;
 }
 
+// draws and moves the bird in menu (also makes sure it is visible)
 function drawMenuBird() {
     let b = birds[0]; // use the first bird only for menu
     b.active = true;
@@ -683,6 +689,7 @@ function drawMenuBird() {
     drawBird(b);
 }
 
+// draws the small bird in menu (also makes sure it is visible)
 function drawSmallMenuBird() {
     let sb = smallBirds[0];
     sb.active = true;
@@ -690,22 +697,26 @@ function drawSmallMenuBird() {
     drawSmallBird(sb);
 }
 
+// updates the bird's position
 function updateBirds(timePassed) {
     birds.forEach((bird, index) => {
-        // --- BIRD 0 = ALWAYS ACTIVE IN GAME ---
+
+        // first bird is visible when transparency is lower than 100
         if (index === 0) {
             bird.active = sky.fill.transparency < 100;
         }
 
-        // --- BIRD 1 = SPAWN AFTER 0.5 SECONDS ---
+        // second bird appears 3 second later
         if (index === 1) {
-            bird.active = timePassed > 3000; // 500 ms = 0.5 seconds
+            bird.active = timePassed > 3000;
         }
 
+        // third bird appears 10 second later
         if (index === 2) {
             bird.active = timePassed > 10000;
         }
 
+        // if the birds are visible, move them and make sure the frog can eat the birds
         if (bird.active) {
             moveBird(bird);
             checkTongueCollision(bird, "bird");
@@ -714,18 +725,20 @@ function updateBirds(timePassed) {
 }
 
 /**
- * Draws the menu text and title
+ *  Draws the menu text, title and subtitles
  */
 function drawMenuText() {
     push();
-    textAlign(CENTER, CENTER);
+    textAlign(CENTER, CENTER); // aligns the text at the center
     textSize(30);
     fill(0);
     strokeWeight(5);
 
+    // changes to a random color every 15 frames
     if (frameCount % 15 === 0) {
         titleEffect.strokeColor = color(random(255), random(255), random(255));
     }
+    // title and subtitle (stroke color, fill color, stroke weight and size)
     stroke(titleEffect.strokeColor);
     text("**Click space to play!**", width / 2, height / 6);
 
@@ -740,6 +753,7 @@ function drawMenuText() {
     fill(255);
     strokeWeight(15);
 
+    // changes to a random color every 10 frames
     if (frameCount % 10 === 0) {
         titleEffect.strokeFill = color(5, random(255), random(255));
     }
@@ -750,6 +764,7 @@ function drawMenuText() {
     fill(255);
     rect(menuButton.x, menuButton.y, menuButton.size, menuButton.size);
 
+    // instruction to click on the instruction box
     fill(0);
     textSize(13);
     text("Click here for instructions", 360, 330);
@@ -759,12 +774,14 @@ function drawMenuText() {
 /**
  * Updates all flies
  */
-function updateFlies(timePassed) {
+function updateFlies() { // update fly position
     flies.forEach((fly) => {
+        // this fly only appears at night (after the transparency of the sky is more than 70)
         if (fly.spawnsAtNight) {
             fly.active = sky.fill.transparency > 70;
         }
 
+        // if the flies are visible move them and make sure the frog can eat flies
         if (fly.active) {
             moveFly(fly);
             checkTongueCollision(fly, "fly");
@@ -835,19 +852,27 @@ function checkTongueCollision(entity, type) {
     const d = dist(frog.tongue.x, frog.tongue.y, entity.x, entity.y);
     const hit = d < frog.tongue.size / 2 + entitySize / 2;
 
+    // effects when the frog collides with (eats) each entity (flies, birds, brown fly)
     if (hit) {
+        // tongue speed goes up every time the frog eats a fly (min: 10, max: 25)
+        // resets the fly
+        // timer for when the fly last ate resets
         if (type === "fly") {
             resetFly(entity);
             frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
             lastEatenTime = millis();
         }
 
+        // tongue speed slows down to 10 if the frog eats a bird
+        // resets the bird
+        // if the bird eats a bird it gets hurt
         if (type === "bird") {
             resetBird(entity);
             frog.tongue.speed = 10;
             damageFrog();
         }
 
+        // flower rotation, angle, position, size and speed
         if (type === "flower") {
             entity.y = random(-200, -50);
             entity.x = random(width);
@@ -855,11 +880,16 @@ function checkTongueCollision(entity, type) {
             entity.speed = random(1, 3);
             entity.rotationSpeed = random(1, 3);
             entity.angle = random(360);
-
+            // tongue speed goes up every time the frog eats a flower (similar to the fly)
+            // resets the flowers
+            // timer for when the fly last ate resets
             frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
             lastEatenTime = millis();
         }
-
+        // tongue speed slows down to 10 if the frog eats a bird
+        // resets the small bird
+        // if the frog eats a small bird when is nto healthy, it gets healed and the timer since last time it ate resets
+        // if the frog eats a small bird when it is healthy, it gets hurt
         if (type === "smallBird") {
             resetSmallBird(entity);
             frog.tongue.speed = 10;
@@ -877,9 +907,11 @@ function checkTongueCollision(entity, type) {
         frog.tongue.state = "inbound";
     }
     if (hit) {
+        // tongue speed goes up every time the frog eats a pink fly (min: 10, max: 25)
+        // the pink fly does not appear again if it is eaten
+        // frog turns pink and goes back to healthy color after 10 seconds
         if (type === "pinkFly") {
             showPinkFly = false;
-            //resetPinkFly(entity);
             frog.tongue.speed = constrain(frog.tongue.speed + 1, 10, 25);
 
             frog.currentColor = frog.colors.pink;
@@ -891,18 +923,19 @@ function checkTongueCollision(entity, type) {
     }
 }
 
-
+// moves the pink fly
 function movePinkFly() {
     // Move the fly
     pinkFly.x += pinkFly.speed;
     // the fly moves up and down while flying to the right
     pinkFly.y = pinkFly.startY + sin(pinkFly.x * 1.5) * 50;
-    // Handle the fly going off the canvas
+    //resets the pink fly if it flies off the canvas
     if (pinkFly.x > width) {
         resetPinkFly();
     }
 }
 
+// resets the fly if it is off the canvas at a random horizontal position and a random size
 function resetPinkFly() {
     pinkFly.x = 0;
     pinkFly.y = random(0, 300);
@@ -910,6 +943,8 @@ function resetPinkFly() {
     pinkFly.size = random(8, 12);
 }
 
+// check if pink fly is true
+// if it is true, draw and moce pink fly
 function checkPinkFly() {
     if (showPinkFly === true) {
         drawPinkFly();
@@ -917,10 +952,7 @@ function checkPinkFly() {
     }
 }
 
-// bird systems
-/**
- * Updates all birds
- */
+
 /**
  * Moves a bird horizontally
  */
@@ -971,13 +1003,13 @@ function drawBird(bird) {
     pop();
 }
 
-// collision system
-
 
 /**
  * Damages the frog when it eats a bird
  */
 function damageFrog() {
+    // the frog changes colors when it gets hurts (darker = closer to death)
+    // the frog starts healing after 5 seconds
     if (frog.currentColor === frog.colors.healthy) {
         frog.currentColor = frog.colors.damaged;
         setTimeout(() => {
@@ -1006,8 +1038,10 @@ function damageFrog() {
  * Checks if the frog is starving
  */
 function checkStarvation() {
-    const timeSinceEaten = millis() - lastEatenTime;
+    const timeSinceEaten = millis() - lastEatenTime; // timer for when the forg last ate
 
+    // if the frog did not eat for 3 seconds, it gets hurt (changes colors)
+    // if the frog gets hurt this way, it cannot heal on its own
     if (timeSinceEaten > 3000) {
         if (frog.currentColor === frog.colors.healthy) {
             frog.currentColor = frog.colors.damaged;
@@ -1021,13 +1055,15 @@ function checkStarvation() {
     }
 }
 
-// flashlight system
+
 /**
  * Updates the flashlight position and visibility
  */
 function showFlashlight() {
+    // flashlight only appears when the transparency of the sky is more than 110
     flashlight.active = sky.fill.transparency > 110;
 
+    // changes every 60 frames to a random position between the height of 300 and 500
     if (flashlight.active && frameCount % 60 === 0) {
         flashlight.x = random(width);
         flashlight.y = random(300, 550);
@@ -1048,6 +1084,8 @@ function drawFlashlight() {
 /**
  * Checks if the flashlight hits the frog
  */
+// if the flashlight hits the frog, it dies
+// if the flashlight hits the frog when it is pink, it does nothing
 function checkFlashlightCollision() {
     const d = dist(flashlight.x, flashlight.y, frog.body.x, frog.body.y);
     if (frog.currentColor === frog.colors.pink && d < flashlight.size / 2 + frog.body.size / 2) {
@@ -1058,11 +1096,12 @@ function checkFlashlightCollision() {
     }
 }
 
-// frog system
+
 /**
  * Draws the frog (tongue and body)
  */
 function drawFrog() {
+    // draws tongue
     push();
     fill("#ff0000");
     noStroke();
@@ -1072,11 +1111,13 @@ function drawFrog() {
     line(frog.tongue.x, frog.tongue.y, frog.body.x, frog.body.y);
     pop();
 
+    // draws body
     push();
     fill(frog.currentColor);
     noStroke();
     ellipse(frog.body.x, frog.body.y, frog.body.size);
 
+    // draw eyes
     let eyeOffsetX = frog.body.size * 0.3;
     let eyeOffsetY = frog.body.size * 0.4;
     let eyeSize = frog.body.size * 0.25;
@@ -1091,6 +1132,7 @@ function drawFrog() {
     ellipse(frog.body.x + eyeOffsetX, frog.body.y - eyeOffsetY, pupilSize);
     pop();
 
+    // makes sure the frog cannot go off the canvas and updates the tongue position
     if (state === "GAME" || state === "MENU") {
         frog.body.x = constrain(
             mouseX,
@@ -1107,21 +1149,24 @@ function drawFrog() {
 function updateTongue() {
     frog.tongue.x = frog.body.x;
 
+    // Checks if the tongue is currently shooting upward
     if (frog.tongue.state === "outbound") {
-        frog.tongue.y -= frog.tongue.speed;
+        frog.tongue.y -= frog.tongue.speed; //Moves the tongue upward by subtracting from its y position
+        // If the tongue reaches the top of the screen, it comes back down
         if (frog.tongue.y <= 0) frog.tongue.state = "inbound";
     } else if (frog.tongue.state === "inbound") {
-        frog.tongue.y += frog.tongue.speed;
+        frog.tongue.y += frog.tongue.speed; //Move the tongue downward by adding to its y position
         if (frog.tongue.y >= height) frog.tongue.state = "idle";
-    }
+    }  // If the tongue reaches the bottom again, stop it and reset to idle
+
 }
 
-// drawing the sky and the environment
+
 /**
  * Updates the sky color and darkness
  */
 function updateSky() {
-    if (sky.isNight) {
+    if (sky.isNight) { // if the value of g is smaller or equal to 85, it is daytime
         sky.fill.r -= sky.change;
         sky.fill.g -= sky.change;
         sky.fill.b += sky.change;
@@ -1129,7 +1174,7 @@ function updateSky() {
             sky.fill.g = 85;
             sky.isNight = false;
         }
-    } else {
+    } else { // if the value of g is bigger or equal to 207, it is nighttime
         sky.fill.r += sky.change;
         sky.fill.g += sky.change;
         sky.fill.b -= sky.change;
@@ -1139,12 +1184,14 @@ function updateSky() {
         }
     }
 
+    // black rectangle on top of everything to give the illusion of darkness at night
     push();
     noStroke();
     fill(0, sky.fill.transparency);
     rect(0, 0, 700, 550);
     pop();
 
+    // if the transparency of the sky is greater or equal to 220, it shifts to nighttime
     if (sky.isNight) {
         sky.fill.transparency += sky.change;
         if (sky.fill.transparency >= 220) {
@@ -1152,6 +1199,7 @@ function updateSky() {
             sky.isNight = false;
         }
     } else {
+        // if the transparency of the sky is lower or equal to 0, it shifts to daytime
         sky.fill.transparency -= sky.change;
         if (sky.fill.transparency <= 0) {
             sky.fill.transparency = 0;
@@ -1164,19 +1212,26 @@ function updateSky() {
  * Updates the progress through the day/night cycle
  */
 function updateProgress() {
+    // If the value of g is lower or equal to 85, the sky gets brighter
     if (sky.fill.g <= 85) {
         sky.direction = 1;
     } else if (startTime > 0 && sky.fill.g >= 207) {
+        // If the value of g is greater or equal to 207, the sky gets darker
         sky.direction = -1;
-        dayCount++;
+        dayCount++; // increase the number of days
     }
 
+    // define g as green is the sky color
     let g = sky.fill.g;
 
+    // When the sky gets darker, progress moves from 0 to 0.5
+    // When the sky gets brighter, progress moves from 0.5 to 1 (a full rotation)
     if (sky.direction === -1) {
-        progress = (207 - g) / 244;
-    } else {
-        progress = (g - 85) / 244 + 0.5;
+        if (sky.direction === -1) {
+            progress = (207 - g) / 244;
+        } else {
+            progress = (g - 85) / 244 + 0.5;
+        }
     }
 }
 
@@ -1187,6 +1242,7 @@ function drawClouds() {
     noStroke();
     fill(sky.cloudColor);
 
+    // draw the array of clouds
     clouds.forEach((cloudGroup) => {
         cloudGroup.forEach((cloud) => {
             ellipse(cloud[0], cloud[1], cloud[2], cloud[3]);
@@ -1201,7 +1257,9 @@ function drawBehindWater() {
     push();
     noStroke();
     fill("#29cde3");
+    // custom shape
     beginShape();
+    // wave and movement of the water behind the frog
     for (let x = 0; x <= width; x += 10) {
         let y = 485 + sin(x * 3 - frameCount * 3) * 10;
         vertex(x, y);
@@ -1219,7 +1277,9 @@ function drawWater() {
     push();
     noStroke();
     fill("#18aaf2");
+    // custom shape
     beginShape();
+    // wave and movement of the water in front of the frog
     for (let x = 0; x <= width; x += 10) {
         let y = 495 + sin(x * 3 + frameCount * 3) * 10;
         vertex(x, y);
@@ -1230,7 +1290,7 @@ function drawWater() {
     pop();
 }
 
-// progression system
+
 /**
  * Draws the progress ring
  */
@@ -1239,6 +1299,7 @@ function drawProgressRing() {
     stroke(progressRing.fill.background);
     strokeWeight(progressRing.strokeWeight);
     noFill();
+    // draws the shpae of the progress ring (white)
     ellipse(
         progressRing.x,
         progressRing.y,
@@ -1251,8 +1312,10 @@ function drawProgressRing() {
         progressRing.fill.progress.g,
         progressRing.fill.progress.b
     );
-    strokeCap(SQUARE);
+    strokeCap(SQUARE); // Makes the ends of the arc have a flat shape
+    // Converts the progress value (0–1) into a full-circle angle starting from the top
     let endAngle = -90 + progress * 360;
+    // draws the fill of the progress ring (green)
     arc(
         progressRing.x,
         progressRing.y,
@@ -1295,10 +1358,10 @@ function win() {
 // drawing all the elements that will appear in the game over state
 function end() {
     push();
+    // draws the text that is centered
     noStroke();
     fill(0);
     rect(0, 0, width, height);
-
     strokeWeight(3);
     stroke("#00ff00");
     textAlign(CENTER, CENTER);
@@ -1306,6 +1369,7 @@ function end() {
     textStyle(BOLD);
     text("**Game Over**", width / 2, height / 2);
 
+    // display final day count
     fill(255);
     noStroke();
     textSize(50);
@@ -1319,12 +1383,15 @@ function end() {
  * Draws the dead frog icon on the game over screen
  */
 function drawDeadFrogIcon() {
+    push();
+    // write the text for game end state (subtitle)
     textSize(20);
     fill(255);
     strokeWeight(5);
     stroke(255, 158, 234);
     text("(Spring Edition!! 🌸)", 350, 130);
 
+    // draws the dead frog icon
     noStroke();
     fill(255);
     circle(width / 2, height / 1.5, 80);
@@ -1333,20 +1400,25 @@ function drawDeadFrogIcon() {
     circle(width / 2.1, height / 1.56, 20);
     circle(width / 1.915, height / 1.56, 20);
 
+    // eyes
     fill(0);
     textSize(13);
     text("X", width / 2.1, height / 1.55);
     text("X", width / 1.915, height / 1.55);
 
+    // tongue
     fill("#ff0000");
     ellipse(width / 1.95, height / 1.45, 5, 20);
 
+    // body
     fill(0);
     rect(width / 2.1, height / 1.47, 32, 2);
     fill("#00ff00");
     rect(width / 2.1, height / 1.49, 32, 5);
+    pop();
 }
 
+// draws the pink fly
 function drawPinkFly() {
     push();
     noStroke();
@@ -1370,7 +1442,7 @@ function drawPinkFly() {
 }
 
 /**
- * Draws the instructions overlay
+ * Draws the instructions box and the instructions pages
  */
 function drawInstructions() {
     push();
@@ -1389,6 +1461,7 @@ function drawInstructions() {
     textAlign(CENTER, CENTER);
     text("Instructions 🌸:", 375, 160);
 
+    // text for the first page
     textAlign(LEFT);
     text("- Control the frog with the mouse and click", 210, 200);
     text("space to eat", 224, 220);
@@ -1402,6 +1475,7 @@ function drawInstructions() {
     text("frog is dead -> GAME OVER ", 270, 430);
     text("- Survive 3 days to WIN", 210, 460);
 
+    // colored squares to show the colors
     fill(frog.colors.damaged);
     rect(250, 385, 10, 10);
     fill(frog.colors.dying);
@@ -1409,6 +1483,7 @@ function drawInstructions() {
     fill(frog.colors.dead);
     rect(250, 425, 10, 10);
 
+    // close button
     strokeWeight(2.5);
     stroke(200);
     noFill();
@@ -1419,22 +1494,25 @@ function drawInstructions() {
         instructions.closeButton.size,
         instructions.closeButton.corner
     );
+    // x for the close button
     fill(0);
     noStroke();
     text("X", 535, 148);
 
+    // arrow to lead to second page
     textSize(12);
     text("Click on the right arrow  -->", 400, 485);
     pop();
 }
 
-
+// third instructions page
 function drawThirdPage() {
     push();
     noStroke();
     fill(255);
     rect(instructions.x, instructions.y, instructions.w, instructions.h, instructions.corner);
 
+    // text for the third page
     fill(0);
     textSize(17);
     textAlign(CENTER, CENTER);
@@ -1447,7 +1525,8 @@ function drawThirdPage() {
     text("- If eaten, the pink fly will not appear again", 210, 310);
 
 
-
+    // drawings for the third page
+    // frogs
     fill(frog.colors.healthy);
     arc(230, 280, 50, 50, 180, 0);
     circle(217, 257, 15);
@@ -1470,10 +1549,12 @@ function drawThirdPage() {
     circle(417, 257, 3);
     circle(443, 257, 3);
 
+
     textSize(10);
     text('+', 270, 265);
     text('-->', 360, 265);
 
+    // small bird
     fill("#f5d311");
     circle(440, 375, 25);
     triangle(430, 375, 410, 370, 420, 380);
@@ -1484,6 +1565,7 @@ function drawThirdPage() {
 
     text('(This is a small bird)', 395, 405);
 
+    // bird
     fill("#fcec35");
     triangle(310, 370, 290, 365, 300, 375);
     ellipse(330, 370, 40);
@@ -1496,6 +1578,7 @@ function drawThirdPage() {
     text('(This is a normal bird)', 275, 405);
     text('(pink fly)', 302, 280);
 
+    // close button
     strokeWeight(2.5);
     stroke(200);
     noFill();
@@ -1507,16 +1590,19 @@ function drawThirdPage() {
     textSize(17);
     text('X', 535, 148);
 
+    // arrow that goes back to second page
     textSize(12);
     text('<--  Click on the right arrow', 195, 485);
     textSize(20);
     text("Enjoy The Game!!", 290, 440);
 
+    // static pink fly 
     drawStaticPinkFly(320, 265, 10);
 
     pop();
 }
 
+// draws the second instructions page
 function drawSecondPage() {
     push();
     noStroke();
@@ -1529,6 +1615,7 @@ function drawSecondPage() {
         instructions.corner
     );
 
+    // text for the second page
     fill(0);
     textSize(17);
     textAlign(CENTER, CENTER);
@@ -1540,8 +1627,10 @@ function drawSecondPage() {
     text("- If the frog eats a small bird while it is hurt", 210, 310);
     text("or dying, it will heal instantly", 224, 330);
 
+    // draws the drawings for the second page
     secondPageDrawings();
 
+    // close button
     strokeWeight(2.5);
     stroke(200);
     noFill();
@@ -1555,17 +1644,21 @@ function drawSecondPage() {
     fill(0);
     noStroke();
 
+    // x to close the page
     textSize(17);
     text("X", 535, 148);
 
+    // arrows that goes back to first page and that goes to third pgae
     textSize(12);
     text("<--  Click on the right arrow", 195, 485);
     text("Click on the right arrow  -->", 400, 485);
     pop();
 }
 
+// second instruction page drawings
 function secondPageDrawings() {
     push();
+    // frogs
     fill(frog.colors.healthy);
     arc(230, 280, 50, 50, 180, 0);
     circle(217, 257, 15);
@@ -1588,6 +1681,41 @@ function secondPageDrawings() {
     circle(417, 257, 3);
     circle(443, 257, 3);
 
+    fill(frog.colors.damaged);
+    arc(230, 390, 50, 50, 180, 0);
+    circle(217, 367, 15);
+    circle(243, 367, 15);
+    fill(255);
+    circle(217, 367, 10);
+    circle(243, 367, 10);
+    fill(0);
+    circle(217, 367, 3);
+    circle(243, 367, 3);
+
+    fill(frog.colors.dying);
+    arc(300, 390, 50, 50, 180, 0);
+    circle(287, 367, 15);
+    circle(313, 367, 15);
+    fill(255);
+    circle(287, 367, 10);
+    circle(313, 367, 10);
+    fill(0);
+    circle(287, 367, 3);
+    circle(313, 367, 3);
+
+    fill(frog.colors.healthy);
+    arc(480, 390, 50, 50, 180, 0);
+    circle(467, 367, 15);
+    circle(493, 367, 15);
+    fill(255);
+    circle(467, 367, 10);
+    circle(493, 367, 10);
+    fill(0);
+    circle(467, 367, 3);
+    circle(493, 367, 3);
+
+
+    // small bird
     fill("#f5d311");
     circle(330, 265, 25);
     triangle(320, 265, 300, 260, 310, 270);
@@ -1601,32 +1729,11 @@ function secondPageDrawings() {
     text("-->", 360, 265);
     text("(small bird)", 305, 290);
 
-    fill(frog.colors.damaged);
-    arc(230, 390, 50, 50, 180, 0);
-    circle(217, 367, 15);
-    circle(243, 367, 15);
-    fill(255);
-    circle(217, 367, 10);
-    circle(243, 367, 10);
-    fill(0);
-    circle(217, 367, 3);
-    circle(243, 367, 3);
-
     text("or", 260, 375);
-
-    fill(frog.colors.dying);
-    arc(300, 390, 50, 50, 180, 0);
-    circle(287, 367, 15);
-    circle(313, 367, 15);
-    fill(255);
-    circle(287, 367, 10);
-    circle(313, 367, 10);
-    fill(0);
-    circle(287, 367, 3);
-    circle(313, 367, 3);
 
     text("+", 340, 375);
 
+    // bird
     fill("#f5d311");
     circle(390, 375, 25);
     triangle(380, 375, 360, 370, 370, 380);
@@ -1636,22 +1743,12 @@ function secondPageDrawings() {
     circle(393, 372, 3);
     text("-->", 420, 375);
 
-    fill(frog.colors.healthy);
-    arc(480, 390, 50, 50, 180, 0);
-    circle(467, 367, 15);
-    circle(493, 367, 15);
-    fill(255);
-    circle(467, 367, 10);
-    circle(493, 367, 10);
-    fill(0);
-    circle(467, 367, 3);
-    circle(493, 367, 3);
-
     textSize(10);
     text("(small bird)", 365, 395);
     pop();
 }
 
+// draws static pink fly (this fly is in the instructions not in the actual game)
 function drawStaticPinkFly(x, y, size = 10) {
     push();
     noStroke();
